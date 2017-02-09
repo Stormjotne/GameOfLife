@@ -9,7 +9,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <Pane prefHeight="330.0" prefWidth="600.0" style="-fx-background-color: grey;" BorderPane.alignment="CENTER" />
+      <Canvas fx:id="grid" height="350.0" width="600.0" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
       <GridPane prefHeight="52.0" prefWidth="600.0" BorderPane.alignment="CENTER">
@@ -51,7 +51,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Cell size" GridPane.halignment="RIGHT" />
+                  <Label text="Cell size:" GridPane.halignment="RIGHT" />
                   <TextField text="10" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets left="10.0" right="10.0" />
@@ -62,4 +62,5 @@
          </children>
       </GridPane>
    </bottom>
+   
 </BorderPane>
