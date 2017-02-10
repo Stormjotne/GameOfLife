@@ -11,4 +11,8 @@ public class GameOfLifeModel {
 		System.out.println("Game made!");
 	}
 	
+	public byte[][] getBoard(){
+		return board;
+	}
+	
 }
