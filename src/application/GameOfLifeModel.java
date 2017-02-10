@@ -15,4 +15,14 @@ public class GameOfLifeModel {
 		return board;
 	}
 	
+	private int cellSize;
+	
+	protected void setSize(int clsz) {
+		cellSize = clsz;
+	}
+	
+	public int getSize() {
+		return cellSize;
+	}
+	
 }
