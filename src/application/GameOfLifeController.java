@@ -21,10 +21,12 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	@FXML private Canvas grid;
 	private GraphicsContext gc;
+	private GameOfLifeModel game;
 	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		game = new GameOfLifeModel();
 		gc = grid.getGraphicsContext2D();
 		draw(gc);
 	}
@@ -40,13 +42,22 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	@FXML private void draw(GraphicsContext gc) {
-		gc.setFill(Color.BLACK);
-		gc.fillRect(20, 20, 20, 20);
+		for (int i = 0; i < game.getBoard().length; i++) {
+			for (int j = 0; j < game.getBoard()[i].length; j++) {
+				if(game.getBoard()[i][j] == 1){
+					gc.setFill(Color.YELLOW);
+				}
+				else  {
+					gc.setFill(Color.BLACK);
+				}
+				int l = 64;
+				gc.fillRect(j*l, i*l, l, l);
+			}
+		}
     }
 
 	public static void main(String[] args) {
 		launch(args);
-		GameOfLifeModel game = new GameOfLifeModel();
 		
 	}
 }

@@ -1,7 +1,7 @@
 package application;
 
 public class GameOfLifeModel {
-	private byte[][] board = {
+	private byte[][] board = new byte[][] {
 			{1, 0, 0, 1},
 			{0, 0, 1, 1},
 			{1, 0, 1, 0},
