@@ -25,6 +25,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		gc = grid.getGraphicsContext2D();
 		draw(gc);
 	}
 	
@@ -33,7 +34,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		primaryStage.setTitle("Game Of Life");
 		Parent root = FXMLLoader.load(getClass().getResource("GameOfLifeFXML.fxml"));
 		Scene scene = new Scene(root);
-		
         
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -41,6 +41,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	@FXML private void draw(GraphicsContext gc) {
 		gc.setFill(Color.BLACK);
+		gc.fillRect(20, 20, 20, 20);
     }
 
 	public static void main(String[] args) {
