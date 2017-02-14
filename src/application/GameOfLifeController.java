@@ -50,7 +50,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				else  {
 					gc.setFill(Color.WHITE);
 				}
-				game.setSize(64);
+				game.setSize(10);
 				int l = game.getSize();
 				gc.fillRect(j*l, i*l, l, l);
 			}

@@ -12,7 +12,7 @@ public class GameOfLifeModel {
 	*/
 	
 	public GameOfLifeModel(){
-Random ranNum = new Random();
+		Random ranNum = new Random();
 		
 		for(int i = 0; i < board.length; i++){
 			
