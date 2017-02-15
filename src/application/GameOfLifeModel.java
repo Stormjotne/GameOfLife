@@ -1,30 +1,56 @@
 package application;
 
+import java.util.Random;
+
 public class GameOfLifeModel {
-	private int k = 35, m = 60;
-	public byte[][] board = new byte[k][m];
-	/*
-	private byte[][] board = new byte[][] {
-			{1, 0, 0, 1},
-			{0, 0, 1, 1},
-			{1, 0, 1, 0},
-			{0, 1, 0, 0}};
-	*/
+	public static int k = 35, m = 60;
+	public static byte[][] board = new byte[k][m];
+	public byte[][] next = new byte[k][m];
 	
 	public GameOfLifeModel(){
+		/** RANDOM ARRAY **/
 		Random ranNum = new Random();
-		
 		for(int i = 0; i < board.length; i++){
 			
 			for(int j = 0; j < board[i].length; j++){
 				byte n = (byte)ranNum.nextInt(2);
 				board[i][j] = n;
-				
 			}
 		}
+		/*** We need random in our lives ***/
 		
 		System.out.println("Game made!");
 	}
+	
+	/**************** The meaning of life *****************/
+	public byte[][] rules (){
+		byte[][] next = new byte[35][60];
+		for (int x = 1; x < next.length-1; x++) {
+		  for (int y = 1; y < next[x].length-1; y++) {
+			  	int neighbors = 0;
+				for (int c = -1; c <= 1; c++) {
+					  for (int d = -1; d <= 1; d++) {
+					    neighbors += board[x+c][y+d]; //Add up all the neighbors' states.
+					   }
+					}
+				neighbors -= board[x][y];
+				
+				if ((board[x][y] == 1) && (neighbors < 2)){
+					next[x][y] = 0;
+				}
+				else if ((board[x][y] == 1)&&(neighbors > 3)){
+					next[x][y] = 0;
+				}
+				else if ((board[x][y] == 0)&&(neighbors == 3)){
+					
+				}
+				else{ next[x][y] = board[x][y];}
+		  }
+		}
+		board = next;
+		return board;
+	}
+	/****************************************/
 	
 	public byte[][] getBoard(){
 		return board;
