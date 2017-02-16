@@ -6,6 +6,7 @@ public class GameOfLifeModel {
 	public static int k = 60, m = 35;
 	public static byte[][] board = new byte[k][m];
 	public byte[][] next = new byte[k][m];
+	private int cellSize;
 	
 	int previous;
 	int state;
@@ -26,8 +27,38 @@ public class GameOfLifeModel {
 		System.err.println("\n" + "Null pointer exeption:");
 	}
 	
+	
+	public int countNeighbors(){ //Returnerer antall naboer til et punkt
+		int neighbors = 3;
+		return neighbors;
+	}
+	
+	
+	public void applyRules(){ //Itererer igjennom board og bruker countNeighbors() til å forandre brettet.
+		for (int x = 1; x < next.length-1; x++) {
+			  for (int y = 1; y < next[x].length-1; y++) {
+				  	int neighbors = countNeighbors();
+					
+					if ((board[x][y] == 1) && (neighbors <= 2)){
+						next[x][y] = 0;
+					}
+					else if ((board[x][y] == 1)&&(neighbors > 3)){
+						next[x][y] = 0;
+					}
+					else if ((board[x][y] == 0)&&(neighbors == 3)){
+						next[x][y] = 1;
+					}
+					else{ next[x][y] = board[x][y];}
+			  }
+			}
+	}
+	
+	public void nextGeneration(){ //Tegner brettet til skjerm.
+		board = next;
+	}
+	
 	/**************** The meaning of life *****************/
-	public void rules (){
+	/*public void rules (){
 		
 		for (int x = 1; x < next.length-1; x++) {
 		  for (int y = 1; y < next[x].length-1; y++) {
@@ -39,7 +70,7 @@ public class GameOfLifeModel {
 					}
 				neighbors -= board[x][y];
 				
-				if ((board[x][y] == 1) && (neighbors < 2)){
+				if ((board[x][y] == 1) && (neighbors <= 2)){
 					next[x][y] = 0;
 				}
 				else if ((board[x][y] == 1)&&(neighbors > 3)){
@@ -53,14 +84,12 @@ public class GameOfLifeModel {
 		}
 		board = next;
 		
-	}
+	}*/
 	/****************************************/
 	
 	public byte[][] getBoard(){
 		return board;
 	}
-	
-	private int cellSize;
 	
 	protected void setSize(int clsz) {
 		cellSize = clsz;

@@ -26,19 +26,21 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Canvas grid;
 	private GraphicsContext gc;
 	private GameOfLifeModel game;
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(120), e -> run()));
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		game = new GameOfLifeModel(); // Lager en random array 
 		
 		/***  added this  ***/ 
-		game.rules(); // could add this on our start button??
+		//game.rules(); // could add this on our start button??
 		/** Calls the rules on our array **/
 		
 		gc = grid.getGraphicsContext2D();
 		draw(gc);
 		timeLine();
+		game.applyRules();
+		game.nextGeneration();
 	}
 	
 	/*****************************/
@@ -49,7 +51,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void run(){
-		game.rules();
+		//game.rules();
 		draw(gc);
 	}
 	/*****************************/
