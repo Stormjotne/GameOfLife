@@ -1,4 +1,4 @@
-package application;
+package application; /*       MY VERSION        */
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,19 +27,20 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	private GraphicsContext gc;
 	private GameOfLifeModel game;
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(120), e -> run()));
-
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		game = new GameOfLifeModel(); // Lager en random array 
 		
 		/***  added this  ***/ 
-		game.rules(); // something wrong with the rules
+		game.rules(); // could add this on our start button??
 		/** Calls the rules on our array **/
 		
 		gc = grid.getGraphicsContext2D();
 		draw(gc);
 		timeLine();
 	}
+	
 	/*****************************/
 	public void timeLine(){
 		animation.setAutoReverse(false);
@@ -55,10 +56,10 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception{
-		Parent root = FXMLLoader.load(getClass().getResource("View.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("GameOfLifeFXML.fxml"));
 		Scene scene = new Scene(root);
 		
-		primaryStage.setTitle("Game Of Life");
+		primaryStage.setTitle("Game Of Life NextTry");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -73,22 +74,21 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 					drawBox(i, j, Color.WHITE);
 				}
 				game.setSize(10);
-				int l = game.getSize();
-				//gc.fillRect(j*l, i*l, l, l); Denne gjorde så den tegnet to arrayer oppå hverandre ( tror jeg )
+				// int l = game.getSize();
+				//gc.fillRect(j*l, i*l, l, l);
 				
+				//game.rules();
 			}
 		}
     }
-	/* Delte opp tegne metoden. (Lagde en metode som tegner og
-	 *  en som sjekker hvilke elementer som skal farges.) */
-	private void drawBox(int x, int y, Color c){ 
+	private void drawBox(int x, int y, Color c){
 		gc.setFill(c);
 		gc.fillRect(x*10, y*10, 9, 9);
 		
 	}
 
-
 	public static void main(String[] args) {
+		
 		launch(args);
 		
 	}

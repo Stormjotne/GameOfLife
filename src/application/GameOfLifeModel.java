@@ -1,12 +1,15 @@
-package application;
+package application; /*         MY VERSION          */
 
 import java.util.Random;
 
 public class GameOfLifeModel {
-	public static int k = 35, m = 60;
+	public static int k = 60, m = 35;
 	public static byte[][] board = new byte[k][m];
 	public byte[][] next = new byte[k][m];
 	
+	int previous;
+	int state;
+		
 	public GameOfLifeModel(){
 		/** RANDOM ARRAY **/
 		Random ranNum = new Random();
@@ -20,11 +23,12 @@ public class GameOfLifeModel {
 		/*** We need random in our lives ***/
 		
 		System.out.println("Game made!");
+		System.err.println("\n" + "Null pointer exeption:");
 	}
 	
 	/**************** The meaning of life *****************/
-	public byte[][] rules (){
-		byte[][] next = new byte[35][60];
+	public void rules (){
+		
 		for (int x = 1; x < next.length-1; x++) {
 		  for (int y = 1; y < next[x].length-1; y++) {
 			  	int neighbors = 0;
@@ -42,13 +46,13 @@ public class GameOfLifeModel {
 					next[x][y] = 0;
 				}
 				else if ((board[x][y] == 0)&&(neighbors == 3)){
-					
+					next[x][y] = 1;
 				}
 				else{ next[x][y] = board[x][y];}
 		  }
 		}
 		board = next;
-		return board;
+		
 	}
 	/****************************************/
 	
@@ -65,5 +69,4 @@ public class GameOfLifeModel {
 	public int getSize() {
 		return cellSize;
 	}
-	
 }
