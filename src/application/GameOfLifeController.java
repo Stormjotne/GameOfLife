@@ -26,15 +26,11 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Canvas grid;
 	private GraphicsContext gc;
 	private GameOfLifeModel game;
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1200), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		game = new GameOfLifeModel(); // Lager en random array 
-		
-		/***  added this  ***/ 
-		//game.rules(); // could add this on our start button??
-		/** Calls the rules on our array **/
 		
 		gc = grid.getGraphicsContext2D();
 		draw(gc);
@@ -51,7 +47,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void run(){
-		//game.rules();
+		game.applyRules();
 		draw(gc);
 	}
 	/*****************************/
@@ -76,16 +72,12 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 					drawBox(i, j, Color.WHITE);
 				}
 				game.setSize(10);
-				// int l = game.getSize();
-				//gc.fillRect(j*l, i*l, l, l);
-				
-				//game.rules();
 			}
 		}
     }
 	private void drawBox(int x, int y, Color c){
 		gc.setFill(c);
-		gc.fillRect(x*10, y*10, 9, 9);
+		gc.fillRect(x*game.getSize(), y*game.getSize(), game.getSize()-1, game.getSize()-1);
 		
 	}
 
