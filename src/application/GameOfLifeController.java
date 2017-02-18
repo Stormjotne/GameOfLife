@@ -31,7 +31,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		game = new GameOfLifeModel(); // Lager en random array 
-		
+
 		gc = grid.getGraphicsContext2D();
 		draw(gc);
 		timeLine();
