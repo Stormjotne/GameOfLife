@@ -31,11 +31,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		game = new GameOfLifeModel(); // Lager en random array 
-		
-		/***  added this  ***/ 
-		//game.rules(); // could add this on our start button??
-		/** Calls the rules on our array **/
-		
 		gc = grid.getGraphicsContext2D();
 		draw(gc);
 		timeLine();
@@ -51,7 +46,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void run(){
-		//game.rules();
 		draw(gc);
 	}
 	/*****************************/
@@ -76,10 +70,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 					drawBox(i, j, Color.WHITE);
 				}
 				game.setSize(10);
-				// int l = game.getSize();
-				//gc.fillRect(j*l, i*l, l, l);
-				
-				//game.rules();
 			}
 		}
     }
