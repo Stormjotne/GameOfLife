@@ -61,7 +61,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		Parent root = FXMLLoader.load(getClass().getResource("GameOfLifeFXML.fxml"));
 		Scene scene = new Scene(root);
 		
-		primaryStage.setTitle("Game Of Life NextTry");
+		primaryStage.setTitle("Game Of Life");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

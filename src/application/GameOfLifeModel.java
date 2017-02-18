@@ -3,7 +3,7 @@ package application; /*         MY VERSION          */
 import java.util.Random;
 
 public class GameOfLifeModel {
-	public static int k = 60, m = 35;
+	public static int k = 200, m = 200;
 	public static byte[][] board = new byte[k][m];
 	public byte[][] next = new byte[k][m];
 	private int cellSize;
@@ -28,18 +28,27 @@ public class GameOfLifeModel {
 	}
 	
 	
-	public int countNeighbors(){ //Returnerer antall naboer til et punkt
-		int neighbors = 3;
+	public int countNeighbors(int x, int y){ 
+		/*Returnerer antall naboer til punktet (x,y)*/
+		int neighbors = 0;
+		
+		for (int i = -1; i <= 1; i++) {
+			  for (int j = -1; j <= 1; j++) {
+			    neighbors += board[x+i][y+j]; //Legger sammen naboenes tilstander: 0, eller 1.
+			   }
+			}
+		neighbors -= board[x][y]; //Trekker fra cellens egen verdi: 0, eller 1.
 		return neighbors;
 	}
 	
 	
-	public void applyRules(){ //Itererer igjennom board og bruker countNeighbors() til Ã¥ forandre brettet.
-		for (int x = 1; x < next.length-1; x++) {
-			  for (int y = 1; y < next[x].length-1; y++) {
-				  	int neighbors = countNeighbors();
+	public void applyRules(){
+		/*Itererer gjennom board og bruker metoden countNeighbors() til å oppdatere en celles tilstand.*/
+		for (int x = 1; x < k-1; x++) {
+			  for (int y = 1; y < m-1; y++) {
+				  	int neighbors = countNeighbors(x,y);
 					
-					if ((board[x][y] == 1) && (neighbors <= 2)){
+					if ((board[x][y] == 1) && (neighbors < 2)){
 						next[x][y] = 0;
 					}
 					else if ((board[x][y] == 1)&&(neighbors > 3)){
@@ -48,12 +57,15 @@ public class GameOfLifeModel {
 					else if ((board[x][y] == 0)&&(neighbors == 3)){
 						next[x][y] = 1;
 					}
-					else{ next[x][y] = board[x][y];}
+					else {
+						next[x][y] = board[x][y];
+					}
 			  }
-			}
+		}
 	}
 	
-	public void nextGeneration(){ //Tegner brettet til skjerm.
+	public void nextGeneration(){
+		/*Tegner brettet til skjerm.*/
 		board = next;
 	}
 	
