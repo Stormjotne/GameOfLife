@@ -48,7 +48,7 @@ public class GameOfLifeModel {
 			  for (int y = 1; y < m-1; y++) {
 				  	int neighbors = countNeighbors(x,y);
 					
-					if ((board[x][y] == 1) && (neighbors <= 2)){
+					if ((board[x][y] == 1) && (neighbors < 2)){
 						next[x][y] = 0;
 					}
 					else if ((board[x][y] == 1)&&(neighbors > 3)){

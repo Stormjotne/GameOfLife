@@ -48,13 +48,13 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		assert stopButton != null : "fx:id=\"stopButton\" No Stop Button Found.";
 		/*Button Logic*/
 		playButton.setOnAction((event) -> {
-			animation.play();
+			play();
 		});
 		pauseButton.setOnAction((event) -> {
-			animation.pause();
+			pause();
 		});
 		stopButton.setOnAction((event) -> {
-			animation.stop();
+			stop();
 		});
 	}
 	
