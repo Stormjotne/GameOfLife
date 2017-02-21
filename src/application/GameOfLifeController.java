@@ -9,6 +9,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import java.io.IOException;
 
 import javafx.animation.KeyFrame;
@@ -24,6 +27,9 @@ import javafx.scene.paint.Color;
 public class GameOfLifeController extends Application implements javafx.fxml.Initializable {
 	
 	@FXML private Canvas grid;
+	@FXML private Button playButton;
+	@FXML private Button pauseButton;
+	@FXML private Button stopButton;
 	private GraphicsContext gc;
 	private GameOfLifeModel game;
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1200), e -> run()));
@@ -37,6 +43,26 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		timeLine();
 		game.applyRules();
 		game.nextGeneration();
+		
+		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
+		assert pauseButton != null : "fx:id=\"pauseButton\" No Pause Button Found.";
+		assert stopButton != null : "fx:id=\"stopButton\" No Stop Button Found.";
+		/*Button Logic*/
+		playButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+                play();
+            }
+        });
+		pauseButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+                pause();
+            }
+        });
+		stopButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+                stop();
+            }
+        });
 	}
 	
 	/*****************************/
@@ -49,6 +75,18 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public void run(){
 		game.applyRules();
 		draw(gc);
+	}
+	
+	public void play(){
+		animation.play();
+	}
+	
+	public void pause(){
+		animation.pause();
+	}
+	
+	public void stop(){
+		animation.stop();
 	}
 	/*****************************/
 	
