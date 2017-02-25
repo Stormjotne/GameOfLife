@@ -31,16 +31,22 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Button stopButton;
 	private GraphicsContext gc;
 	private GameOfLifeModel game;
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(500), e -> run()));
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(2000), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		game = new GameOfLifeModel(); // Lager en random array 
-
+		byte[][] b = {
+				{ 0, 0, 0, 0, 0 },
+				{ 0, 0, 1, 0, 0 },
+				{ 0, 0, 1, 0, 0 },
+				{ 0, 0, 1, 0, 0 },
+				{ 0, 0, 0, 0, 0 }
+				};
+		game.setBoard(b);
 		gc = grid.getGraphicsContext2D();
 		draw(gc);
 		timeLine();
-		game.applyRules();
 		game.nextGeneration();
 		
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
@@ -80,12 +86,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	public void stopButton(){
 		animation.stop();
-		game.firstGeneration();
-		gc = grid.getGraphicsContext2D();
-		draw(gc);
-		timeLine();
-		game.applyRules();
-		
 	}
 	/*****************************/
 	
@@ -108,13 +108,13 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				else  {
 					drawBox(i, j, Color.WHITE);
 				}
-				game.setSize(10);
+				game.setCellSize(100);
 			}
 		}
     }
 	private void drawBox(int x, int y, Color c){
 		gc.setFill(c);
-		gc.fillRect(x*game.getSize(), y*game.getSize(), game.getSize()-1, game.getSize()-1);
+		gc.fillRect(x*game.getCellSize(), y*game.getCellSize(), game.getCellSize()-1, game.getCellSize()-1);
 		
 	}
 
