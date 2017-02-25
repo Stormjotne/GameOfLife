@@ -10,9 +10,9 @@
 
 <?import javafx.scene.paint.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameOfLifeController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameOfLifeController">
    <center>
-      <Canvas fx:id="grid" height="680.0" width="1280.0" BorderPane.alignment="CENTER" />
+      <Canvas fx:id="grid" height="680.0" width="680.0" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
       <GridPane prefHeight="52.0" prefWidth="600.0" BorderPane.alignment="CENTER">

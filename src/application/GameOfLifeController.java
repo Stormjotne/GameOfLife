@@ -31,7 +31,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Button stopButton;
 	private GraphicsContext gc;
 	private GameOfLifeModel game;
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1200), e -> run()));
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(500), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -48,13 +48,13 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		assert stopButton != null : "fx:id=\"stopButton\" No Stop Button Found.";
 		/*Button Logic*/
 		playButton.setOnAction((event) -> {
-			play();
+			playButton();
 		});
 		pauseButton.setOnAction((event) -> {
-			pause();
+			pauseButton();
 		});
 		stopButton.setOnAction((event) -> {
-			stop();
+			stopButton();
 		});
 	}
 	
@@ -70,16 +70,21 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		draw(gc);
 	}
 	
-	public void play(){
+	public void playButton(){
 		animation.play();
 	}
 	
-	public void pause(){
+	public void pauseButton(){
 		animation.pause();
 	}
 	
-	public void stop(){
+	public void stopButton(){
 		animation.stop();
+		game.firstGeneration();
+		gc = grid.getGraphicsContext2D();
+		draw(gc);
+		timeLine();
+		game.applyRules();
 		
 	}
 	/*****************************/

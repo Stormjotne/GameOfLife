@@ -6,6 +6,7 @@ public class GameOfLifeModel {
 	public static int k = 100, m = 100;
 	public static byte[][] board = new byte[k][m];
 	public byte[][] next = new byte[k][m];
+	public byte[][] first = new byte[k][m];
 	private int cellSize;
 	
 	int previous;
@@ -22,7 +23,7 @@ public class GameOfLifeModel {
 			}
 		}
 		/*** We need random in our lives ***/
-		
+		first = board; // Arrayen 'first' er nå lik den først instansen av spillebrettet.
 		System.out.println("Game made!");
 		System.err.println("\n" + "Null pointer exeption:");
 	}
@@ -57,11 +58,20 @@ public class GameOfLifeModel {
 					else if ((board[x][y] == 0)&&(neighbors == 3)){
 						next[x][y] = 1;
 					}
+					//Kan bytte ut else-utsagnet med dette regelrette utsagnet:
+					/*else if ((board[x][y] == 1)&&((neighbors == 2)||(neighbors == 3))){
+						next[x][y] = 1;
+					}*/
 					else {
 						next[x][y] = board[x][y];
 					}
 			  }
 		}
+	}
+	
+	public void firstGeneration(){
+		/*Brukt for å tilbakestille spillebrettet.*/
+		board = first;
 	}
 	
 	public void nextGeneration(){
