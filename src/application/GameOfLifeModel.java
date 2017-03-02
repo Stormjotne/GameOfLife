@@ -1,4 +1,4 @@
-package application; /*         MY VERSION          */
+package application;
 
 import java.util.Random;
 
@@ -23,7 +23,7 @@ public class GameOfLifeModel {
 			}
 		}
 		/*** We need random in our lives ***/
-		first = board; // Arrayen 'first' er nå lik den først instansen av spillebrettet.
+		first = board; // Arrayen 'first' er nå lik den første instansen av spillebrettet.
 		System.out.println("Game made!");
 		System.err.println("\n" + "Null pointer exeption:");
 	}
@@ -35,14 +35,13 @@ public class GameOfLifeModel {
 	
 	public void nextGeneration(){
 		/*Tegner brettet til skjerm.*/
-		applyRules();
 		board = next;
 	}
 	
 	public void applyRules(){
 		/*Itererer gjennom board og bruker metoden countNeighbors() til å oppdatere en celles tilstand.*/
-		for (int x = 1; x < k-1; x++) {
-			  for (int y = 1; y < m-1; y++) {
+		for (int x = 1; x < (board.length-1); x++) {
+			  for (int y = 1; y < (board[x].length-1); y++) {
 				  	int neighbors = countNeighbors(x,y);
 				  	
 					
@@ -70,9 +69,9 @@ public class GameOfLifeModel {
 		/*Returnerer antall naboer til punktet (x,y)*/
 		int neighbors = 0;
 		
-		for (int i = -1; i <= 1; i++) {
-			  for (int j = -1; j <= 1; j++) {
-			    neighbors += board[x+i][y+j]; //Legger sammen naboenes tilstander: 0, eller 1.
+		for (int i = -1; i < 2; i++) {
+			  for (int j = -1; j < 2; j++) {
+			    neighbors += board[(x+i)][(y+j)]; //Legger sammen naboenes tilstander: 0, eller 1.
 			   }
 			}
 		neighbors -= board[x][y]; //Trekker fra cellens egen verdi: 0, eller 1.
@@ -109,7 +108,7 @@ public class GameOfLifeModel {
 		StringBuffer output = new StringBuffer();
 		for(int i = 0; i < board.length; i++){
 			for(int j = 0; j < board[i].length; j++){
-				output.append(board[i][j]);
+				output.append(board[j][i]);
 			}
 		}
 		return output.toString();

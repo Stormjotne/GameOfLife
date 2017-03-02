@@ -31,22 +31,24 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Button stopButton;
 	private GraphicsContext gc;
 	private GameOfLifeModel game;
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(2000), e -> run()));
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		game = new GameOfLifeModel(); // Lager en random array 
 		byte[][] b = {
 				{ 0, 0, 0, 0, 0 },
-				{ 0, 0, 1, 0, 0 },
-				{ 0, 0, 1, 0, 0 },
-				{ 0, 0, 1, 0, 0 },
+				{ 0, 0, 0, 0, 0 },
+				{ 0, 1, 1, 1, 0 },
+				{ 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 0, 0 }
 				};
+		game = new GameOfLifeModel();
+		//game.setBoardSize(5);
 		game.setBoard(b);
 		gc = grid.getGraphicsContext2D();
 		draw(gc);
 		timeLine();
+		game.applyRules();
 		game.nextGeneration();
 		
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
@@ -72,8 +74,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void run(){
-		game.applyRules();
 		draw(gc);
+		game.applyRules();
+		game.nextGeneration();
 	}
 	
 	public void playButton(){
@@ -103,12 +106,12 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		for (int i = 0; i < game.getBoard().length; i++) {
 			for (int j = 0; j < game.getBoard()[i].length; j++) {
 				if(game.getBoard()[i][j] == 1){
-					drawBox(i, j, Color.RED);
+					drawBox(i, j, Color.BLACK);
 				}
 				else  {
-					drawBox(i, j, Color.WHITE);
+					drawBox(i, j, Color.GRAY);
 				}
-				game.setCellSize(100);
+				game.setCellSize(10);
 			}
 		}
     }
