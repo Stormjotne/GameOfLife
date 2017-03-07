@@ -23,12 +23,11 @@ public class LogicTesting {
 			game = new GameOfLifeModel();
 			//game.setBoardSize(5);
 			game.setBoard(b);
+			org.junit.Assert.assertEquals(game.toString(),"0000000100001000010000000");
 			System.out.println(game.toString());
-			game.applyRules();
 			game.nextGeneration();
 			org.junit.Assert.assertEquals(game.toString(),"0000000000011100000000000");
 			System.out.println(game.toString());
-			game.applyRules();
 			game.nextGeneration();
 			org.junit.Assert.assertEquals(game.toString(),"0000000100001000010000000");
 			System.out.println(game.toString());

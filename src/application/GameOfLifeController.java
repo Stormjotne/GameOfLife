@@ -48,7 +48,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		gc = grid.getGraphicsContext2D();
 		draw(gc);
 		timeLine();
-		game.applyRules();
 		game.nextGeneration();
 		
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
@@ -75,7 +74,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	public void run(){
 		draw(gc);
-		game.applyRules();
 		game.nextGeneration();
 	}
 	
@@ -111,7 +109,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				else  {
 					drawBox(i, j, Color.GRAY);
 				}
-				game.setCellSize(10);
+				game.setCellSize(60);
 			}
 		}
     }

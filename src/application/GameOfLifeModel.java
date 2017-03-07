@@ -34,11 +34,6 @@ public class GameOfLifeModel {
 	}
 	
 	public void nextGeneration(){
-		/*Tegner brettet til skjerm.*/
-		board = next;
-	}
-	
-	public void applyRules(){
 		/*Itererer gjennom board og bruker metoden countNeighbors() til å oppdatere en celles tilstand.*/
 		for (int x = 1; x < (board.length-1); x++) {
 			  for (int y = 1; y < (board[x].length-1); y++) {
@@ -63,14 +58,16 @@ public class GameOfLifeModel {
 					}
 			  }
 		}
+		/*Oppdaterer spillebrettet.*/
+		board = next;
 	}
 	
 	public int countNeighbors(int x, int y){ 
 		/*Returnerer antall naboer til punktet (x,y)*/
 		int neighbors = 0;
 		
-		for (int i = -1; i < 2; i++) {
-			  for (int j = -1; j < 2; j++) {
+		for (int i = -1; i <= 1; i++) {
+			  for (int j = -1; j <= 1; j++) {
 			    neighbors += board[(x+i)][(y+j)]; //Legger sammen naboenes tilstander: 0, eller 1.
 			   }
 			}
@@ -78,8 +75,8 @@ public class GameOfLifeModel {
 		return neighbors;
 	}
 	
-	public void setBoard(byte[][] b) {
-		board = b;
+	public void setBoard(byte[][] boardArray) {
+		board = boardArray;
 	}
 	
 	public byte[][] getBoard(){
