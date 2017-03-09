@@ -35,6 +35,7 @@ public class GameOfLifeModel {
 	
 	public void nextGeneration(){
 		/*Itererer gjennom board og bruker metoden countNeighbors() til å oppdatere en celles tilstand.*/
+		next = new byte[board.length][board[0].length];
 		for (int x = 1; x < (board.length-1); x++) {
 			  for (int y = 1; y < (board[x].length-1); y++) {
 				  	int neighbors = countNeighbors(x,y);
