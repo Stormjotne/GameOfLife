@@ -23,18 +23,18 @@ public class GameOfLifeModel {
 			}
 		}
 		/*** We need random in our lives ***/
-		first = board; // Arrayen 'first' er nå lik den første instansen av spillebrettet.
+		first = board; // Arrayen 'first' er nï¿½ lik den fï¿½rste instansen av spillebrettet.
 		System.out.println("Game made!");
 		System.err.println("\n" + "Null pointer exeption:");
 	}
 	
 	public void firstGeneration(){
-		/*Brukt for å tilbakestille spillebrettet.*/
+		/*Brukt for ï¿½ tilbakestille spillebrettet.*/
 		board = first;
 	}
 	
 	public void nextGeneration(){
-		/*Itererer gjennom board og bruker metoden countNeighbors() til å oppdatere en celles tilstand.*/
+		/*Itererer gjennom board og bruker metoden countNeighbors() til ï¿½ oppdatere en celles tilstand.*/
 		next = new byte[board.length][board[0].length];
 		for (int x = 1; x < (board.length-1); x++) {
 			  for (int y = 1; y < (board[x].length-1); y++) {
@@ -75,6 +75,18 @@ public class GameOfLifeModel {
 		neighbors -= board[x][y]; //Trekker fra cellens egen verdi: 0, eller 1.
 		return neighbors;
 	}
+	
+	//Lager et tomt spillebrett.
+		public byte[][] setCleanBoard(int x, int y){
+			byte[][] cleanBoard = new byte[x][y];
+			for (int i = 1; x < (board.length-1); x++) {
+				  for (int j = 1; y < (board[x].length-1); y++) {
+					  cleanBoard[i][j] = 0;
+				  }
+			}
+			return cleanBoard;
+		}
+
 	
 	public void setBoard(byte[][] boardArray) {
 		board = boardArray;
