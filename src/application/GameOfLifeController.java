@@ -15,6 +15,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXML;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.canvas.Canvas;
@@ -29,6 +30,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Button playButton;
 	@FXML private Button pauseButton;
 	@FXML private Button stopButton;
+	@FXML public ColorPicker colorPicker;
 	private GraphicsContext gc;
 	private GameOfLifeModel game;
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
@@ -46,6 +48,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		//game.setBoardSize(5);
 		game.setBoard(b);
 		gc = grid.getGraphicsContext2D();
+		colorPicker.setValue(Color.BLACK);
 		draw(gc);
 		timeLine();
 		game.nextGeneration();
@@ -104,10 +107,10 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		for (int i = 0; i < game.getBoard().length; i++) {
 			for (int j = 0; j < game.getBoard()[i].length; j++) {
 				if(game.getBoard()[i][j] == 1){
-					drawBox(i, j, Color.BLACK);
+					drawBox(i, j, colorPicker.getValue());
 				}
 				else  {
-					drawBox(i, j, Color.GRAY);
+					drawBox(i, j, Color.WHITE);
 				}
 				game.setCellSize(60);
 			}

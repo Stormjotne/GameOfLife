@@ -10,9 +10,9 @@
 
 <?import javafx.scene.paint.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameOfLifeController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="512.0" prefWidth="512.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameOfLifeController">
    <center>
-      <Canvas fx:id="grid" height="680.0" width="680.0" BorderPane.alignment="CENTER" />
+      <Canvas fx:id="grid" height="400.0" width="400.0" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
       <GridPane prefHeight="52.0" prefWidth="600.0" BorderPane.alignment="CENTER">
@@ -41,7 +41,7 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" top="5.0" />
                </padding>
             </Button>
-            <ColorPicker GridPane.columnIndex="3">
+            <ColorPicker fx:id="colorPicker" GridPane.columnIndex="3">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin></ColorPicker>
