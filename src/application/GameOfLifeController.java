@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -34,15 +36,18 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Button randomButton;
 	@FXML private Button cleanButton;
 	@FXML private Button fileChooserButton;
+	@FXML private Button fileByURLButton;
 	
 	@FXML public ColorPicker colorPicker;
 	private GraphicsContext gc;
 	private GameOfLifeModel game;
+	private GameOfLifePatternReader URLReader;
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(50), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		game = new GameOfLifeModel();
+		URLReader = new GameOfLifePatternReader();
 		gc = grid.getGraphicsContext2D();
 		colorPicker.setValue(Color.BLACK);
 		game.setCellSize(10);
@@ -70,6 +75,10 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
 		assert pauseButton != null : "fx:id=\"pauseButton\" No Pause Button Found.";
 		assert stopButton != null : "fx:id=\"stopButton\" No Stop Button Found.";
+		assert randomButton != null : "fx:id=\"randomButton\" No Random Button Found.";
+		assert cleanButton != null : "fx:id=\"cleanButton\" No Clean Button Found.";
+		assert fileChooserButton != null : "fx:id=\"fileChooserButton\" No Pattern From Drive Button Found.";
+		assert fileByURLButton != null : "fx:id=\"fileByURLButton\" No Pattern By URL Button Found.";
 		/*Button Logic*/
 		playButton.setOnAction((event) -> {
 			playButton();
@@ -79,6 +88,18 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		});
 		stopButton.setOnAction((event) -> {
 			stopButton();
+		});
+		randomButton.setOnAction((event) -> {
+			randomButton();
+		});
+		cleanButton.setOnAction((event) -> {
+			stopButton();
+		});
+		fileChooserButton.setOnAction((event) -> {
+			fileChooserButton();
+		});
+		fileByURLButton.setOnAction((event) -> {
+			fileByURLButton();
 		});
 	}
 	
@@ -103,6 +124,33 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	public void stopButton(){
 		animation.stop();
+	}
+	
+	public void randomButton(){
+		game.setRandomBoard(game.getBoardWidth(), game.getBoardHeight());
+	}
+	
+	public void cleanButton(){
+		game.setCleanBoard(game.getBoardWidth(), game.getBoardHeight());
+	}
+	
+	public void fileChooserButton(){
+		URLReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
+		try {
+			URLReader.downloadPattern();
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void fileByURLButton(){
+		URLReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
+		try {
+			URLReader.readFileFromURL();
+		} catch (IOException e) {
+			OutputStream yourOutputStream = null;
+			e.printStackTrace(new PrintStream(yourOutputStream));
+		}
 	}
 	/*****************************/
 	
@@ -137,6 +185,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public static void main(String[] args) {
 		
 		launch(args);
+		
 		
 	}
 }

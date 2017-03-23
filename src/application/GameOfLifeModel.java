@@ -3,7 +3,7 @@ package application;
 import java.util.Random;
 
 public class GameOfLifeModel {
-	public static int k = 10, m = 10;
+	public static int k = 80, m = 40;
 	public static byte[][] board = new byte[k][m];
 	public byte[][] next = new byte[k][m];
 	public byte[][] first = new byte[k][m];
@@ -112,12 +112,20 @@ public class GameOfLifeModel {
 		return board;
 	}
 	
-	public void setBoardSize(int Area){
+	public void setBoardWidth(int WIDTH){
+		k = WIDTH;
 	}
 	
-	public int getBoardSize(){
+	public void setBoardheight(int HEIGHT){
+		m = HEIGHT;
+	}
+	
+	public int getBoardWidth(){
 		return k;
-		/*return k*m;*/
+	}
+	
+	public int getBoardHeight(){
+		return m;
 	}
 	
 	protected void setCellSize(int cllsz) {
