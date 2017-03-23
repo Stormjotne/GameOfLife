@@ -3,7 +3,7 @@ package application;
 import java.util.Random;
 
 public class GameOfLifeModel {
-	public static int k = 5, m = 5;
+	public static int k = 10, m = 10;
 	public static byte[][] board = new byte[k][m];
 	public byte[][] next = new byte[k][m];
 	public byte[][] first = new byte[k][m];
@@ -14,14 +14,16 @@ public class GameOfLifeModel {
 		
 	public GameOfLifeModel(){
 		/** RANDOM ARRAY **/
-		Random ranNum = new Random();
+		/*Random ranNum = new Random();
 		for(int i = 0; i < board.length; i++){
 			
 			for(int j = 0; j < board[i].length; j++){
 				byte n = (byte)ranNum.nextInt(2);
 				board[i][j] = n;
 			}
-		}
+		}*/
+		setCleanBoard(k,m);
+		board[2][2] = 1;
 		/*** We need random in our lives ***/
 		first = board; // Arrayen 'first' er n� lik den f�rste instansen av spillebrettet.
 		System.out.println("Game made!");
@@ -90,6 +92,18 @@ public class GameOfLifeModel {
 	
 	public void setBoard(byte[][] boardArray) {
 		board = boardArray;
+	}
+	
+	public void changeSingleBoardValueToOne(int x, int y){
+		board[x][y] = 1;
+	}
+	
+	public void changeSingleBoardValueToZero(int x, int y){
+		board[x][y] = 0;
+	}
+	
+	public byte getSingleValue(int x, int y){
+		return board[x][y];
 	}
 	
 	public byte[][] getBoard(){
