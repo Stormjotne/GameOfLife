@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -37,16 +38,34 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML public ColorPicker colorPicker;
 	private GraphicsContext gc;
 	private GameOfLifeModel game;
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(50), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		game = new GameOfLifeModel();
 		gc = grid.getGraphicsContext2D();
 		colorPicker.setValue(Color.BLACK);
+		game.setCellSize(10);
 		draw(gc);
 		timeLine();
 		game.nextGeneration();
+		
+		/***** Mouse onClick logic ******
+		  Changes the location in the array on mouseclick and draws a new box
+		 */
+		grid.addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e) ->{
+			int x = (int)(e.getX()/game.getCellSize());
+			int y = (int)(e.getY()/game.getCellSize());
+			if(game.getSingleValue(x,y)==1){
+				game.changeSingleBoardValueToZero(x,y);
+				drawBox(x,y,Color.WHITE);
+			}
+			else { 
+				game.changeSingleBoardValueToOne(x,y);
+				drawBox(x,y,colorPicker.getValue());
+			}
+		});
+		/********************************/
 		
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
 		assert pauseButton != null : "fx:id=\"pauseButton\" No Pause Button Found.";
@@ -106,7 +125,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				else  {
 					drawBox(i, j, Color.WHITE);
 				}
-				game.setCellSize(10);
 			}
 		}
     }

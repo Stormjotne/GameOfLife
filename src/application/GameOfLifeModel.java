@@ -3,8 +3,8 @@ package application;
 import java.util.Random;
 
 public class GameOfLifeModel {
-	public final int k = 80, m = 40;
-	public byte[][] board = new byte[k][m];
+	public static int k = 10, m = 10;
+	public static byte[][] board = new byte[k][m];
 	public byte[][] next = new byte[k][m];
 	public byte[][] first = new byte[k][m];
 	private int cellSize;
@@ -13,11 +13,7 @@ public class GameOfLifeModel {
 	int state;
 		
 	public GameOfLifeModel(){
-		for(int i = 0; i < board.length; i++){
-			for(int j = 0; j < board[i].length; j++){
-				board[i][j] = 0;
-			}
-		}
+		setCleanBoard(k,m);
 		first = board; // Arrayen 'first' er n� lik den f�rste instansen av spillebrettet.
 		System.out.println("Game made!");
 		System.err.println("\n" + "Null pointer exeption:");
@@ -83,7 +79,7 @@ public class GameOfLifeModel {
 	}
 		
 	public byte[][] setRandomBoard(int x, int y){
-	/** Initializes an empty array to be represented by the game board. **/	
+	/** Initializes a random array to be represented by the game board. **/	
 		byte[][] randomBoard = new byte[x][y];
 		Random ranNum = new Random();
 		for (int i = 1; x < (board.length); x++) {
@@ -98,6 +94,18 @@ public class GameOfLifeModel {
 	
 	public void setBoard(byte[][] boardArray) {
 		board = boardArray;
+	}
+	
+	public void changeSingleBoardValueToOne(int x, int y){
+		board[x][y] = 1;
+	}
+	
+	public void changeSingleBoardValueToZero(int x, int y){
+		board[x][y] = 0;
+	}
+	
+	public byte getSingleValue(int x, int y){
+		return board[x][y];
 	}
 	
 	public byte[][] getBoard(){
