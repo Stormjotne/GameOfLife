@@ -30,6 +30,10 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Button playButton;
 	@FXML private Button pauseButton;
 	@FXML private Button stopButton;
+	@FXML private Button randomButton;
+	@FXML private Button cleanButton;
+	@FXML private Button fileChooserButton;
+	
 	@FXML public ColorPicker colorPicker;
 	private GraphicsContext gc;
 	private GameOfLifeModel game;
@@ -37,16 +41,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		byte[][] b = {
-				{ 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0 },
-				{ 0, 1, 1, 1, 0 },
-				{ 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0 }
-				};
 		game = new GameOfLifeModel();
-		//game.setBoardSize(5);
-		game.setBoard(b);
 		gc = grid.getGraphicsContext2D();
 		colorPicker.setValue(Color.BLACK);
 		draw(gc);
@@ -72,7 +67,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public void timeLine(){
 		animation.setAutoReverse(false);
         animation.setCycleCount(Timeline.INDEFINITE);
-        animation.play();
 	}
 	
 	public void run(){
@@ -112,7 +106,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				else  {
 					drawBox(i, j, Color.WHITE);
 				}
-				game.setCellSize(60);
+				game.setCellSize(10);
 			}
 		}
     }

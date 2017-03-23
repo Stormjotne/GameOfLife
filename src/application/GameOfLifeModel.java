@@ -3,8 +3,8 @@ package application;
 import java.util.Random;
 
 public class GameOfLifeModel {
-	public static int k = 5, m = 5;
-	public static byte[][] board = new byte[k][m];
+	public final int k = 80, m = 40;
+	public byte[][] board = new byte[k][m];
 	public byte[][] next = new byte[k][m];
 	public byte[][] first = new byte[k][m];
 	private int cellSize;
@@ -13,28 +13,23 @@ public class GameOfLifeModel {
 	int state;
 		
 	public GameOfLifeModel(){
-		/** RANDOM ARRAY **/
-		Random ranNum = new Random();
 		for(int i = 0; i < board.length; i++){
-			
 			for(int j = 0; j < board[i].length; j++){
-				byte n = (byte)ranNum.nextInt(2);
-				board[i][j] = n;
+				board[i][j] = 0;
 			}
 		}
-		/*** We need random in our lives ***/
 		first = board; // Arrayen 'first' er n� lik den f�rste instansen av spillebrettet.
 		System.out.println("Game made!");
 		System.err.println("\n" + "Null pointer exeption:");
 	}
 	
 	public void firstGeneration(){
-		/*Brukt for � tilbakestille spillebrettet.*/
+		/** Used to reset the game board. **/
 		board = first;
 	}
 	
 	public void nextGeneration(){
-		/*Itererer gjennom board og bruker metoden countNeighbors() til � oppdatere en celles tilstand.*/
+		/** Iterates through the board and updates the state of all cells using countNeighbors(). **/
 		next = new byte[board.length][board[0].length];
 		for (int x = 1; x < (board.length-1); x++) {
 			  for (int y = 1; y < (board[x].length-1); y++) {
@@ -64,7 +59,7 @@ public class GameOfLifeModel {
 	}
 	
 	public int countNeighbors(int x, int y){ 
-		/*Returnerer antall naboer til punktet (x,y)*/
+		/** Returns the number of live neighbors of the cell at location (x, y). **/
 		int neighbors = 0;
 		
 		for (int i = -1; i <= 1; i++) {
@@ -76,16 +71,29 @@ public class GameOfLifeModel {
 		return neighbors;
 	}
 	
-	//Lager et tomt spillebrett.
-		public byte[][] setCleanBoard(int x, int y){
-			byte[][] cleanBoard = new byte[x][y];
-			for (int i = 1; x < (board.length-1); x++) {
-				  for (int j = 1; y < (board[x].length-1); y++) {
-					  cleanBoard[i][j] = 0;
-				  }
-			}
-			return cleanBoard;
+	public byte[][] setCleanBoard(int x, int y){
+	/** Initializes an empty array to be represented by the game board. **/
+		byte[][] cleanBoard = new byte[x][y];
+		for (int i = 1; x < (board.length); x++) {
+			  for (int j = 1; y < (board[x].length); y++) {
+				  cleanBoard[i][j] = 0;
+			  }
 		}
+		return cleanBoard;
+	}
+		
+	public byte[][] setRandomBoard(int x, int y){
+	/** Initializes an empty array to be represented by the game board. **/	
+		byte[][] randomBoard = new byte[x][y];
+		Random ranNum = new Random();
+		for (int i = 1; x < (board.length); x++) {
+			  for (int j = 1; y < (board[x].length); y++) {
+				byte n = (byte)ranNum.nextInt(2);
+				randomBoard[i][j] = n;
+			}
+		}
+		return randomBoard;
+	}
 
 	
 	public void setBoard(byte[][] boardArray) {
@@ -97,8 +105,6 @@ public class GameOfLifeModel {
 	}
 	
 	public void setBoardSize(int Area){
-		k = Area;
-		m = k;
 	}
 	
 	public int getBoardSize(){
