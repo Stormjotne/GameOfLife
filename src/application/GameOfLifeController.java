@@ -27,6 +27,9 @@ import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
 
 
+/** 
+ * The controller class for the Game of Life application.
+ * */
 public class GameOfLifeController extends Application implements javafx.fxml.Initializable {
 	
 	@FXML private Canvas grid;
@@ -70,7 +73,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				drawBox(x,y,colorPicker.getValue());
 			}
 		});
-		/********************************/
 		
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
 		assert pauseButton != null : "fx:id=\"pauseButton\" No Pause Button Found.";
@@ -148,8 +150,8 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		try {
 			URLReader.readFileFromURL();
 		} catch (IOException e) {
-			OutputStream yourOutputStream = null;
-			e.printStackTrace(new PrintStream(yourOutputStream));
+			  System.err.printf ("Failed to read from url: " + URLReader.getPatternURL());
+			  e.printStackTrace ();
 		}
 	}
 	/*****************************/

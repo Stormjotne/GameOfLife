@@ -18,14 +18,17 @@ public class GameOfLifeModel {
 		System.out.println("Game made!");
 		System.err.println("\n" + "Null pointer exeption:");
 	}
-	
+
+	/** 
+	 * Resets the game board.
+	 * */
 	public void firstGeneration(){
-		/** Used to reset the game board. **/
 		board = first;
 	}
-	
+
+	/** Iterates through the board and updates the state of all cells using countNeighbors().
+	 * */
 	public void nextGeneration(){
-		/** Iterates through the board and updates the state of all cells using countNeighbors(). **/
 		next = new byte[board.length][board[0].length];
 		for (int x = 1; x < (board.length-1); x++) {
 			  for (int y = 1; y < (board[x].length-1); y++) {
@@ -53,9 +56,11 @@ public class GameOfLifeModel {
 		/*Oppdaterer spillebrettet.*/
 		board = next;
 	}
-	
+
+	/** 
+	 * Returns the number of live neighbors of the cell at location (x, y).
+	 * */
 	public int countNeighbors(int x, int y){ 
-		/** Returns the number of live neighbors of the cell at location (x, y). **/
 		int neighbors = 0;
 		
 		for (int i = -1; i <= 1; i++) {
@@ -66,9 +71,11 @@ public class GameOfLifeModel {
 		neighbors -= board[x][y]; //Trekker fra cellens egen verdi: 0, eller 1.
 		return neighbors;
 	}
-	
+
+	/**
+	 * Initializes an empty array to be represented by the game board.
+	 * */
 	public byte[][] setCleanBoard(int x, int y){
-	/** Initializes an empty array to be represented by the game board. **/
 		byte[][] cleanBoard = new byte[x][y];
 		for (int i = 1; x < (board.length); x++) {
 			  for (int j = 1; y < (board[x].length); y++) {
@@ -77,9 +84,11 @@ public class GameOfLifeModel {
 		}
 		return cleanBoard;
 	}
-		
+
+	/**
+	 * Initializes a random array to be represented by the game board.
+	 * */	
 	public byte[][] setRandomBoard(int x, int y){
-	/** Initializes a random array to be represented by the game board. **/	
 		byte[][] randomBoard = new byte[x][y];
 		Random ranNum = new Random();
 		for (int i = 1; x < (board.length); x++) {
