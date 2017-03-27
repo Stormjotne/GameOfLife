@@ -3,7 +3,7 @@ package application;
 import java.util.Random;
 
 public class GameOfLifeModel {
-	public static int k = 800, m = 800;
+	public static int k = 80, m = 80;
 	public static byte[][] board = new byte[k][m];
 	public byte[][] next = new byte[k][m];
 	public byte[][] first = new byte[k][m];
