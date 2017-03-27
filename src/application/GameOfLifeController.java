@@ -50,7 +50,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		URLReader = new GameOfLifePatternReader();
 		gc = grid.getGraphicsContext2D();
 		colorPicker.setValue(Color.BLACK);
-		game.setCellSize(10);
+		game.setCellSize(5);
 		draw(gc);
 		timeLine();
 		game.nextGeneration();

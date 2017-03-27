@@ -3,7 +3,7 @@ package application;
 import java.util.Random;
 
 public class GameOfLifeModel {
-	public static int k = 80, m = 40;
+	public static int k = 800, m = 800;
 	public static byte[][] board = new byte[k][m];
 	public byte[][] next = new byte[k][m];
 	public byte[][] first = new byte[k][m];
@@ -13,7 +13,7 @@ public class GameOfLifeModel {
 	int state;
 		
 	public GameOfLifeModel(){
-		setCleanBoard(k,m);
+		this.board = setRandomBoard(k,m);
 		first = board; // Arrayen 'first' er n� lik den f�rste instansen av spillebrettet.
 		System.out.println("Game made!");
 		System.err.println("\n" + "Null pointer exeption:");
@@ -70,8 +70,8 @@ public class GameOfLifeModel {
 	public byte[][] setCleanBoard(int x, int y){
 	/** Initializes an empty array to be represented by the game board. **/
 		byte[][] cleanBoard = new byte[x][y];
-		for (int i = 1; x < (board.length); x++) {
-			  for (int j = 1; y < (board[x].length); y++) {
+		for (int i = 1; i < (board.length); i++) {
+			  for (int j = 1; j < (board[0].length); j++) {
 				  cleanBoard[i][j] = 0;
 			  }
 		}
@@ -82,8 +82,8 @@ public class GameOfLifeModel {
 	/** Initializes a random array to be represented by the game board. **/	
 		byte[][] randomBoard = new byte[x][y];
 		Random ranNum = new Random();
-		for (int i = 1; x < (board.length); x++) {
-			  for (int j = 1; y < (board[x].length); y++) {
+		for (int i = 1; i < board.length; i++) {
+			  for (int j = 1; j < board[0].length; j++) {
 				byte n = (byte)ranNum.nextInt(2);
 				randomBoard[i][j] = n;
 			}
