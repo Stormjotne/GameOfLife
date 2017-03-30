@@ -40,23 +40,25 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Button cleanButton;
 	@FXML private Button fileChooserButton;
 	@FXML private Button fileByURLButton;
-	
 	@FXML public ColorPicker colorPicker;
+	
 	private GraphicsContext gc;
-	private GameOfLifeModel game;
+	public GameOfLifeModel game;
+	public GameOfLifeRules rules;
 	private GameOfLifePatternReader URLReader;
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(50), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		game = new GameOfLifeModel();
+		rules = new GameOfLifeRules();
 		URLReader = new GameOfLifePatternReader();
 		gc = grid.getGraphicsContext2D();
 		colorPicker.setValue(Color.BLACK);
 		game.setCellSize(10);
 		draw(gc);
 		timeLine();
-		game.nextGeneration();
+		rules.nextGeneration();
 		
 		/***** Mouse onClick logic ******
 		  Changes the location in the array on mouseclick and draws a new box
@@ -95,7 +97,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			randomButton();
 		});
 		cleanButton.setOnAction((event) -> {
-			stopButton();
+			cleanButton();
 		});
 		fileChooserButton.setOnAction((event) -> {
 			fileChooserButton();
@@ -113,7 +115,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	public void run(){
 		draw(gc);
-		game.nextGeneration();
+		rules.nextGeneration();
 	}
 	
 	public void playButton(){
@@ -129,11 +131,13 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void randomButton(){
-		game.setRandomBoard(game.getBoardWidth(), game.getBoardHeight());
+		game.setBoard(game.setRandomBoard(game.getBoardWidth(), game.getBoardHeight()));
+		draw(gc);
 	}
 	
 	public void cleanButton(){
-		game.setCleanBoard(game.getBoardWidth(), game.getBoardHeight());
+		game.setBoard(game.setCleanBoard(game.getBoardWidth(), game.getBoardHeight()));
+		draw(gc);
 	}
 	
 	public void fileChooserButton(){
