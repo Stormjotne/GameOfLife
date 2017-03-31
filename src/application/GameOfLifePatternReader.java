@@ -33,13 +33,16 @@ public class GameOfLifePatternReader {
 				int tempHEIGHT;
 				String tempNotHighLife;
 				if (fileRead.startsWith("#N")) {
-					tempName = fileRead.substring(2);
+					tempName = fileRead.substring(3);
+					System.out.println(tempName);
 				}
 				else if (fileRead.startsWith("#O")) {
-					tempOrigin = fileRead.substring(2);
+					tempOrigin = fileRead.substring(3);
+					System.out.println(tempOrigin);
 				}
-				else if (fileRead.startsWith("#C")|fileRead.startsWith("#c")) {
-					tempInformation = fileRead.substring(2);
+				else if (fileRead.startsWith("#C")) {
+					tempInformation = fileRead.substring(3);
+					System.out.println(tempInformation);
 				}
 				else if (fileRead.startsWith("#P")) {
 					
@@ -53,16 +56,20 @@ public class GameOfLifePatternReader {
 				else if (fileRead.startsWith("x")) {
 				
 				String[] tokenize = fileRead.split(", ");
-				tempWIDTH = Integer.parseInt(tokenize[0].substring(3));
-				tempHEIGHT = Integer.parseInt(tokenize[1].substring(3));
-				tempNotHighLife = tokenize[2].substring(6);
+				tempWIDTH = Integer.parseInt(tokenize[0].substring(4));
+				tempHEIGHT = Integer.parseInt(tokenize[1].substring(4));
+				tempNotHighLife = tokenize[2].substring(7);
+				System.out.println(tempWIDTH + tempHEIGHT + tempNotHighLife);
+				}
+				else {
+				//b = dead cell, o = alive cell, $ = end of line
+					
 				}
 				/* Create temporary object of Pattern */
-				GameOfLifePattern tempObj = new GameOfLifePattern(tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT);
+				//GameOfLifePattern tempObj = new GameOfLifePattern(tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT);
                 fileRead = br.readLine();
-                br.close();
 			}
-			
+            br.close();	
 		}
 		catch (FileNotFoundException fnfe)
         {

@@ -45,14 +45,14 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	private GraphicsContext gc;
 	public GameOfLifeModel game;
 	public GameOfLifeRules rules;
-	private GameOfLifePatternReader URLReader;
+	private GameOfLifePatternReader PatternReader;
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(50), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		game = new GameOfLifeModel();
 		rules = new GameOfLifeRules();
-		URLReader = new GameOfLifePatternReader();
+		PatternReader = new GameOfLifePatternReader();
 		gc = grid.getGraphicsContext2D();
 		colorPicker.setValue(Color.BLACK);
 		game.setCellSize(10);
@@ -100,7 +100,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			cleanButton();
 		});
 		fileChooserButton.setOnAction((event) -> {
-			fileChooserButton();
+			fileByURLButton();
 		});
 		fileByURLButton.setOnAction((event) -> {
 			fileByURLButton();
@@ -141,20 +141,31 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void fileChooserButton(){
-		URLReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
+		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
 		try {
-			URLReader.downloadPattern();
+			PatternReader.downloadPattern();
 		} catch (IOException e) {
-			System.out.println(e);
+			  System.err.printf ("Failed to read from local storage");
+			  e.printStackTrace ();
 		}
 	}
 	
-	public void fileByURLButton(){
-		URLReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
+	/*public void fileByURLButton(){
+		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
 		try {
-			URLReader.readFileFromURL();
+			PatternReader.readFileFromURL();
 		} catch (IOException e) {
 			  System.err.printf ("Failed to read from url: " + URLReader.getPatternURL());
+			  e.printStackTrace ();
+		}
+	}*/
+	
+	public void fileByURLButton(){
+		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
+		try {
+			PatternReader.readLocalFile();
+		} catch (IOException e) {
+			  System.err.printf ("Failed to read from local storage");
 			  e.printStackTrace ();
 		}
 	}
