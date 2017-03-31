@@ -7,12 +7,14 @@ public class GameOfLifePattern {
 	private int WIDTH;
 	private int HEIGHT;
 	private boolean notHighLife;
+	char[] charPlotPatternArray;
 	
-	public GameOfLifePattern(String patternName, String patternOrigin, String patternInformation, int WIDTH, int HEIGHT) {
+	public GameOfLifePattern(String patternName, String patternOrigin, String patternInformation, int WIDTH, int HEIGHT, char[] charPlotPatternArray) {
 		this.patternName = patternName;
 		this.patternOrigin = patternOrigin;
 		this.patternInformation = patternInformation;
 		this.WIDTH = WIDTH;
 		this.HEIGHT = HEIGHT;
+		this.charPlotPatternArray = charPlotPatternArray;
 	}
 }

@@ -13,6 +13,15 @@ public class GameOfLifePatternReader {
 	
 	public String userPatternURL;
 
+	String tempName;
+	String tempOrigin;
+	String tempInformation;
+	int tempWIDTH;
+	int tempHEIGHT;
+	String tempNotHighLife;
+	String tempPlotPattern;
+	char[] charPlotPatternArray;
+
 	public void GameOfLifePatternReader() {
 		
 	}
@@ -21,17 +30,11 @@ public class GameOfLifePatternReader {
 	 * Reads a single RLE file from local patterns folder.
 	 * Needs a lot of work.
 	 * */
-	public void readLocalFile() throws IOException {
+	public void readLocalFile(GameOfLifeModel game) throws IOException {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("patterns/glider.rle"));
 			String fileRead = br.readLine();
 			while (fileRead != null) {
-				String tempName;
-				String tempOrigin;
-				String tempInformation;
-				int tempWIDTH;
-				int tempHEIGHT;
-				String tempNotHighLife;
 				if (fileRead.startsWith("#N")) {
 					tempName = fileRead.substring(3);
 					System.out.println(tempName);
@@ -62,11 +65,14 @@ public class GameOfLifePatternReader {
 				System.out.println(tempWIDTH + tempHEIGHT + tempNotHighLife);
 				}
 				else {
+				//make a string with dead and alive cells to be transformed into an array
 				//b = dead cell, o = alive cell, $ = end of line
+					charPlotPatternArray = fileRead.toCharArray();
+					System.out.println(charPlotPatternArray);
 					
 				}
 				/* Create temporary object of Pattern */
-				//GameOfLifePattern tempObj = new GameOfLifePattern(tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT);
+				GameOfLifePattern tempObj = new GameOfLifePattern(tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, charPlotPatternArray);
                 fileRead = br.readLine();
 			}
             br.close();	
