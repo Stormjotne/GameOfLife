@@ -12,7 +12,7 @@ public class GameOfLifeModel {
 		
 	public GameOfLifeModel(){
 		board = setCleanBoard(k,m);
-		first = board; // Arrayen 'first' er n� lik den f�rste instansen av spillebrettet.
+		first = board;
 		System.out.println("Game made!");
 	}
 

@@ -100,7 +100,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			cleanButton();
 		});
 		fileChooserButton.setOnAction((event) -> {
-			fileByURLButton();
+			fileChooserButton();
 		});
 		fileByURLButton.setOnAction((event) -> {
 			fileByURLButton();
@@ -143,9 +143,22 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public void fileChooserButton(){
 		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
 		try {
+			//Downloads the specified file.
 			PatternReader.downloadPattern();
+			//Reads file and stores object.
+			PatternReader.readLocalFile(game);
 		} catch (IOException e) {
 			  System.err.printf ("Failed to read from local storage");
+			  e.printStackTrace ();
+		}
+	}
+	
+	public void fileByURLButton(){
+		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
+		try {
+			PatternReader.readFileFromURL();
+		} catch (IOException e) {
+			  System.err.printf ("Failed to read from url: " + PatternReader.getPatternURL());
 			  e.printStackTrace ();
 		}
 	}
@@ -153,23 +166,12 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	/*public void fileByURLButton(){
 		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
 		try {
-			PatternReader.readFileFromURL();
-		} catch (IOException e) {
-			  System.err.printf ("Failed to read from url: " + URLReader.getPatternURL());
-			  e.printStackTrace ();
-		}
-	}*/
-	
-	public void fileByURLButton(){
-		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
-		try {
 			PatternReader.readLocalFile(game);
 		} catch (IOException e) {
 			  System.err.printf ("Failed to read from local storage");
 			  e.printStackTrace ();
 		}
-	}
-	/*****************************/
+	}*/
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception{

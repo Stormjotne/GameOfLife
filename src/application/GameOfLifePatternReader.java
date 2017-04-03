@@ -12,13 +12,14 @@ import java.util.List;
 public class GameOfLifePatternReader {
 	
 	public String userPatternURL;
+	public String userPatternDirectory;
 
 	String tempName;
 	String tempOrigin;
 	String tempInformation;
 	int tempWIDTH;
 	int tempHEIGHT;
-	String tempNotHighLife;
+	String tempLifeRules;
 	String tempPlotPattern;
 	char[] charPlotPatternArray;
 
@@ -35,14 +36,17 @@ public class GameOfLifePatternReader {
 			BufferedReader br = new BufferedReader(new FileReader("patterns/glider.rle"));
 			String fileRead = br.readLine();
 			while (fileRead != null) {
+				//Name of Pattern
 				if (fileRead.startsWith("#N")) {
 					tempName = fileRead.substring(3);
 					System.out.println(tempName);
 				}
+				//Name of Creator
 				else if (fileRead.startsWith("#O")) {
 					tempOrigin = fileRead.substring(3);
 					System.out.println(tempOrigin);
 				}
+				//Comments, trivia about the pattern
 				else if (fileRead.startsWith("#C")) {
 					tempInformation = fileRead.substring(3);
 					System.out.println(tempInformation);
@@ -56,13 +60,14 @@ public class GameOfLifePatternReader {
 				else if (fileRead.startsWith("#r")) {
 					
 				}
+				//Size of pattern, and rules (Life or HighLife)
 				else if (fileRead.startsWith("x")) {
 				
 				String[] tokenize = fileRead.split(", ");
 				tempWIDTH = Integer.parseInt(tokenize[0].substring(4));
 				tempHEIGHT = Integer.parseInt(tokenize[1].substring(4));
-				tempNotHighLife = tokenize[2].substring(7);
-				System.out.println(tempWIDTH + tempHEIGHT + tempNotHighLife);
+				tempLifeRules = tokenize[2].substring(7);
+				System.out.println(tempWIDTH + tempHEIGHT + tempLifeRules);
 				}
 				else {
 				//make a string with dead and alive cells to be transformed into an array
@@ -71,11 +76,11 @@ public class GameOfLifePatternReader {
 					System.out.println(charPlotPatternArray);
 					
 				}
-				/* Create temporary object of Pattern */
-				GameOfLifePattern tempObj = new GameOfLifePattern(tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, charPlotPatternArray);
                 fileRead = br.readLine();
 			}
-            br.close();	
+            br.close();
+			/* Create temporary object of Pattern */
+			GameOfLifePattern tempObj = new GameOfLifePattern(tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
 		}
 		catch (FileNotFoundException fnfe)
         {
@@ -117,16 +122,37 @@ public class GameOfLifePatternReader {
         RLEReader.close();
 	}
 
-	/**  
+	/** 
+	 *  Sets the online location of the pattern. 
+	 *  Takes user input.
 	 * */
 	public void setPatternURL(String patternURL) {
 		userPatternURL = patternURL;
 	}
 
 	/** 
+	 * Gets the online location of the pattern.
+	 * Given by the user.
 	 * */
 	public String getPatternURL() {
 		String currentPatternURL = userPatternURL;
 		return currentPatternURL;
+	}
+	
+	/** 
+	 *  Sets the local location of the pattern directory. 
+	 *  Takes user input.
+	 * */
+	public void setPatternDirectory(String patternDirectory) {
+		userPatternDirectory = patternDirectory;
+	}
+
+	/** 
+	 * Gets the local location of the pattern driectory.
+	 * Given by the user.
+	 * */
+	public String getPatternDirectory() {
+		String currentPatternDirectory = userPatternDirectory;
+		return currentPatternDirectory;
 	}
 }
