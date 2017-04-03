@@ -29,4 +29,9 @@ public class GameOfLifePattern {
 		this.notHighLife = (lifeRules == "6B3/S23");
 		this.charPlotPatternArray = charPlotPatternArray;
 	}
+	
+	public String toString() {
+		String output = new String("Name: " + this.patternName + " | Origin: " + this.patternOrigin + " | Information: " + this.patternInformation + " | Width of Pattern: " + this.WIDTH + " | Height of Pattern: " + this.HEIGHT + " | Plot: ");
+		return output;
+	}
 }
