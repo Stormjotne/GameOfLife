@@ -13,6 +13,7 @@ public class GameOfLifePatternReader {
 	
 	public String userPatternURL;
 	public String userPatternDirectory;
+	public String userPatternName;
 
 	String tempName;
 	String tempOrigin;
@@ -28,28 +29,29 @@ public class GameOfLifePatternReader {
 	}
 	
 	/**
-	 * Reads a single RLE file from local patterns folder.
-	 * Needs a lot of work.
+	 * Reads a single RLE file and parses its contents into useful information about a Game of Life pattern.
+	 * The goal is for this method to be called by both remote and local file functions and successfully parse contents into Pattern objects.
+	 * Takes an instance of the Model class as its argument.
 	 * */
-	public void readLocalFile(GameOfLifeModel game) throws IOException {
+	public void parseFileToPatternObject(GameOfLifeModel game) throws IOException {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("patterns/glider.rle"));
+			BufferedReader br = new BufferedReader(new FileReader(userPatternDirectory + "glider.rle"));
 			String fileRead = br.readLine();
 			while (fileRead != null) {
 				//Name of Pattern
 				if (fileRead.startsWith("#N")) {
 					tempName = fileRead.substring(3);
-					System.out.println(tempName);
+					//System.out.println(tempName);
 				}
 				//Name of Creator
 				else if (fileRead.startsWith("#O")) {
 					tempOrigin = fileRead.substring(3);
-					System.out.println(tempOrigin);
+					//System.out.println(tempOrigin);
 				}
 				//Comments, trivia about the pattern
 				else if (fileRead.startsWith("#C")) {
 					tempInformation = fileRead.substring(3);
-					System.out.println(tempInformation);
+					//System.out.println(tempInformation);
 				}
 				else if (fileRead.startsWith("#P")) {
 					
@@ -67,20 +69,20 @@ public class GameOfLifePatternReader {
 				tempWIDTH = Integer.parseInt(tokenize[0].substring(4));
 				tempHEIGHT = Integer.parseInt(tokenize[1].substring(4));
 				tempLifeRules = tokenize[2].substring(7);
-				System.out.println(tempWIDTH + tempHEIGHT + tempLifeRules);
+				//System.out.println(tempWIDTH + tempHEIGHT + tempLifeRules);
 				}
 				else {
 				//make a string with dead and alive cells to be transformed into an array
 				//b = dead cell, o = alive cell, $ = end of line
 					charPlotPatternArray = fileRead.toCharArray();
-					System.out.println(charPlotPatternArray);
+					//System.out.println(charPlotPatternArray);
 					
 				}
                 fileRead = br.readLine();
 			}
             br.close();
-			/* Create temporary object of Pattern */
-			GameOfLifePattern tempObj = new GameOfLifePattern(tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
+			// Create temporary object of Pattern
+			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
 			tempObj.toString();
 		}
 		catch (FileNotFoundException fnfe)
@@ -100,13 +102,14 @@ public class GameOfLifePatternReader {
 	public void downloadPattern() throws IOException {
 		URL patternURL = new URL(userPatternURL);
 		ReadableByteChannel rbc = Channels.newChannel(patternURL.openStream());
-		File directory = new File(String.valueOf("patterns/"));
+		File directory = new File(String.valueOf(userPatternDirectory));
 			if (! directory.exists()){
 				directory.mkdir();
 			}
-		FileOutputStream fos = new FileOutputStream("patterns/glider.rle");
+		FileOutputStream fos = new FileOutputStream(userPatternDirectory + "glider.rle");
 		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         System.out.println("Pattern with filename: " + patternURL.getFile() + " has been copied to the local patterns folder.");
+        fos.close();
 	}
 
 	/**

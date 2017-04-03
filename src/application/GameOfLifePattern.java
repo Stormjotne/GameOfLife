@@ -6,6 +6,7 @@ package application;
  * General information is displayed in a separate box.
  * */
 public class GameOfLifePattern {
+	public GameOfLifeModel game;
 	private String patternName;
 	private String patternOrigin;
 	private String patternInformation;
@@ -19,7 +20,7 @@ public class GameOfLifePattern {
 	 * It takes Strings and parsed strings from the PatternReader as arguments, and stores the values.
 	 * Take note of the boolean variable notHighLife. If it returns true, the imported pattern is made for the normal version of Conway's Game of Life.
 	 * */
-	public GameOfLifePattern(String patternName, String patternOrigin, String patternInformation, int WIDTH, int HEIGHT, String lifeRules, char[] charPlotPatternArray) {
+	public GameOfLifePattern(GameOfLifeModel game, String patternName, String patternOrigin, String patternInformation, int WIDTH, int HEIGHT, String lifeRules, char[] charPlotPatternArray) {
 		this.patternName = patternName;
 		this.patternOrigin = patternOrigin;
 		this.patternInformation = patternInformation;
@@ -30,6 +31,13 @@ public class GameOfLifePattern {
 		this.charPlotPatternArray = charPlotPatternArray;
 	}
 	
+	/*public byte[][] constructPatternFromRLE() {
+		
+		
+		
+	}*/
+	
+	@Override
 	public String toString() {
 		String output = new String("Name: " + this.patternName + " | Origin: " + this.patternOrigin + " | Information: " + this.patternInformation + " | Width of Pattern: " + this.WIDTH + " | Height of Pattern: " + this.HEIGHT + " | Plot: ");
 		return output;

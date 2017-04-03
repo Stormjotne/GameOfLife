@@ -142,11 +142,12 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	public void fileChooserButton(){
 		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
+		PatternReader.setPatternDirectory("patterns/");
 		try {
 			//Downloads the specified file.
 			PatternReader.downloadPattern();
 			//Reads file and stores object.
-			PatternReader.readLocalFile(game);
+			PatternReader.parseFileToPatternObject(game);
 		} catch (IOException e) {
 			  System.err.printf ("Failed to read from local storage");
 			  e.printStackTrace ();
@@ -155,6 +156,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	public void fileByURLButton(){
 		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
+		PatternReader.setPatternDirectory("patterns/");
 		try {
 			PatternReader.readFileFromURL();
 		} catch (IOException e) {
