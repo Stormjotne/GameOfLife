@@ -21,7 +21,7 @@ public class GameOfLifePatternReader {
 	int tempWIDTH;
 	int tempHEIGHT;
 	String tempLifeRules;
-	String tempPlotPattern;
+	StringBuffer tempPlotPattern = new StringBuffer();
 	char[] charPlotPatternArray;
 
 	public void GameOfLifePatternReader() {
@@ -35,7 +35,7 @@ public class GameOfLifePatternReader {
 	 * */
 	public void parseFileToPatternObject(GameOfLifeModel game) throws IOException {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(userPatternDirectory + "glider.rle"));
+			BufferedReader br = new BufferedReader(new FileReader(userPatternDirectory + userPatternName + ".rle"));
 			String fileRead = br.readLine();
 			while (fileRead != null) {
 				//Name of Pattern
@@ -72,16 +72,17 @@ public class GameOfLifePatternReader {
 				//System.out.println(tempWIDTH + tempHEIGHT + tempLifeRules);
 				}
 				else {
-				//make a string with dead and alive cells to be transformed into an array
-				//b = dead cell, o = alive cell, $ = end of line
-				//The String is converted to an array of Characters, cut at the first instance of '!'
-				//charPlotPatternArray = (fileRead.substring(0, fileRead.indexOf("!"))).toCharArray();
-					charPlotPatternArray = fileRead.toCharArray();
-					//System.out.println(charPlotPatternArray);
+				//Append lines with RLE pattern coordinates to a StringBuffer
+					tempPlotPattern.append(fileRead);
 					
 				}
                 fileRead = br.readLine();
 			}
+			//The StringBuffer is converted to a String and then to an array of Characters
+			//The last Character should always be '!'
+			charPlotPatternArray = tempPlotPattern.toString().toCharArray();
+			System.out.println(charPlotPatternArray);
+			
             br.close();
 			// Create temporary object of Pattern
 			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
@@ -103,13 +104,13 @@ public class GameOfLifePatternReader {
 	 * Downloads a single file from user-specified URL and saves it to the specified directory.
 	 * */
 	public void downloadPattern() throws IOException {
-		URL patternURL = new URL(userPatternURL);
+		URL patternURL = new URL(userPatternURL + ".rle");
 		ReadableByteChannel rbc = Channels.newChannel(patternURL.openStream());
 		File directory = new File(String.valueOf(userPatternDirectory));
 			if (! directory.exists()){
 				directory.mkdir();
 			}
-		FileOutputStream fos = new FileOutputStream(userPatternDirectory + "glider.rle");
+		FileOutputStream fos = new FileOutputStream(userPatternDirectory + userPatternName + ".rle");
 		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         System.out.println("Pattern with filename: " + patternURL.getFile() + " has been copied to the local patterns folder.");
         fos.close();
@@ -119,7 +120,7 @@ public class GameOfLifePatternReader {
 	 * Reads a file from user-specified URL and prints it to the console line-by-line.
 	 * */
 	public void readFileFromURL() throws IOException {
-		URL patternURL = new URL(userPatternURL);
+		URL patternURL = new URL(userPatternURL + ".rle");
 		BufferedReader RLEReader = new BufferedReader(
 		new InputStreamReader(patternURL.openStream()));
 		String inputLine;
@@ -161,5 +162,21 @@ public class GameOfLifePatternReader {
 	public String getPatternDirectory() {
 		String currentPatternDirectory = userPatternDirectory;
 		return currentPatternDirectory;
+	}
+	/** 
+	 *  Sets the name of the pattern chosen by the user.
+	 *  Takes user input.
+	 * */
+	public void setPatternName(String patternName) {
+		userPatternName = patternName;
+	}
+
+	/** 
+	 * Gets the name of the user-defined pattern.
+	 * Given by the user.
+	 * */
+	public String getPatternName() {
+		String currentpatternName = userPatternName;
+		return currentpatternName;
 	}
 }

@@ -141,8 +141,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void fileChooserButton(){
-		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
+		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider");
 		PatternReader.setPatternDirectory("patterns/");
+		PatternReader.setPatternName("glider");
 		try {
 			//Downloads the specified file.
 			PatternReader.downloadPattern();

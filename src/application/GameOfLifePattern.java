@@ -87,29 +87,26 @@ public class GameOfLifePattern {
 						  counter++;
 					  }
 				  }
-				  else if(charPlotPatternArray[counter] == '!'){
-					  i = patternBoard[0].length-1;
-					  j = patternBoard.length-1;
-				  }
 				  
 				  /*else if(Character.isDigit(charPlotPatternArray[counter])){
 					  int internalCounter = Character.getNumericValue(charPlotPatternArray[counter]);
+					  System.out.println("Current internal counter:" + internalCounter);
 					  counter++;
 					  if(charPlotPatternArray[counter] == 'o'){
-						  for (int k = 1; k < internalCounter; k++){
+						  for (int k = 0; k < internalCounter; k++){
 							  patternBoard[i+k][j] = 1;
 						 }
-						 i+=internalCounter;
 					 }
 					  else {
-						  for (int k = 1; k < internalCounter; k++){
+						  for (int k = 0; k < internalCounter; k++){
 							  patternBoard[i+k][j] = 0;
 						  }
-						  i+=internalCounter;
 					  }
+				  }
+				  else if(charPlotPatternArray[counter] == '!'){
+					  i = patternBoard[0].length-1;
+					  j = patternBoard.length-1;
 				  }*/
-				  
-				 
 			  }
 		}
 		//game.setBoard(patternBoard);
