@@ -53,7 +53,18 @@ public class GameOfLifeModel {
 
 	
 	public void setBoard(byte[][] boardArray) {
-		board = boardArray;
+		byte[][] temporaryBoard = new byte[k][m];
+		for (int i = 0; i < (board.length); i++) {
+			  for (int j = 0; j < (board[0].length); j++) {
+				  temporaryBoard[i][j] = 0;
+			  }
+		}
+		for (int i = 1; i < (boardArray.length); i++) {
+			  for (int j = 1; j < (boardArray[0].length); j++) {
+				  temporaryBoard[i][j] = boardArray[i][j];
+			  }
+		}
+		board = temporaryBoard;
 	}
 	
 	public void changeSingleBoardValueToOne(int x, int y){

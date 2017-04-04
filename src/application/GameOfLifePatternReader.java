@@ -74,6 +74,8 @@ public class GameOfLifePatternReader {
 				else {
 				//make a string with dead and alive cells to be transformed into an array
 				//b = dead cell, o = alive cell, $ = end of line
+				//The String is converted to an array of Characters, cut at the first instance of '!'
+				//charPlotPatternArray = (fileRead.substring(0, fileRead.indexOf("!"))).toCharArray();
 					charPlotPatternArray = fileRead.toCharArray();
 					//System.out.println(charPlotPatternArray);
 					
@@ -83,6 +85,7 @@ public class GameOfLifePatternReader {
             br.close();
 			// Create temporary object of Pattern
 			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
+			game.setBoard(tempObj.constructPatternFromRLE());
 			tempObj.toString();
 		}
 		catch (FileNotFoundException fnfe)
