@@ -52,7 +52,7 @@ public class GameOfLifePattern {
 					  counter++;
 				  }
 				  
-				  else if(charPlotPatternArray[counter] == '2'){
+				  /*else if(charPlotPatternArray[counter] == '2'){
 					  counter++;
 					  if(charPlotPatternArray[counter] == 'o'){
 						  patternBoard[i][j] = 1;
@@ -86,27 +86,46 @@ public class GameOfLifePattern {
 						  patternBoard[i][j] = 0;
 						  counter++;
 					  }
-				  }
+				  }*/
 				  
-				  /*else if(Character.isDigit(charPlotPatternArray[counter])){
+				  else if(Character.isDigit(charPlotPatternArray[counter])){
 					  int internalCounter = Character.getNumericValue(charPlotPatternArray[counter]);
-					  System.out.println("Current internal counter:" + internalCounter);
 					  counter++;
+					  // Check if next char is also a digit.
+					  // If it is, concatenate it to the first with general desimal arithmetic.
+					  if(Character.isDigit(charPlotPatternArray[counter])){
+						  int internalDoubleDigitCounter = (internalCounter * 10) + Character.getNumericValue(charPlotPatternArray[counter]);
+						  System.out.println("Current internal counter:" + internalCounter);
+						  counter++;
+						  
+						  if(charPlotPatternArray[counter] == 'o'){
+							  for (int k = 0; k < internalDoubleDigitCounter; k++){
+								  patternBoard[i+k][j] = 1;
+							 }
+						 }
+						  else {
+							  for (int k = 0; k < internalDoubleDigitCounter; k++){
+								  patternBoard[i+k][j] = 0;
+							  }
+						  }
+					  }
 					  if(charPlotPatternArray[counter] == 'o'){
+						  System.out.println("Current internal counter:" + internalCounter);
 						  for (int k = 0; k < internalCounter; k++){
 							  patternBoard[i+k][j] = 1;
 						 }
 					 }
 					  else {
+						  System.out.println("Current internal counter:" + internalCounter);
 						  for (int k = 0; k < internalCounter; k++){
 							  patternBoard[i+k][j] = 0;
 						  }
 					  }
 				  }
 				  else if(charPlotPatternArray[counter] == '!'){
-					  i = patternBoard[0].length-1;
-					  j = patternBoard.length-1;
-				  }*/
+					  i = patternBoard[0].length;
+					  j = patternBoard.length;
+				  }
 			  }
 		}
 		//game.setBoard(patternBoard);
