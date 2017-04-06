@@ -27,7 +27,9 @@ import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
 
 
-/** 
+/**
+ * @author Ruby, Håkon & Julia
+ * @category
  * The controller class for the Game of Life application.
  * */
 public class GameOfLifeController extends Application implements javafx.fxml.Initializable {
@@ -141,9 +143,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void fileChooserButton(){
-		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider");
+		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/pulsar");
 		PatternReader.setPatternDirectory("patterns/");
-		PatternReader.setPatternName("glider");
+		PatternReader.setPatternName("pulsar");
 		try {
 			//Downloads the specified file.
 			PatternReader.downloadPattern();

@@ -1,6 +1,7 @@
 package application;
 /** 
- * This class is used to import information about a Game of Life pattern from RLE files.
+ * @author Ruby, Håkon & Julia
+ * @category This class is used to import information about a Game of Life pattern from RLE files.
  * The PatternReader class invokes an object of Pattern which holds key values extracted from the file.
  * The pattern is represented by the board using the size and plot coordinates.
  * General information is displayed in a separate box.
@@ -64,13 +65,14 @@ public class GameOfLifePattern {
 					  if(Character.isDigit(charPlotPatternArray[counter])){
 						  int internalDoubleDigitCounter = (internalCounter * 10) + Character.getNumericValue(charPlotPatternArray[counter]);
 						  counter++;
-						  System.out.println("Current internal counter: " + internalCounter);
+						  System.out.println("Current internal counter: " + internalDoubleDigitCounter);
 
 						  // Check if next char is 'o', add as many live cells as the internalCounter states.
 						  if(charPlotPatternArray[counter] == 'o'){
 							  for (int k = 0; k < internalDoubleDigitCounter; k++){
 								  patternBoard[i+k][j] = 1;
 							  }
+							  //i+=internalDoubleDigitCounter-(internalDoubleDigitCounter*2/3);
 							  i+=internalDoubleDigitCounter-2;
 						  }
 						  // Check if next char is 'b', add as many dead cells as the internalCounter states.
@@ -78,6 +80,7 @@ public class GameOfLifePattern {
 							  for (int k = 0; k < internalDoubleDigitCounter; k++){
 								  patternBoard[i+k][j] = 0;
 							  }
+							  //i+=internalDoubleDigitCounter-(internalDoubleDigitCounter*2/3);
 							  i+=internalDoubleDigitCounter-2;
 						  }
 						  // Check if next char is '$', skip as many lines as the internalCounter states.
@@ -87,11 +90,12 @@ public class GameOfLifePattern {
 						  }
 					  }
 					  // Check if next char is 'o', add as many live cells as the internalCounter states.
-					  if(charPlotPatternArray[counter] == 'o'){
+					  else if(charPlotPatternArray[counter] == 'o'){
 						  System.out.println("Current internal counter: " + internalCounter);
 						  for (int k = 0; k < internalCounter; k++){
 							  patternBoard[i+k][j] = 1;
 						  }
+						  //i+=internalCounter-(internalCounter*2/3);
 						  i+=internalCounter-2;
 					  }
 					  // Check if next char is 'b', add as many dead cells as the internalCounter states.

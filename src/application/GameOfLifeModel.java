@@ -1,7 +1,14 @@
 package application;
 
 import java.util.Random;
-
+/**
+ * 
+ * @author Ruby, Håkon & Julia
+ * @category
+ * This class contains data about the game board (arrays) and cells.
+ * 
+ * Class should be split into Board and Cell before we start working on extra assignments. 
+ */
 public class GameOfLifeModel {
 	public static int k = 80, m = 40;
 	public static byte[][] board = new byte[k][m];
@@ -25,6 +32,8 @@ public class GameOfLifeModel {
 
 	/**
 	 * Initializes an empty array to be represented by the game board.
+	 * @param x : the width of the board.
+	 * @param y : the height of the board.
 	 * */
 	public byte[][] setCleanBoard(int x, int y){
 		byte[][] cleanBoard = new byte[x][y];
@@ -38,6 +47,8 @@ public class GameOfLifeModel {
 
 	/**
 	 * Initializes a random array to be represented by the game board.
+	 * @param x : the width of the board.
+	 * @param y : the height of the board.
 	 * */	
 	public byte[][] setRandomBoard(int x, int y){
 		byte[][] randomBoard = new byte[x][y];
@@ -51,7 +62,13 @@ public class GameOfLifeModel {
 		return randomBoard;
 	}
 
-	
+	/**
+	 * Initializes a array which incorporates any lesser user-defined arrays.
+	 * Useful for importing existing GoL patterns.
+	 * Used in the PatternReader class to modify the game board with information parsed from RLE files.
+	 * @param boardArray : any two-dimensional array lesser than the current board's width and height.
+	 * Pattern.constructPatternFromRLE() returns such an array from RLE files.
+	 */
 	public void setBoard(byte[][] boardArray) {
 		byte[][] temporaryBoard = new byte[k][m];
 		for (int i = 0; i < (board.length); i++) {
