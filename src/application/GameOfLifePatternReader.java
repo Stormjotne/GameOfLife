@@ -87,7 +87,6 @@ public class GameOfLifePatternReader {
 			// Create temporary object of Pattern
 			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
 			game.setBoard(tempObj.constructPatternFromRLE());
-			tempObj.toString();
 		}
 		catch (FileNotFoundException fnfe)
         {

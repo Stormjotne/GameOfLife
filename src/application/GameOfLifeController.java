@@ -46,7 +46,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public GameOfLifeModel game;
 	public GameOfLifeRules rules;
 	private GameOfLifePatternReader PatternReader;
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(167), e -> run()));
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
