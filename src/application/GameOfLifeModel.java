@@ -76,8 +76,8 @@ public class GameOfLifeModel {
 				  temporaryBoard[i][j] = 0;
 			  }
 		}
-		for (int i = 1; i < (boardArray.length); i++) {
-			  for (int j = 1; j < (boardArray[0].length); j++) {
+		for (int i = 0; i < (boardArray.length); i++) {
+			  for (int j = 0; j < (boardArray[0].length); j++) {
 				  temporaryBoard[i][j] = boardArray[i][j];
 			  }
 		}

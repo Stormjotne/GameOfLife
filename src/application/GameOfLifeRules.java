@@ -14,7 +14,10 @@ public class GameOfLifeRules extends GameOfLifeModel {
 		neighbors = 0;
 		for (int i = -1; i <= 1; i++) {
 			  for (int j = -1; j <= 1; j++) {
-			    neighbors += super.getBoard()[(x+i)][(y+j)]; //Legger sammen naboenes tilstander: 0, eller 1.
+				// Sums the neighbors' states, which are 0 or 1.
+				// Executes a modulus operation to achieve wrap-around, 
+				// i.e. the cells on the top count as neighbors for the bottom cells, and the cells to the left are neighbors to the rightmost cells.
+			    neighbors += super.getBoard()[(x+i+(super.getBoard().length))%(super.getBoard().length)][(y+j+(super.getBoard()[x].length))%(super.getBoard()[x].length)];
 			   }
 			}
 		neighbors -= super.getBoard()[x][y]; //Trekker fra cellens egen verdi: 0, eller 1.
@@ -26,8 +29,8 @@ public class GameOfLifeRules extends GameOfLifeModel {
 	 * */
 	public void nextGeneration(){
 		nextBoard = new byte[board.length][board[0].length];
-		for (int x = 1; x < (super.getBoard().length-1); x++) {
-			  for (int y = 1; y < (super.getBoard()[x].length-1); y++) {
+		for (int x = 0; x < (super.getBoard().length); x++) {
+			  for (int y = 0; y < (super.getBoard()[x].length); y++) {
 				  	int neighbors2 = countNeighbors(x,y);
 					
 					if ((super.getBoard()[x][y] == 1)&&(neighbors2 < 2)){

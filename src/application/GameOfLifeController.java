@@ -48,7 +48,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public GameOfLifeModel game;
 	public GameOfLifeRules rules;
 	private GameOfLifePatternReader PatternReader;
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(50), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -143,9 +143,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void fileChooserButton(){
-		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/pulsar");
+		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider");
 		PatternReader.setPatternDirectory("patterns/");
-		PatternReader.setPatternName("pulsar");
+		PatternReader.setPatternName("glider");
 		try {
 			//Downloads the specified file.
 			PatternReader.downloadPattern();
@@ -155,6 +155,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			  System.err.printf ("Failed to read from local storage");
 			  e.printStackTrace ();
 		}
+		draw(gc);
 	}
 	
 	public void fileByURLButton(){
@@ -166,6 +167,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			  System.err.printf ("Failed to read from url: " + PatternReader.getPatternURL());
 			  e.printStackTrace ();
 		}
+		draw(gc);
 	}
 	
 	/*public void fileByURLButton(){
