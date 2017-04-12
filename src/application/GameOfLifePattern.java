@@ -1,10 +1,10 @@
 package application;
 /** 
- * @author Ruby, Håkon & Julia
- * @category This class is used to import information about a Game of Life pattern from RLE files.
+ * This class is used to import information about a Game of Life pattern from RLE files.
  * The PatternReader class invokes an object of Pattern which holds key values extracted from the file.
  * The pattern is represented by the board using the size and plot coordinates.
  * General information is displayed in a separate box.
+ * @author Ruby & Håkon
  * */
 public class GameOfLifePattern {
 	public GameOfLifeModel game;

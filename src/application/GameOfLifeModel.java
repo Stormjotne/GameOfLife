@@ -3,11 +3,9 @@ package application;
 import java.util.Random;
 /**
  * 
- * @author Ruby, Håkon & Julia
- * @category
  * This class contains data about the game board (arrays) and cells.
- * 
  * Class should be split into Board and Cell before we start working on extra assignments. 
+ * @author Ruby, Håkon & Julia
  */
 public class GameOfLifeModel {
 	public static int k = 80, m = 40;

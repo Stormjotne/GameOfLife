@@ -32,6 +32,7 @@ public class GameOfLifePatternReader {
 	 * Reads a single RLE file and parses its contents into useful information about a Game of Life pattern.
 	 * The goal is for this method to be called by both remote and local file functions and successfully parse contents into Pattern objects.
 	 * Takes an instance of the Model class as its argument.
+	 * @author Ruby
 	 * */
 	public void parseFileToPatternObject(GameOfLifeModel game) throws IOException {
 		try {

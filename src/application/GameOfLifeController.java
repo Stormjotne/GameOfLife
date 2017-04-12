@@ -6,9 +6,11 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -25,12 +27,15 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 
 /**
- * @author Ruby, Håkon & Julia
- * @category
  * The controller class for the Game of Life application.
+ * @author Ruby, Håkon & Julia
  * */
 public class GameOfLifeController extends Application implements javafx.fxml.Initializable {
 	
