@@ -53,6 +53,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public GameOfLifeModel game;
 	public GameOfLifeRules rules;
 	private GameOfLifePatternReader PatternReader;
+	final FileChooser fileChooser = new FileChooser();
+	FileChooser.ExtensionFilter extentionFilter = new FileChooser.ExtensionFilter("RLE files (*.rle)", "*.rle");
+	File defaultDirectory = new File("patterns/");
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(50), e -> run()));
 	
 	@Override
@@ -148,26 +151,30 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void fileChooserButton(){
-		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider");
-		PatternReader.setPatternDirectory("patterns/");
-		PatternReader.setPatternName("glider");
 		try {
-			//Downloads the specified file.
-			PatternReader.downloadPattern();
-			//Reads file and stores object.
-			PatternReader.parseFileToPatternObject(game);
+			fileChooser.setInitialDirectory(defaultDirectory);
+			File file = fileChooser.showOpenDialog(null);
+			if (file != null) {
+				//Reads file and stores object.
+				PatternReader.parseFileToPatternObject(game, file);
+			}
 		} catch (IOException e) {
-			  System.err.printf ("Failed to read from local storage");
+			  System.err.printf ("Failed to read from local storage.");
 			  e.printStackTrace ();
 		}
 		draw(gc);
 	}
 	
 	public void fileByURLButton(){
-		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
+		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider");
 		PatternReader.setPatternDirectory("patterns/");
+		PatternReader.setPatternName("glider");
 		try {
-			PatternReader.readFileFromURL();
+			
+			//Downloads the specified file.
+			PatternReader.downloadPattern();
+			//Reads file and stores object.
+			//PatternReader.parseFileToPatternObject(game);
 		} catch (IOException e) {
 			  System.err.printf ("Failed to read from url: " + PatternReader.getPatternURL());
 			  e.printStackTrace ();

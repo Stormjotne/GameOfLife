@@ -34,9 +34,9 @@ public class GameOfLifePatternReader {
 	 * Takes an instance of the Model class as its argument.
 	 * @author Ruby
 	 * */
-	public void parseFileToPatternObject(GameOfLifeModel game) throws IOException {
+	public void parseFileToPatternObject(GameOfLifeModel game, File rle) throws IOException {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(userPatternDirectory + userPatternName + ".rle"));
+			BufferedReader br = new BufferedReader(new FileReader(rle.getAbsolutePath()));
 			String fileRead = br.readLine();
 			while (fileRead != null) {
 				//Name of Pattern
