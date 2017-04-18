@@ -156,14 +156,15 @@ public class GameOfLifePattern {
 				  }*/
 			  }
 		}
-		//game.setBoard(patternBoard);
+		//setBoard is invoked from the reader instead.
+		/*game.setBoard(patternBoard);*/
 		return patternBoard;
 	}
 	
 	public void printArray(byte[][] x){
 		for (int i = 0; i < (x.length); i++) {
 			  for (int j = 0; j < (x[0].length); j++) {
-				  System.out.println(x[i][j]);
+				  System.out.print(x[i][j]);
 			  }
 		}
 	}

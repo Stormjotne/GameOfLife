@@ -87,7 +87,10 @@ public class GameOfLifePatternReader {
             br.close();
 			// Create temporary object of Pattern
 			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
+			// Constructs a new board / array with information from the Pattern Object.
 			game.setBoard(tempObj.constructPatternFromRLE());
+			//Reset StringBuffer for the coordinate plot.
+			tempPlotPattern.setLength(0);
 		}
 		catch (FileNotFoundException fnfe)
         {
@@ -101,7 +104,7 @@ public class GameOfLifePatternReader {
 	}
 	
 	/**
-	 * Downloads a single file from user-specified URL and saves it to the specified directory.
+	 * Downloads a single rle-file from user-specified URL and saves it to the specified directory.
 	 * */
 	public void downloadPattern() throws IOException {
 		URL patternURL = new URL(userPatternURL + ".rle");
@@ -117,7 +120,7 @@ public class GameOfLifePatternReader {
 	}
 
 	/**
-	 * Reads a file from user-specified URL and prints it to the console line-by-line.
+	 * Reads a rle-file from user-specified URL and prints it to the console line-by-line.
 	 * */
 	public void readFileFromURL() throws IOException {
 		URL patternURL = new URL(userPatternURL + ".rle");
