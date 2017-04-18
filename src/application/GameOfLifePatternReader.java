@@ -102,12 +102,84 @@ public class GameOfLifePatternReader {
             ioe.printStackTrace();
         }
 	}
-	
+	/**
+	 * Reads a rle-file from user-specified URL and prints it to the console line-by-line.
+	 * */
+	public void parseURLToPatternObject(GameOfLifeModel game) throws IOException {
+		try {
+			URL patternURL = new URL(userPatternURL);
+			BufferedReader RLEReader = new BufferedReader(
+					new InputStreamReader(patternURL.openStream()));
+			String fileRead = RLEReader.readLine();
+			while (fileRead != null) {
+				//Name of Pattern
+				if (fileRead.startsWith("#N")) {
+					tempName = fileRead.substring(3);
+					//System.out.println(tempName);
+				}
+				//Name of Creator
+				else if (fileRead.startsWith("#O")) {
+					tempOrigin = fileRead.substring(3);
+					//System.out.println(tempOrigin);
+				}
+				//Comments, trivia about the pattern
+				else if (fileRead.startsWith("#C")) {
+					tempInformation = fileRead.substring(3);
+					//System.out.println(tempInformation);
+				}
+				else if (fileRead.startsWith("#P")) {
+					
+				}
+				else if (fileRead.startsWith("#R")) {
+					
+				}
+				else if (fileRead.startsWith("#r")) {
+					
+				}
+				//Size of pattern, and rules (Life or HighLife)
+				else if (fileRead.startsWith("x")) {
+			
+					String[] tokenize = fileRead.split(", ");
+					tempWIDTH = Integer.parseInt(tokenize[0].substring(4));
+					tempHEIGHT = Integer.parseInt(tokenize[1].substring(4));
+					tempLifeRules = tokenize[2].substring(7);
+					//System.out.println(tempWIDTH + tempHEIGHT + tempLifeRules);
+				}
+				else {
+					//Append lines with RLE pattern coordinates to a StringBuffer
+					tempPlotPattern.append(fileRead);
+				
+				}
+				fileRead = RLEReader.readLine();
+			}
+			//The StringBuffer is converted to a String and then to an array of Characters
+			//The last Character should always be '!'
+			charPlotPatternArray = tempPlotPattern.toString().toCharArray();
+			System.out.println(charPlotPatternArray);
+			
+			RLEReader.close();
+			// Create temporary object of Pattern
+			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
+			// Constructs a new board / array with information from the Pattern Object.
+			game.setBoard(tempObj.constructPatternFromRLE());
+			//Reset StringBuffer for the coordinate plot.
+			tempPlotPattern.setLength(0);
+		}
+		catch (FileNotFoundException fnfe)
+        {
+            System.out.println("file not found");
+        }
+
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+        }
+	}
 	/**
 	 * Downloads a single rle-file from user-specified URL and saves it to the specified directory.
 	 * */
 	public void downloadPattern() throws IOException {
-		URL patternURL = new URL(userPatternURL + ".rle");
+		URL patternURL = new URL(userPatternURL);
 		ReadableByteChannel rbc = Channels.newChannel(patternURL.openStream());
 		File directory = new File(String.valueOf(userPatternDirectory));
 			if (! directory.exists()){
@@ -118,21 +190,6 @@ public class GameOfLifePatternReader {
         System.out.println("Pattern with filename: " + patternURL.getFile() + " has been copied to the local patterns folder.");
         fos.close();
 	}
-
-	/**
-	 * Reads a rle-file from user-specified URL and prints it to the console line-by-line.
-	 * */
-	public void readFileFromURL() throws IOException {
-		URL patternURL = new URL(userPatternURL + ".rle");
-		BufferedReader RLEReader = new BufferedReader(
-		new InputStreamReader(patternURL.openStream()));
-		String inputLine;
-        while ((inputLine = RLEReader.readLine()) != null) {
-            System.out.println(inputLine);
-        }
-        RLEReader.close();
-	}
-
 	/** 
 	 *  Sets the online location of the pattern. 
 	 *  Takes user input.
@@ -140,7 +197,6 @@ public class GameOfLifePatternReader {
 	public void setPatternURL(String patternURL) {
 		userPatternURL = patternURL;
 	}
-
 	/** 
 	 * Gets the online location of the pattern.
 	 * Given by the user.
@@ -149,7 +205,6 @@ public class GameOfLifePatternReader {
 		String currentPatternURL = userPatternURL;
 		return currentPatternURL;
 	}
-	
 	/** 
 	 *  Sets the local location of the pattern directory. 
 	 *  Takes user input.
@@ -157,9 +212,8 @@ public class GameOfLifePatternReader {
 	public void setPatternDirectory(String patternDirectory) {
 		userPatternDirectory = patternDirectory;
 	}
-
 	/** 
-	 * Gets the local location of the pattern driectory.
+	 * Gets the local location of the pattern directory.
 	 * Given by the user.
 	 * */
 	public String getPatternDirectory() {
@@ -173,7 +227,6 @@ public class GameOfLifePatternReader {
 	public void setPatternName(String patternName) {
 		userPatternName = patternName;
 	}
-
 	/** 
 	 * Gets the name of the user-defined pattern.
 	 * Given by the user.

@@ -20,8 +20,10 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -166,31 +168,27 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void fileByURLButton(){
-		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider");
-		PatternReader.setPatternDirectory("patterns/");
-		PatternReader.setPatternName("glider");
-		try {
-			
-			//Downloads the specified file.
-			PatternReader.downloadPattern();
-			//Reads file and stores object.
-			//PatternReader.parseFileToPatternObject(game);
-		} catch (IOException e) {
-			  System.err.printf ("Failed to read from url: " + PatternReader.getPatternURL());
-			  e.printStackTrace ();
-		}
-		draw(gc);
+		TextInputDialog defaultURLInput = new TextInputDialog("http://www.conwaylife.com/patterns/glider.rle");
+		defaultURLInput.setTitle("URL Input Dialog");
+		defaultURLInput.setHeaderText("Load your favorite GoL Pattern.");
+		defaultURLInput.setContentText("Enter URL:");
+		defaultURLInput.showAndWait()
+		//Cancelling dialog throws MalformedURL exception.
+			.ifPresent(urlinput -> PatternReader.setPatternURL(urlinput));
+		//PatternReader.setPatternDirectory("patterns/");
+		//PatternReader.setPatternName("glider");
+			try {
+		
+				//Downloads the specified file.
+				PatternReader.parseURLToPatternObject(game);
+				//Reads file and stores object.
+				//PatternReader.parseFileToPatternObject(game);
+			} catch (IOException e) {
+				System.err.printf ("Failed to read from url: " + PatternReader.getPatternURL());
+				e.printStackTrace ();
+			}
+			draw(gc);
 	}
-	
-	/*public void fileByURLButton(){
-		PatternReader.setPatternURL("http://www.conwaylife.com/patterns/glider.rle");
-		try {
-			PatternReader.readLocalFile(game);
-		} catch (IOException e) {
-			  System.err.printf ("Failed to read from local storage");
-			  e.printStackTrace ();
-		}
-	}*/
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception{

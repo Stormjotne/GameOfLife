@@ -34,7 +34,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="playButton" mnemonicParsing="false" text="Play">
+            <Button fx:id="playButton" defaultButton="true" mnemonicParsing="false" text="Play">
                <padding>
                   <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                </padding></Button>
@@ -50,8 +50,7 @@
             </Button>
             <Button fx:id="randomButton" mnemonicParsing="false" text="Random" GridPane.columnIndex="3" />
             <Button fx:id="cleanButton" mnemonicParsing="false" text="Clean" GridPane.columnIndex="4" />
-            <Button fx:id="fileChooserButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="124.0" text="Pattern From Drive" GridPane.columnIndex="5" />
-            <Button fx:id="fileByURLButton" mnemonicParsing="false" text="Pattern From URL" GridPane.columnIndex="6" />
+            <Button fx:id="fileChooserButton" mnemonicParsing="false" text="Pattern From Drive" GridPane.columnIndex="5" />
             <ColorPicker fx:id="colorPicker" GridPane.columnIndex="7">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
@@ -73,7 +72,7 @@
                   </TextField>
                </children>
             </GridPane>
-            <Button mnemonicParsing="false" text="Pattern From URL" GridPane.columnIndex="6" />
+            <Button fx:id="fileByURLButton" mnemonicParsing="false" text="Pattern From URL" GridPane.columnIndex="6" />
          </children>
       </GridPane>
    </bottom>

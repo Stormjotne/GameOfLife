@@ -9,7 +9,7 @@ public class GameOfLifeRules extends GameOfLifeModel {
 	
 	/**
 	 * Counts neighbors around a x,y coordinate and returns an integer.
-	 * @param 
+	 * @param  
 	 * @author Ruby, Håkon & Julia
 	 * */
 	public int countNeighbors(int x, int y){ 
