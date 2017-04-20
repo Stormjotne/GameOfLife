@@ -1,5 +1,7 @@
 package application;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import java.nio.*;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -23,6 +25,7 @@ public class GameOfLifePatternReader {
 	String tempLifeRules;
 	StringBuffer tempPlotPattern = new StringBuffer();
 	char[] charPlotPatternArray;
+	Alert fileNotFoundAlert = new Alert(AlertType.ERROR);
 
 	public void GameOfLifePatternReader() {
 		
@@ -169,12 +172,11 @@ public class GameOfLifePatternReader {
 		}
 		catch (FileNotFoundException fnfe)
         {
+			fileNotFoundAlert.setTitle("Error");
+			fileNotFoundAlert.setHeaderText("File not found");
+			fileNotFoundAlert.setContentText("The path you specified did not contain a .rle file");
+			fileNotFoundAlert.showAndWait();
             System.out.println("file not found");
-        }
-
-        catch (IOException ioe)
-        {
-            ioe.printStackTrace();
         }
 	}
 	/**

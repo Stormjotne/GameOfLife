@@ -24,10 +24,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -63,6 +65,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	final FileChooser fileChooser = new FileChooser();
 	FileChooser.ExtensionFilter extentionFilter = new FileChooser.ExtensionFilter("RLE files (*.rle)", "*.rle");
 	File defaultDirectory = new File("patterns/");
+	Alert malformedURLAlert = new Alert(AlertType.ERROR);
 	int timing = 120;
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
 	
@@ -212,7 +215,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 
         Optional<String> result = defaultURLInput.showAndWait();
         	try {
-				if (result.isPresent() && result.get().endsWith(".rle)")) {
+				if (result.isPresent() /*&& result.get().endsWith(".rle)")*/) {
 		            System.out.println("Result present => OK was pressed");
 		            System.out.println("Result: " + result.get());
 		            PatternReader.setPatternURL(result.get());
@@ -223,8 +226,11 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				//Reads file and stores object.
 				//PatternReader.parseFileToPatternObject(game);
 			} catch (IOException e) {
+				malformedURLAlert.setTitle("Error");
+				malformedURLAlert.setHeaderText("Path not found.");
+				malformedURLAlert.setContentText("The URL you specified did not contain a .rle file");
+				malformedURLAlert.showAndWait();
 				System.err.printf ("Failed to read from url: " + PatternReader.getPatternURL());
-				e.printStackTrace ();
 			}
 			draw(gc);
 	}
