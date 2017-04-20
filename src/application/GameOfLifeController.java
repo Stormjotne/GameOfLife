@@ -1,6 +1,7 @@
 package application; /*       MY VERSION        */
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
@@ -58,7 +60,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	final FileChooser fileChooser = new FileChooser();
 	FileChooser.ExtensionFilter extentionFilter = new FileChooser.ExtensionFilter("RLE files (*.rle)", "*.rle");
 	File defaultDirectory = new File("patterns/");
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(50), e -> run()));
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(40), e -> run()));
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -86,6 +88,15 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				game.changeSingleBoardValueToOne(x,y);
 				drawBox(x,y,colorPicker.getValue());
 			}
+		});
+		
+		grid.addEventHandler(MouseEvent.MOUSE_DRAGGED,(MouseEvent e) ->{
+			int x = (int)(e.getX()/game.getCellSize());
+			int y = (int)(e.getY()/game.getCellSize());
+			
+				game.changeSingleBoardValueToOne(x,y);
+				drawBox(x,y,colorPicker.getValue());
+			
 		});
 		
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
@@ -172,15 +183,30 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		defaultURLInput.setTitle("URL Input Dialog");
 		defaultURLInput.setHeaderText("Load your favorite GoL Pattern.");
 		defaultURLInput.setContentText("Enter URL:");
-		defaultURLInput.showAndWait()
-		//Cancelling dialog throws MalformedURL exception.
-			.ifPresent(urlinput -> PatternReader.setPatternURL(urlinput));
-		//PatternReader.setPatternDirectory("patterns/");
-		//PatternReader.setPatternName("glider");
-			try {
+		/*defaultURLInput.showAndWait();
+		.ifPresent(urlinput -> {
+			if (urlinput == ButtonType.OK) {
+			PatternReader.setPatternURL(urlinput);
+			}
+		});*/
+		final Button cancel = (Button) defaultURLInput.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancel.addEventFilter(ActionEvent.ACTION, event ->
+            System.out.println("Cancel was definitely pressed")
+        );
+
+        Optional<String> result = defaultURLInput.showAndWait();
+        
 		
-				//Downloads the specified file.
-				PatternReader.parseURLToPatternObject(game);
+		
+			try {
+				if (result.isPresent()) {
+		            System.out.println("Result present => OK was pressed");
+		            System.out.println("Result: " + result.get());
+		            PatternReader.setPatternURL(result.get());
+		            PatternReader.parseURLToPatternObject(game);
+		        } else {
+		            System.out.println("Result not present => Cancel might have been pressed");
+		        }    
 				//Reads file and stores object.
 				//PatternReader.parseFileToPatternObject(game);
 			} catch (IOException e) {

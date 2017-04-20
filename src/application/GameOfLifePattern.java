@@ -36,7 +36,7 @@ public class GameOfLifePattern {
 	public byte[][] constructPatternFromRLE() {
 		  System.out.println("Pattern Width: " + this.WIDTH + " Pattern Height: " + this.HEIGHT);
 		patternBoard = new byte[WIDTH+2][HEIGHT+2];
-		  System.out.println(patternBoard.length);
+		  System.out.println("Array Width: " + patternBoard.length);
 		int counter = 0;
 		//b = dead cell, o = alive cell, $ = end of line
 		//i and j = 1 to avoid the edges.
