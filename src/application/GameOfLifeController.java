@@ -212,13 +212,13 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 
         Optional<String> result = defaultURLInput.showAndWait();
         	try {
-				if (result.isPresent()) {
+				if (result.isPresent() && result.get().endsWith(".rle)")) {
 		            System.out.println("Result present => OK was pressed");
 		            System.out.println("Result: " + result.get());
 		            PatternReader.setPatternURL(result.get());
 		            PatternReader.parseURLToPatternObject(game);
 		        } else {
-		            System.out.println("Result not present => Cancel might have been pressed");
+		            System.out.println("Result was invalid. URL was malformed, or dialog cancelled by user.");
 		        }    
 				//Reads file and stores object.
 				//PatternReader.parseFileToPatternObject(game);
