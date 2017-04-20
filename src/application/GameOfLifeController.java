@@ -67,7 +67,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	File defaultDirectory = new File("patterns/");
 	Alert malformedURLAlert = new Alert(AlertType.ERROR);
 	int timing = 120;
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(250), e -> run()));
 	
 	    
 	public void timerlistener(){
@@ -85,7 +85,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		PatternReader = new GameOfLifePatternReader();
 		gc = grid.getGraphicsContext2D();
 		colorPicker.setValue(Color.BLACK);
-		game.setCellSize(10);
+		game.setCellSize(5);
 		draw(gc);
 		timeLine();
 		rules.nextGeneration();

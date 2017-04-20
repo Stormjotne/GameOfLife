@@ -8,7 +8,7 @@ import java.util.Random;
  * @author Ruby, Håkon & Julia
  */
 public class GameOfLifeModel {
-	public static int k = 80, m = 40;
+	public static int k = 160, m = 80;
 	public static byte[][] board = new byte[k][m];
 	public byte[][] first = new byte[k][m];
 	private int cellSize;
