@@ -36,7 +36,7 @@ public class GameOfLifePattern {
 	public byte[][] constructPatternFromRLE() {
 		  System.out.println("Pattern Width: " + this.WIDTH + " Pattern Height: " + this.HEIGHT);
 		patternBoard = new byte[WIDTH+2][HEIGHT+2];
-		  System.out.println("Array Width: " + patternBoard.length);
+		  System.out.println("Array Width: " + patternBoard.length + " Array Height: " + patternBoard[0].length);
 		int counter = 0;
 		//b = dead cell, o = alive cell, $ = end of line
 		//i and j = 1 to avoid the edges.
@@ -53,7 +53,7 @@ public class GameOfLifePattern {
 					  counter++;
 				  }
 				  else if(charPlotPatternArray[counter] == '$'){
-					  i = patternBoard[0].length;
+					  i = patternBoard.length;
 					  counter++;
 				  }
 
@@ -86,7 +86,7 @@ public class GameOfLifePattern {
 						  // Check if next char is '$', skip as many lines as the internalCounter states.
 						  else if(charPlotPatternArray[counter] == '$'){
 							  j+=internalDoubleDigitCounter-2;
-							  i = patternBoard[0].length;
+							  i = patternBoard.length;
 						  }
 					  }
 					  // Check if next char is 'o', add as many live cells as the internalCounter states.
@@ -109,14 +109,14 @@ public class GameOfLifePattern {
 					  // Check if next char is '$', skip as many lines as the internalCounter states.
 					  else if(charPlotPatternArray[counter] == '$'){
 						  j+=internalCounter-2;
-						  i = patternBoard[0].length;
+						  i = patternBoard.length;
 					  }
 				  }
 				  // Check if next char is '!', set the for-loop variables to conclude the loop.
 				  else if(charPlotPatternArray[counter] == '!'){
 					  System.out.println("Algorithm gets to the last line.");
-					  i = patternBoard[0].length+1;
-					  j = patternBoard.length+1;
+					  j = patternBoard[0].length;
+					  i = patternBoard.length;
 				  }
 				  //Code below is made specifically for glider.rle
 				  /*else if(charPlotPatternArray[counter] == '2'){
