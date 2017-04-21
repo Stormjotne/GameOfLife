@@ -33,7 +33,7 @@ public class GameOfLifePattern {
 		this.charPlotPatternArray = charPlotPatternArray;
 	}
 	
-	public byte[][] constructPatternFromRLE() {
+	public byte[][] constructPatternFromRLE() throws PatternFormatException, ArrayIndexOutOfBoundsException {
 		  System.out.println("Pattern Width: " + this.WIDTH + " Pattern Height: " + this.HEIGHT);
 		patternBoard = new byte[WIDTH+2][HEIGHT+2];
 		  System.out.println("Array Width: " + patternBoard.length + " Array Height: " + patternBoard[0].length);
@@ -88,6 +88,11 @@ public class GameOfLifePattern {
 							  j+=internalDoubleDigitCounter-2;
 							  i = patternBoard.length;
 						  }
+
+						  else {
+							  counter++;
+							  throw new PatternFormatException();
+						  }
 					  }
 					  // Check if next char is 'o', add as many live cells as the internalCounter states.
 					  else if(charPlotPatternArray[counter] == 'o'){
@@ -111,12 +116,22 @@ public class GameOfLifePattern {
 						  j+=internalCounter-2;
 						  i = patternBoard.length;
 					  }
+
+					  else {
+						  counter++;
+						  throw new PatternFormatException();
+					  }
 				  }
 				  // Check if next char is '!', set the for-loop variables to conclude the loop.
 				  else if(charPlotPatternArray[counter] == '!'){
 					  System.out.println("Algorithm gets to the last line.");
 					  j = patternBoard[0].length;
 					  i = patternBoard.length;
+				  }
+				  
+				  else {
+					  counter++;
+					  throw new PatternFormatException();
 				  }
 				  //Code below is made specifically for glider.rle
 				  /*else if(charPlotPatternArray[counter] == '2'){

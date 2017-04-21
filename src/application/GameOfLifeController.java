@@ -66,8 +66,8 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	FileChooser.ExtensionFilter extentionFilter = new FileChooser.ExtensionFilter("RLE files (*.rle)", "*.rle");
 	File defaultDirectory = new File("patterns/");
 	Alert malformedURLAlert = new Alert(AlertType.ERROR);
-	int timing = 120;
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(250), e -> run()));
+	int timing = 10;
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
 	
 	    
 	public void timerlistener(){
@@ -89,11 +89,13 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		draw(gc);
 		timeLine();
 		rules.nextGeneration();
+	    animation.setRate(timing);
 		
 		/***** Mouse onClick logic ******
 		  Changes the location in the array on mouseclick and draws a new box
 		 */
 		grid.addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e) ->{
+			try {
 			int x = (int)(e.getX()/game.getCellSize());
 			int y = (int)(e.getY()/game.getCellSize());
 			if(game.getSingleValue(x,y)==1){
@@ -104,15 +106,21 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				game.changeSingleBoardValueToOne(x,y);
 				drawBox(x,y,colorPicker.getValue());
 			}
+			} catch(ArrayIndexOutOfBoundsException ex) {
+				System.err.println("Action could not be performed. Out of Bounds.");
+			}
 		});
 		
 		grid.addEventHandler(MouseEvent.MOUSE_DRAGGED,(MouseEvent e) ->{
+			try {
 			int x = (int)(e.getX()/game.getCellSize());
 			int y = (int)(e.getY()/game.getCellSize());
 			//Only brings cells to life.
 				game.changeSingleBoardValueToOne(x,y);
 				drawBox(x,y,colorPicker.getValue());
-			
+		} catch(ArrayIndexOutOfBoundsException ex) {
+			System.err.println("Action could not be performed. Out of Bounds.");
+		}
 		});
 		/*Assertion of GUI control elements.*/
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
@@ -259,7 +267,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
     }
 	private void drawBox(int x, int y, Color c){
 		gc.setFill(c);
-		gc.fillRect(x*game.getCellSize(), y*game.getCellSize(), game.getCellSize()-1, game.getCellSize()-1);
+		gc.fillRect(x*game.getCellSize(), y*game.getCellSize(), game.getCellSize()-game.getCellSize()*0.2, game.getCellSize()-game.getCellSize()*0.2);
 		
 	}
 

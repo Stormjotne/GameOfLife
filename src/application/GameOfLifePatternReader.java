@@ -25,7 +25,7 @@ public class GameOfLifePatternReader {
 	String tempLifeRules;
 	StringBuffer tempPlotPattern = new StringBuffer();
 	char[] charPlotPatternArray;
-	Alert fileNotFoundAlert = new Alert(AlertType.ERROR);
+	Alert alertGameOfLifePatternReader = new Alert(AlertType.ERROR);
 
 	public void GameOfLifePatternReader() {
 		
@@ -91,12 +91,28 @@ public class GameOfLifePatternReader {
 			// Create temporary object of Pattern
 			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
 			// Constructs a new board / array with information from the Pattern Object.
-			game.setBoard(tempObj.constructPatternFromRLE());
+			try {
+				game.setBoard(tempObj.constructPatternFromRLE());
+			} catch(PatternFormatException e) {
+				alertGameOfLifePatternReader.setTitle("Error");
+				alertGameOfLifePatternReader.setHeaderText("File could not be parsed.");
+				alertGameOfLifePatternReader.setContentText("The program was unable to parse the specified file. Please make sure it doesn't contain any illegal letters. Go to: http://www.conwaylife.com/wiki/RLE for more info.");
+				alertGameOfLifePatternReader.showAndWait();
+			} catch(ArrayIndexOutOfBoundsException e) {
+				alertGameOfLifePatternReader.setTitle("Error");
+				alertGameOfLifePatternReader.setHeaderText("Pattern too big.");
+				alertGameOfLifePatternReader.setContentText("The program was unable to draw the specified pattern because it was too big.");
+				alertGameOfLifePatternReader.showAndWait();
+			}
 			//Reset StringBuffer for the coordinate plot.
 			tempPlotPattern.setLength(0);
 		}
 		catch (FileNotFoundException fnfe)
         {
+			alertGameOfLifePatternReader.setTitle("Error");
+			alertGameOfLifePatternReader.setHeaderText("File not found");
+			alertGameOfLifePatternReader.setContentText("The path you specified did not contain a .rle file");
+			alertGameOfLifePatternReader.showAndWait();
             System.out.println("file not found");
         }
 
@@ -166,16 +182,28 @@ public class GameOfLifePatternReader {
 			// Create temporary object of Pattern
 			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
 			// Constructs a new board / array with information from the Pattern Object.
-			game.setBoard(tempObj.constructPatternFromRLE());
+			try {
+				game.setBoard(tempObj.constructPatternFromRLE());
+			} catch(PatternFormatException e) {
+				alertGameOfLifePatternReader.setTitle("Error");
+				alertGameOfLifePatternReader.setHeaderText("File could not be parsed.");
+				alertGameOfLifePatternReader.setContentText("The program was unable to parse the specified file. Please make sure it doesn't contain any illegal letters, and that the pattern is not too big.");
+				alertGameOfLifePatternReader.showAndWait();
+			} catch(ArrayIndexOutOfBoundsException e) {
+				alertGameOfLifePatternReader.setTitle("Error");
+				alertGameOfLifePatternReader.setHeaderText("Pattern too big.");
+				alertGameOfLifePatternReader.setContentText("The program was unable to draw the specified pattern because it was too big.");
+				alertGameOfLifePatternReader.showAndWait();
+			}
 			//Reset StringBuffer for the coordinate plot.
 			tempPlotPattern.setLength(0);
 		}
 		catch (FileNotFoundException fnfe)
         {
-			fileNotFoundAlert.setTitle("Error");
-			fileNotFoundAlert.setHeaderText("File not found");
-			fileNotFoundAlert.setContentText("The path you specified did not contain a .rle file");
-			fileNotFoundAlert.showAndWait();
+			alertGameOfLifePatternReader.setTitle("Error");
+			alertGameOfLifePatternReader.setHeaderText("File not found");
+			alertGameOfLifePatternReader.setContentText("The path you specified did not contain a .rle file");
+			alertGameOfLifePatternReader.showAndWait();
             System.out.println("file not found");
         }
 	}
