@@ -37,7 +37,7 @@ public class GameOfLifePatternReader {
 	 * Takes an instance of the Model class and a user-selected file as its arguments.
 	 * @author Ruby
 	 * */
-	public void parseFileToPatternObject(GameOfLifeModel game, File rle) throws IOException {
+	public void parseFileToPatternObject(File rle) throws IOException {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(rle.getAbsolutePath()));
 			String fileRead = br.readLine();
@@ -88,22 +88,6 @@ public class GameOfLifePatternReader {
 			System.out.println(charPlotPatternArray);
 			
             br.close();
-			// Create temporary object of Pattern
-			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
-			// Constructs a new board / array with information from the Pattern Object.
-			try {
-				game.setPatternBoard(tempObj.constructPatternFromRLE());
-			} catch(PatternFormatException e) {
-				alertGameOfLifePatternReader.setTitle("Error");
-				alertGameOfLifePatternReader.setHeaderText("File could not be parsed.");
-				alertGameOfLifePatternReader.setContentText("The program was unable to parse the specified file. Please make sure it doesn't contain any illegal letters. Go to: http://www.conwaylife.com/wiki/RLE for more info.");
-				alertGameOfLifePatternReader.showAndWait();
-			} catch(ArrayIndexOutOfBoundsException e) {
-				alertGameOfLifePatternReader.setTitle("Error");
-				alertGameOfLifePatternReader.setHeaderText("Pattern too big.");
-				alertGameOfLifePatternReader.setContentText("The program was unable to draw the specified pattern because it was too big.");
-				alertGameOfLifePatternReader.showAndWait();
-			}
 			//Reset StringBuffer for the coordinate plot.
 			tempPlotPattern.setLength(0);
 		}
@@ -126,7 +110,7 @@ public class GameOfLifePatternReader {
 	 * The goal is for this method to be called by both remote and local file functions and successfully parse contents into Pattern objects.
 	 * Takes an instance of the Model class as its argument.
 	 * */
-	public void parseURLToPatternObject(GameOfLifeModel game) throws IOException {
+	public void parseURLToPatternObject() throws IOException {
 		try {
 			URL patternURL = new URL(userPatternURL);
 			BufferedReader RLEReader = new BufferedReader(
@@ -177,24 +161,7 @@ public class GameOfLifePatternReader {
 			//The last Character should always be '!'
 			charPlotPatternArray = tempPlotPattern.toString().toCharArray();
 			System.out.println(charPlotPatternArray);
-			
 			RLEReader.close();
-			// Create temporary object of Pattern
-			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
-			// Constructs a new board / array with information from the Pattern Object.
-			try {
-				game.setPatternBoard(tempObj.constructPatternFromRLE());
-			} catch(PatternFormatException e) {
-				alertGameOfLifePatternReader.setTitle("Error");
-				alertGameOfLifePatternReader.setHeaderText("File could not be parsed.");
-				alertGameOfLifePatternReader.setContentText("The program was unable to parse the specified file. Please make sure it doesn't contain any illegal letters, and that the pattern is not too big.");
-				alertGameOfLifePatternReader.showAndWait();
-			} catch(ArrayIndexOutOfBoundsException e) {
-				alertGameOfLifePatternReader.setTitle("Error");
-				alertGameOfLifePatternReader.setHeaderText("Pattern too big.");
-				alertGameOfLifePatternReader.setContentText("The program was unable to draw the specified pattern because it was too big.");
-				alertGameOfLifePatternReader.showAndWait();
-			}
 			//Reset StringBuffer for the coordinate plot.
 			tempPlotPattern.setLength(0);
 		}

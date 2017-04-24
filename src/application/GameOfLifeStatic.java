@@ -7,20 +7,38 @@ import java.util.Random;
  * Class should be split into Board and Cell before we start working on extra assignments. 
  * @author Ruby, Håkon & Julia
  */
-public class GameOfLifeModel {
+public class GameOfLifeStatic extends GameOfLife {
 	public static int k = 260, m = 120;
-	public static byte[][] board = new byte[k][m];
-	public byte[][] first = new byte[k][m];
-	private int cellSize;
+	public static GameOfLifeCell[][] board = new GameOfLifeCell[k][m];
+	public GameOfLifeCell[][] first = new GameOfLifeCell[k][m];
+	int neighbors;
 	int previous;
 	int state;
 		
-	public GameOfLifeModel(){
+	public GameOfLifeStatic(){
 		board = setCleanBoard(k,m);
 		first = board;
-		System.out.println("Game made!");
+		System.out.println("New Static Board!");
 	}
-
+	/**
+	 * Counts neighbors around a x,y coordinate and returns an integer.
+	 * @param  
+	 * @author Ruby, Håkon & Julia
+	 * */
+	public int countNeighbors(int x, int y){ 
+		neighbors = 0;
+		for (int i = -1; i <= 1; i++) {
+			  for (int j = -1; j <= 1; j++) {
+				// Sums the neighbors' states, which are 0 or 1.
+				// Executes a modulus operation to achieve wrap-around, 
+				// i.e. the cells on the top count as neighbors for the bottom cells, and the cells to the left are neighbors to the rightmost cells.
+			    neighbors += getBoard()[(x+i+k)%k][(y+j+m)%m].getPreviousState();
+			   }
+			}
+		neighbors -= getBoard()[x][y].getPreviousState(); //Trekker fra cellens egen verdi: 0, eller 1.
+		return neighbors;
+	}
+	
 	/** 
 	 * Resets the game board.
 	 * */
@@ -33,11 +51,11 @@ public class GameOfLifeModel {
 	 * @param x : the width of the board.
 	 * @param y : the height of the board.
 	 * */
-	public byte[][] setCleanBoard(int x, int y){
-		byte[][] cleanBoard = new byte[x][y];
+	public GameOfLifeCell[][] setCleanBoard(int x, int y){
+		GameOfLifeCell[][] cleanBoard = new GameOfLifeCell[x][y];
 		for (int i = 0; i < (board.length); i++) {
 			  for (int j = 0; j < (board[0].length); j++) {
-				  cleanBoard[i][j] = 0;
+				  cleanBoard[i][j] = new GameOfLifeCell(i, j, (byte) 0);
 			  }
 		}
 		return cleanBoard;
@@ -48,13 +66,13 @@ public class GameOfLifeModel {
 	 * @param x : the width of the board.
 	 * @param y : the height of the board.
 	 * */	
-	public byte[][] setRandomBoard(int x, int y){
-		byte[][] randomBoard = new byte[x][y];
+	public GameOfLifeCell[][] setRandomBoard(int x, int y){
+		GameOfLifeCell[][] randomBoard = new GameOfLifeCell[x][y];
 		Random ranNum = new Random();
-		for (int i = 1; i < (board.length-1); i++) {
-			  for (int j = 1; j < (board[0].length-1); j++) {
+		for (int i = 0; i < (board.length); i++) {
+			  for (int j = 0; j < (board[0].length); j++) {
 				byte n = (byte)ranNum.nextInt(2);
-				randomBoard[i][j] = n;
+				randomBoard[i][j] = new GameOfLifeCell(i, j, n);
 			}
 		}
 		return randomBoard;
@@ -67,13 +85,9 @@ public class GameOfLifeModel {
 	 * @param boardArray : any two-dimensional array lesser than the current board's width and height.
 	 * Pattern.constructPatternFromRLE() returns such an array from RLE files.
 	 */
-	public void setPatternBoard(byte[][] boardArray) {
-		byte[][] temporaryBoard = new byte[k][m];
-		for (int i = 0; i < (board.length); i++) {
-			  for (int j = 0; j < (board[0].length); j++) {
-				  temporaryBoard[i][j] = 0;
-			  }
-		}
+	public void setPatternBoard(GameOfLifeCell[][] boardArray) {
+		GameOfLifeCell[][] temporaryBoard = setCleanBoard(k, m);
+		
 		for (int i = 0; i < (boardArray.length); i++) {
 			  for (int j = 0; j < (boardArray[0].length); j++) {
 				  temporaryBoard[i][j] = boardArray[i][j];
@@ -82,8 +96,8 @@ public class GameOfLifeModel {
 		board = temporaryBoard;
 	}
 	
-	public void setBoard(byte[][] boardArray) {
-		byte[][] temporaryBoard = new byte[k][m];
+	public void setBoard(GameOfLifeCell[][] boardArray) {
+		GameOfLifeCell[][] temporaryBoard = new GameOfLifeCell[k][m];
 		for (int i = 0; i < k; i++) {
 			  for (int j = 0; j < m; j++) {
 				  temporaryBoard[i][j] = boardArray[i][j];
@@ -93,18 +107,18 @@ public class GameOfLifeModel {
 	}
 	
 	public void changeSingleBoardValueToOne(int x, int y){
-		board[x][y] = 1;
+		board[x][y] = new GameOfLifeCell(x, y, (byte) 1);
 	}
 	
 	public void changeSingleBoardValueToZero(int x, int y){
-		board[x][y] = 0;
+		board[x][y] = new GameOfLifeCell(x, y, (byte) 0);
 	}
 	
 	public byte getSingleValue(int x, int y){
-		return board[x][y];
+		return board[x][y].getCellState();
 	}
 	
-	public byte[][] getBoard(){
+	public GameOfLifeCell[][] getBoard(){
 		return board;
 	}
 	
@@ -124,13 +138,6 @@ public class GameOfLifeModel {
 		return m;
 	}
 	
-	protected void setCellSize(int cllsz) {
-		cellSize = cllsz;
-	}
-	
-	public int getCellSize() {
-		return cellSize;
-	}
 	
 	public String toString() {
 		StringBuffer output = new StringBuffer();

@@ -7,7 +7,6 @@ package application;
  * @author Ruby & Håkon
  * */
 public class GameOfLifePattern {
-	public GameOfLifeModel game;
 	private String patternName;
 	private String patternOrigin;
 	private String patternInformation;
@@ -16,13 +15,13 @@ public class GameOfLifePattern {
 	private String lifeRules;
 	private boolean notHighLife;
 	char[] charPlotPatternArray;
-	byte[][] patternBoard;
+	GameOfLifeCell[][] patternBoard;
 	/** 
 	 * The constructor of Pattern.
 	 * It takes Strings and parsed strings from the PatternReader as arguments, and stores the values.
 	 * Take note of the boolean variable notHighLife. If it returns true, the imported pattern is made for the normal version of Conway's Game of Life.
 	 * */
-	public GameOfLifePattern(GameOfLifeModel game, String patternName, String patternOrigin, String patternInformation, int WIDTH, int HEIGHT, String lifeRules, char[] charPlotPatternArray) {
+	public GameOfLifePattern(String patternName, String patternOrigin, String patternInformation, int WIDTH, int HEIGHT, String lifeRules, char[] charPlotPatternArray) {
 		this.patternName = patternName;
 		this.patternOrigin = patternOrigin;
 		this.patternInformation = patternInformation;
@@ -33,9 +32,10 @@ public class GameOfLifePattern {
 		this.charPlotPatternArray = charPlotPatternArray;
 	}
 	
-	public byte[][] constructPatternFromRLE() throws PatternFormatException, ArrayIndexOutOfBoundsException {
+	public GameOfLifeCell[][] constructPatternFromRLE() throws PatternFormatException, ArrayIndexOutOfBoundsException {
 		  System.out.println("Pattern Width: " + this.WIDTH + " Pattern Height: " + this.HEIGHT);
-		patternBoard = new byte[WIDTH+2][HEIGHT+2];
+		patternBoard = new GameOfLifeCell[WIDTH+2][HEIGHT+2];
+		patternBoard = setCleanBoard(patternBoard.length, patternBoard[0].length);
 		  System.out.println("Array Width: " + patternBoard.length + " Array Height: " + patternBoard[0].length);
 		int counter = 0;
 		//b = dead cell, o = alive cell, $ = end of line
@@ -45,11 +45,11 @@ public class GameOfLifePattern {
 			  for (int i = 1; i < patternBoard.length; i++) {
 				  System.out.println("Current counter: " + counter);
 				  if(charPlotPatternArray[counter] == 'o'){
-					  patternBoard[i][j] = 1;
+					  patternBoard[i][j] = new GameOfLifeCell(i, j, (byte) 1);
 					  counter++;
 				  }
 				  else if(charPlotPatternArray[counter] == 'b'){
-					  patternBoard[i][j] = 0;
+					  patternBoard[i][j] = new GameOfLifeCell(i, j, (byte) 0);
 					  counter++;
 				  }
 				  else if(charPlotPatternArray[counter] == '$'){
@@ -70,7 +70,7 @@ public class GameOfLifePattern {
 						  // Check if next char is 'o', add as many live cells as the internalCounter states.
 						  if(charPlotPatternArray[counter] == 'o'){
 							  for (int k = 0; k < internalDoubleDigitCounter; k++){
-								  patternBoard[i+k][j] = 1;
+								  patternBoard[i+k][j] = new GameOfLifeCell(i, j, (byte) 1);
 							  }
 							  //i+=internalDoubleDigitCounter-(internalDoubleDigitCounter*2/3);
 							  i+=internalDoubleDigitCounter-2;
@@ -78,7 +78,7 @@ public class GameOfLifePattern {
 						  // Check if next char is 'b', add as many dead cells as the internalCounter states.
 						  else if(charPlotPatternArray[counter] == 'b') {
 							  for (int k = 0; k < internalDoubleDigitCounter; k++){
-								  patternBoard[i+k][j] = 0;
+								  patternBoard[i+k][j] = new GameOfLifeCell(i, j, (byte) 0);
 							  }
 							  //i+=internalDoubleDigitCounter-(internalDoubleDigitCounter*2/3);
 							  i+=internalDoubleDigitCounter-2;
@@ -98,7 +98,7 @@ public class GameOfLifePattern {
 					  else if(charPlotPatternArray[counter] == 'o'){
 						  System.out.println("Current internal counter: " + internalCounter);
 						  for (int k = 0; k < internalCounter; k++){
-							  patternBoard[i+k][j] = 1;
+							  patternBoard[i+k][j] = new GameOfLifeCell(i, j, (byte) 1);
 						  }
 						  //i+=internalCounter-(internalCounter*2/3);
 						  i+=internalCounter-2;
@@ -107,7 +107,7 @@ public class GameOfLifePattern {
 					  else if (charPlotPatternArray[counter] == 'b'){
 						  System.out.println("Current internal counter: " + internalCounter);
 						  for (int k = 0; k < internalCounter; k++){
-							  patternBoard[i+k][j] = 0;
+							  patternBoard[i+k][j] = new GameOfLifeCell(i, j, (byte) 0);
 						  }
 						  i+=internalCounter-2;
 					  }
@@ -140,7 +140,17 @@ public class GameOfLifePattern {
 		return patternBoard;
 	}
 	
-	public void printArray(byte[][] x){
+	public GameOfLifeCell[][] setCleanBoard(int x, int y){
+		GameOfLifeCell[][] cleanBoard = new GameOfLifeCell[x][y];
+		for (int i = 0; i < x; i++) {
+			  for (int j = 0; j < y; j++) {
+				  cleanBoard[i][j] = new GameOfLifeCell(i, j, (byte) 0);
+			  }
+		}
+		return cleanBoard;
+	}
+	
+	public void printArray(GameOfLifeCell[][] x){
 		for (int i = 0; i < (x.length); i++) {
 			  for (int j = 0; j < (x[0].length); j++) {
 				  System.out.print(x[i][j]);

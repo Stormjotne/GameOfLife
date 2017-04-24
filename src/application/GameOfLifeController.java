@@ -59,13 +59,14 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Slider speedSlider;
 	
 	private GraphicsContext gc;
-	public GameOfLifeModel game;
+	public GameOfLifeStatic game;
+	public GameOfLifeCell cell;
 	public GameOfLifeRules rules;
 	private GameOfLifePatternReader PatternReader;
 	final FileChooser fileChooser = new FileChooser();
 	FileChooser.ExtensionFilter extentionFilter = new FileChooser.ExtensionFilter("RLE files (*.rle)", "*.rle");
 	File defaultDirectory = new File("patterns/");
-	Alert malformedURLAlert = new Alert(AlertType.ERROR);
+	Alert alertGameOfLifeController = new Alert(AlertType.ERROR);
 	int timing = 10;
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
 	
@@ -80,24 +81,24 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		game = new GameOfLifeModel();
+		game = new GameOfLifeStatic();
 		rules = new GameOfLifeRules();
+		cell = new GameOfLifeCell(5);
 		PatternReader = new GameOfLifePatternReader();
 		gc = grid.getGraphicsContext2D();
 		colorPicker.setValue(Color.BLACK);
-		game.setCellSize(5);
 		draw(gc);
 		timeLine();
-		rules.nextGeneration();
 	    animation.setRate(timing);
+	    //removed rules from initialize
 		
 		/***** Mouse onClick logic ******
 		  Changes the location in the array on mouseclick and draws a new box
 		 */
 		grid.addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e) ->{
 			try {
-			int x = (int)(e.getX()/game.getCellSize());
-			int y = (int)(e.getY()/game.getCellSize());
+			int x = (int)(e.getX()/cell.getCellSize());
+			int y = (int)(e.getY()/cell.getCellSize());
 			if(game.getSingleValue(x,y)==1){
 				game.changeSingleBoardValueToZero(x,y);
 				drawBox(x,y,Color.WHITE);
@@ -113,8 +114,8 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		
 		grid.addEventHandler(MouseEvent.MOUSE_DRAGGED,(MouseEvent e) ->{
 			try {
-			int x = (int)(e.getX()/game.getCellSize());
-			int y = (int)(e.getY()/game.getCellSize());
+			int x = (int)(e.getX()/cell.getCellSize());
+			int y = (int)(e.getY()/cell.getCellSize());
 			//Only brings cells to life.
 				game.changeSingleBoardValueToOne(x,y);
 				drawBox(x,y,colorPicker.getValue());
@@ -155,48 +156,52 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			fileByURLButton();
 		});
 	}
-	
-	/*****************************/
-	public void timeLine(){
-		animation.setAutoReverse(false);
-        animation.setCycleCount(Timeline.INDEFINITE);
-	}
-	
-	public void run(){
-		draw(gc);
-		timerlistener();
-		rules.nextGeneration();
-	}
-	
-	public void playButton(){
+	/*Button Functions*/
+	public void playButton() {
 		animation.play();
 	}
 	
-	public void pauseButton(){
+	public void pauseButton() {
 		animation.pause();
 	}
 	
-	public void stopButton(){
+	public void stopButton() {
 		animation.stop();
 	}
 	
-	public void randomButton(){
+	public void randomButton() {
 		game.setBoard(game.setRandomBoard(game.getBoardWidth(), game.getBoardHeight()));
 		draw(gc);
 	}
 	
-	public void cleanButton(){
+	public void cleanButton() {
 		game.setBoard(game.setCleanBoard(game.getBoardWidth(), game.getBoardHeight()));
 		draw(gc);
 	}
 	
-	public void fileChooserButton(){
+	public void fileChooserButton()  {
 		try {
 			fileChooser.setInitialDirectory(defaultDirectory);
 			File file = fileChooser.showOpenDialog(null);
 			if (file != null) {
 				//Reads file and stores object.
-				PatternReader.parseFileToPatternObject(game, file);
+				PatternReader.parseFileToPatternObject(file);
+				// Create temporary object of Pattern
+				GameOfLifePattern tempObj = new GameOfLifePattern(PatternReader.tempName, PatternReader.tempOrigin, PatternReader.tempInformation, PatternReader.tempWIDTH, PatternReader.tempHEIGHT, PatternReader.tempLifeRules, PatternReader.charPlotPatternArray);
+				// Constructs a new board / array with information from the Pattern Object.
+				try {
+					game.setPatternBoard(tempObj.constructPatternFromRLE());
+				} catch(PatternFormatException e) {
+					alertGameOfLifeController.setTitle("Error");
+					alertGameOfLifeController.setHeaderText("File could not be parsed.");
+					alertGameOfLifeController.setContentText("The program was unable to parse the specified file. Please make sure it doesn't contain any illegal letters, and that the pattern is not too big.");
+					alertGameOfLifeController.showAndWait();
+				} catch(ArrayIndexOutOfBoundsException e) {
+					alertGameOfLifeController.setTitle("Error");
+					alertGameOfLifeController.setHeaderText("Pattern too big.");
+					alertGameOfLifeController.setContentText("The program was unable to draw the specified pattern because it was too big.");
+					alertGameOfLifeController.showAndWait();
+				}
 			}
 		} catch (IOException e) {
 			  System.err.printf ("Failed to read from local storage.");
@@ -205,7 +210,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		draw(gc);
 	}
 	
-	public void fileByURLButton(){
+	public void fileByURLButton() {
 		TextInputDialog defaultURLInput = new TextInputDialog("http://www.conwaylife.com/patterns/glider.rle");
 		defaultURLInput.setTitle("URL Input Dialog");
 		defaultURLInput.setHeaderText("Load your favorite GoL Pattern.");
@@ -223,28 +228,67 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 
         Optional<String> result = defaultURLInput.showAndWait();
         	try {
+        		//Get url from user input
 				if (result.isPresent() /*&& result.get().endsWith(".rle)")*/) {
 		            System.out.println("Result present => OK was pressed");
 		            System.out.println("Result: " + result.get());
 		            PatternReader.setPatternURL(result.get());
-		            PatternReader.parseURLToPatternObject(game);
+		            //Reads file and stores object.
+		            PatternReader.parseURLToPatternObject();
+		            // Create temporary object of Pattern
+		            GameOfLifePattern tempObj = new GameOfLifePattern(PatternReader.tempName, PatternReader.tempOrigin, PatternReader.tempInformation, PatternReader.tempWIDTH, PatternReader.tempHEIGHT, PatternReader.tempLifeRules, PatternReader.charPlotPatternArray);
+		            // Constructs a new board / array with information from the Pattern Object.
+					try {
+						game.setPatternBoard(tempObj.constructPatternFromRLE());
+					} catch(PatternFormatException e) {
+						alertGameOfLifeController.setTitle("Error");
+						alertGameOfLifeController.setHeaderText("File could not be parsed.");
+						alertGameOfLifeController.setContentText("The program was unable to parse the specified file. Please make sure it doesn't contain any illegal letters, and that the pattern is not too big.");
+						alertGameOfLifeController.showAndWait();
+					} catch(ArrayIndexOutOfBoundsException e) {
+						alertGameOfLifeController.setTitle("Error");
+						alertGameOfLifeController.setHeaderText("Pattern too big.");
+						alertGameOfLifeController.setContentText("The program was unable to draw the specified pattern because it was too big.");
+						alertGameOfLifeController.showAndWait();
+					}
 		        } else {
 		            System.out.println("Result was invalid. URL was malformed, or dialog cancelled by user.");
 		        }    
 				//Reads file and stores object.
 				//PatternReader.parseFileToPatternObject(game);
 			} catch (IOException e) {
-				malformedURLAlert.setTitle("Error");
-				malformedURLAlert.setHeaderText("Path not found.");
-				malformedURLAlert.setContentText("The URL you specified did not contain a .rle file");
-				malformedURLAlert.showAndWait();
+				alertGameOfLifeController.setTitle("Error");
+				alertGameOfLifeController.setHeaderText("Path not found.");
+				alertGameOfLifeController.setContentText("The URL you specified did not contain a .rle file");
+				alertGameOfLifeController.showAndWait();
 				System.err.printf ("Failed to read from url: " + PatternReader.getPatternURL());
 			}
 			draw(gc);
 	}
+
+	public void timeLine() {
+		animation.setAutoReverse(false);
+        animation.setCycleCount(Timeline.INDEFINITE);
+	}
+	
+	public void run(){
+		cellHistory();
+		draw(gc);
+		timerlistener();
+		rules.conwayLife(game);
+	}
+	
+	public void cellHistory() {
+		for (int i = 0;i < game.getBoardWidth();i++) {
+			for (int j = 0;j < game.getBoardHeight();j++) {
+				game.getBoard()[i][j].savePreviousState();
+			}
+		}
+	}
+	
 	
 	@Override
-	public void start(Stage primaryStage) throws Exception{
+	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("GameOfLifeFXML.fxml"));
 		Scene scene = new Scene(root);
 		
@@ -254,10 +298,16 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	@FXML private void draw(GraphicsContext gc) {
-		for (int i = 0; i < game.getBoard().length; i++) {
-			for (int j = 0; j < game.getBoard()[i].length; j++) {
-				if(game.getBoard()[i][j] == 1){
+		for (int i = 0; i < game.getBoardWidth(); i++) {
+			for (int j = 0; j < game.getBoardHeight(); j++) {
+				if(game.getBoard()[i][j].getPreviousState() == 0 && game.getBoard()[i][j].getCellState() == 1){
 					drawBox(i, j, colorPicker.getValue());
+				}
+				else if(game.getBoard()[i][j].getPreviousState() == 1 && game.getBoard()[i][j].getCellState() == 0){
+					drawBox(i, j, Color.RED);
+				}
+				else if(game.getBoard()[i][j].getCellState() == 1){
+					drawBox(i, j, Color.BLACK);
 				}
 				else  {
 					drawBox(i, j, Color.WHITE);
@@ -265,9 +315,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			}
 		}
     }
-	private void drawBox(int x, int y, Color c){
+	private void drawBox(int x, int y, Color c) {
 		gc.setFill(c);
-		gc.fillRect(x*game.getCellSize(), y*game.getCellSize(), game.getCellSize()-game.getCellSize()*0.2, game.getCellSize()-game.getCellSize()*0.2);
+		gc.fillRect(x*cell.getCellSize(), y*cell.getCellSize(), cell.getCellSize()-cell.getCellSize()*0.2, cell.getCellSize()-cell.getCellSize()*0.2);
 		
 	}
 
