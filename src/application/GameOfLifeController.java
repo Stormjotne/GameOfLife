@@ -67,7 +67,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	File defaultDirectory = new File("patterns/");
 	Alert malformedURLAlert = new Alert(AlertType.ERROR);
 	int timing = 10;
-	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
+	Timeline animation = new Timeline(new KeyFrame(Duration.millis(25), e -> run()));
 	
 	    
 	public void timerlistener(){

@@ -92,7 +92,7 @@ public class GameOfLifePatternReader {
 			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
 			// Constructs a new board / array with information from the Pattern Object.
 			try {
-				game.setBoard(tempObj.constructPatternFromRLE());
+				game.setPatternBoard(tempObj.constructPatternFromRLE());
 			} catch(PatternFormatException e) {
 				alertGameOfLifePatternReader.setTitle("Error");
 				alertGameOfLifePatternReader.setHeaderText("File could not be parsed.");
@@ -183,7 +183,7 @@ public class GameOfLifePatternReader {
 			GameOfLifePattern tempObj = new GameOfLifePattern(game, tempName, tempOrigin, tempInformation, tempWIDTH, tempHEIGHT, tempLifeRules, charPlotPatternArray);
 			// Constructs a new board / array with information from the Pattern Object.
 			try {
-				game.setBoard(tempObj.constructPatternFromRLE());
+				game.setPatternBoard(tempObj.constructPatternFromRLE());
 			} catch(PatternFormatException e) {
 				alertGameOfLifePatternReader.setTitle("Error");
 				alertGameOfLifePatternReader.setHeaderText("File could not be parsed.");

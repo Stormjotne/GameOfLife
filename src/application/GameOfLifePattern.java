@@ -133,46 +133,10 @@ public class GameOfLifePattern {
 					  counter++;
 					  throw new PatternFormatException();
 				  }
-				  //Code below is made specifically for glider.rle
-				  /*else if(charPlotPatternArray[counter] == '2'){
-					  counter++;
-					  if(charPlotPatternArray[counter] == 'o'){
-						  patternBoard[i][j] = 1;
-						  i++;
-						  patternBoard[i][j] = 1;
-						  counter++;
-					  }
-					  else {
-						  patternBoard[i][j] = 0;
-						  i++;
-						  patternBoard[i][j] = 0;
-						  counter++;
-					  }
-				  }
-				  else if(charPlotPatternArray[counter] == '3'){
-					  counter++;
-					  if(charPlotPatternArray[counter] == 'o'){
-						  patternBoard[i][j] = 1;
-						  i++;
-						  patternBoard[i][j] = 1;
-						  i++;
-						  patternBoard[i][j] = 1;
-						  //Outofbounds patternBoard[i][j=j+2] = 1;
-						  counter++;
-					  }
-					  else {
-						  patternBoard[i][j] = 0;
-						  i++;
-						  patternBoard[i][j] = 0;
-						  i++;
-						  patternBoard[i][j] = 0;
-						  counter++;
-					  }
-				  }*/
 			  }
 		}
 		//setBoard is invoked from the reader instead.
-		/*game.setBoard(patternBoard);*/
+		/*game.setPatternBoard(patternBoard);*/
 		return patternBoard;
 	}
 	

@@ -67,7 +67,7 @@ public class GameOfLifeModel {
 	 * @param boardArray : any two-dimensional array lesser than the current board's width and height.
 	 * Pattern.constructPatternFromRLE() returns such an array from RLE files.
 	 */
-	public void setBoard(byte[][] boardArray) {
+	public void setPatternBoard(byte[][] boardArray) {
 		byte[][] temporaryBoard = new byte[k][m];
 		for (int i = 0; i < (board.length); i++) {
 			  for (int j = 0; j < (board[0].length); j++) {
@@ -76,6 +76,16 @@ public class GameOfLifeModel {
 		}
 		for (int i = 0; i < (boardArray.length); i++) {
 			  for (int j = 0; j < (boardArray[0].length); j++) {
+				  temporaryBoard[i][j] = boardArray[i][j];
+			  }
+		}
+		board = temporaryBoard;
+	}
+	
+	public void setBoard(byte[][] boardArray) {
+		byte[][] temporaryBoard = new byte[k][m];
+		for (int i = 0; i < k; i++) {
+			  for (int j = 0; j < m; j++) {
 				  temporaryBoard[i][j] = boardArray[i][j];
 			  }
 		}
