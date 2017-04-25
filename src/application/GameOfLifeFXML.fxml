@@ -5,90 +5,81 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameOfLifeController">
-   <center>
-      <Canvas fx:id="grid" height="542.0" width="1076.0" BorderPane.alignment="CENTER" />
-   </center>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameOfLifeController">
    <bottom>
-      <GridPane prefHeight="52.0" prefWidth="1030.0" BorderPane.alignment="CENTER">
+      <GridPane prefHeight="120.0" prefWidth="1030.0" BorderPane.alignment="CENTER">
         <columnConstraints>
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="210.66668701171875" minWidth="0.0" prefWidth="63.666656494140625" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="432.0" minWidth="0.0" prefWidth="68.33334350585938" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="619.0" minWidth="10.0" prefWidth="70.66668701171875" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="619.0" minWidth="10.0" prefWidth="85.33331298828125" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="474.66668701171875" minWidth="10.0" prefWidth="68.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="474.66668701171875" minWidth="10.0" prefWidth="156.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="474.66668701171875" minWidth="10.0" prefWidth="118.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="818.0000305175781" minWidth="10.0" prefWidth="123.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="818.0000305175781" minWidth="10.0" prefWidth="154.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="383.0" minWidth="10.0" prefWidth="204.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="210.66668701171875" minWidth="0.0" prefWidth="81.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="432.0" minWidth="0.0" prefWidth="77.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="619.0" minWidth="10.0" prefWidth="80.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="619.0" minWidth="10.0" prefWidth="140.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="474.66668701171875" minWidth="10.0" prefWidth="107.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="474.66668701171875" minWidth="10.0" prefWidth="186.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="474.66668701171875" minWidth="10.0" prefWidth="236.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="818.0000305175781" minWidth="10.0" prefWidth="127.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="818.0000305175781" minWidth="10.0" prefWidth="57.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="383.0" minWidth="10.0" prefWidth="185.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="60.0" minHeight="0.0" prefHeight="21.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="playButton" defaultButton="true" mnemonicParsing="false" text="Play">
-               <padding>
-                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-               </padding></Button>
-            <Button fx:id="pauseButton" mnemonicParsing="false" text="Pause" GridPane.columnIndex="1">
+            <Button fx:id="playButton" defaultButton="true" mnemonicParsing="false" prefHeight="40.0" prefWidth="70.0" text="Play">
                <padding>
                   <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                </padding>
             </Button>
-            <Button fx:id="stopButton" mnemonicParsing="false" text="Reset" GridPane.columnIndex="2">
+            <Button fx:id="pauseButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="70.0" text="Pause" GridPane.rowIndex="1">
                <padding>
                   <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                </padding>
             </Button>
-            <Button fx:id="randomButton" mnemonicParsing="false" text="Random" GridPane.columnIndex="3" />
-            <Button fx:id="cleanButton" mnemonicParsing="false" text="Clean" GridPane.columnIndex="4" />
-            <Button fx:id="fileChooserButton" mnemonicParsing="false" text="Pattern From Drive" GridPane.columnIndex="5" />
-            <GridPane GridPane.columnIndex="9">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label text="Cell size:" GridPane.halignment="RIGHT" />
-                  <TextField text="10" GridPane.columnIndex="1">
-                     <GridPane.margin>
-                        <Insets left="10.0" right="10.0" />
-                     </GridPane.margin>
-                  </TextField>
-               </children>
-            </GridPane>
-            <Button fx:id="fileByURLButton" mnemonicParsing="false" text="Pattern From URL" GridPane.columnIndex="6" />
-            <ColorPicker fx:id="colorPicker" prefHeight="25.0" prefWidth="87.0" GridPane.columnIndex="7">
+            <Button fx:id="stopButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="70.0" text="Reset" GridPane.columnIndex="1">
+               <padding>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+               </padding>
+            </Button>
+            <Button fx:id="randomButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="70.0" text="Random" GridPane.columnIndex="2" />
+            <Button fx:id="cleanButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="70.0" text="Clean" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Button fx:id="fileChooserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" text="Pattern From Drive" GridPane.columnIndex="3" />
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="64.0" text="Cell Size:" textAlignment="CENTER" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Button fx:id="fileByURLButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" text="Pattern From URL" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <ColorPicker fx:id="colorPicker" prefHeight="40.0" prefWidth="83.0" GridPane.columnIndex="5">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin>
             </ColorPicker>
-            <GridPane GridPane.columnIndex="8">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="31.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="120.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Slider fx:id="speedSlider" blockIncrement="0.0" majorTickUnit="2.0" max="20.0" min="2.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="1" />
-                  <Label text="FPS:" />
-               </children>
-            </GridPane>
+            <Label prefHeight="40.0" prefWidth="40.0" text="FPS:" GridPane.columnIndex="8" />
+            <Slider fx:id="speedSlider" blockIncrement="0.0" majorTickUnit="10.0" max="60.0" min="5.0" minorTickCount="5" prefHeight="38.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="9" />
+            <Slider fx:id="Slider1" blockIncrement="0.0" layoutX="1001.0" layoutY="21.0" majorTickUnit="4.0" max="40.0" min="4.0" minorTickCount="0" prefHeight="38.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="9" GridPane.rowIndex="1" />
+            <Slider fx:id="Slider2" blockIncrement="0.0" layoutX="1112.0" layoutY="21.0" majorTickUnit="4.0" max="40.0" min="4.0" minorTickCount="0" prefHeight="38.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="7" />
+            <Slider fx:id="Slider3" blockIncrement="0.0" layoutX="1112.0" layoutY="21.0" majorTickUnit="4.0" max="40.0" min="4.0" minorTickCount="0" prefHeight="38.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+            <MenuButton fx:id="cellButton" contentDisplay="RIGHT" mnemonicParsing="false" popupSide="RIGHT" prefHeight="40.0" prefWidth="70.0" text="Cell" GridPane.columnIndex="4">
+              <items>
+                <MenuItem fx:id="cellConway" mnemonicParsing="false" text="Conway" />
+                <MenuItem fx:id="cellHistory" mnemonicParsing="false" text="History" />
+              </items>
+            </MenuButton>
+            <MenuButton fx:id="rulesButton" contentDisplay="RIGHT" mnemonicParsing="false" popupSide="RIGHT" prefHeight="40.0" prefWidth="70.0" text="Rules" GridPane.columnIndex="4" GridPane.rowIndex="1">
+              <items>
+                <MenuItem fx:id="rulesConway" mnemonicParsing="false" text="Conway" />
+                <MenuItem fx:id="rulesNoDeaths" mnemonicParsing="false" text="No-Deaths" />
+              </items>
+            </MenuButton>
          </children>
       </GridPane>
    </bottom>
+   <center>
+      <Canvas fx:id="grid" height="865.0" width="1261.0" BorderPane.alignment="CENTER" />
+   </center>
    
-</BorderPane>
+      </BorderPane>

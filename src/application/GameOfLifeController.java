@@ -3,6 +3,8 @@ package application;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,7 +25,10 @@ import javafx.fxml.FXML;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -47,6 +52,7 @@ import javafx.scene.layout.VBox;
  * */
 public class GameOfLifeController extends Application implements javafx.fxml.Initializable {
 	
+	private static final String MyVar = null;
 	@FXML private Canvas grid;
 	@FXML private Button playButton;
 	@FXML private Button pauseButton;
@@ -55,13 +61,22 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Button cleanButton;
 	@FXML private Button fileChooserButton;
 	@FXML private Button fileByURLButton;
+	@FXML private MenuButton cellButton;
+	@FXML private MenuItem cellConway;
+	@FXML private MenuItem cellHistory;
+	@FXML private MenuButton rulesButton;
+	@FXML private MenuItem rulesConway;
+	@FXML private MenuItem rulesNoDeaths;
 	@FXML public ColorPicker colorPicker;
 	@FXML private Slider speedSlider;
 	
 	private GraphicsContext gc;
-	public GameOfLifeStatic game;
+	public GameOfLife game;
+	public GameOfLifeStatic staticBoard;
 	public GameOfLifeCell cell;
 	public GameOfLifeRules rules;
+	java.lang.reflect.Method ruleMethod = null;
+	java.lang.reflect.Method cellMethod = null;
 	private GameOfLifePatternReader PatternReader;
 	final FileChooser fileChooser = new FileChooser();
 	FileChooser.ExtensionFilter extentionFilter = new FileChooser.ExtensionFilter("RLE files (*.rle)", "*.rle");
@@ -77,13 +92,37 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
             animation.setRate(timing);
         });
     }
-
+	public Method setRules(String ruletype) {
+		try {
+		ruleMethod = rules.getClass().getDeclaredMethod(ruletype, GameOfLife.class, GameOfLifeStatic.class);
+		} catch (SecurityException e) 
+		{  }
+		  catch (NoSuchMethodException e)
+		{  }
+		return ruleMethod;
+	}
+	
+	public Method setCellRules(String ruletype) {
+		try {
+		cellMethod = cell.getClass().getDeclaredMethod(ruletype, GameOfLifeCell.class);
+		} catch (SecurityException e) 
+		{  }
+		  catch (NoSuchMethodException e)
+		{  }
+		return cellMethod;
+	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		game = new GameOfLifeStatic();
+		game = new GameOfLife();
+		staticBoard = new GameOfLifeStatic();
+		//Set all cells to be active
+		//game.initActivityMap();
+		//game.initActivityList();
 		rules = new GameOfLifeRules();
+		ruleMethod = setRules("conwayLife");
 		cell = new GameOfLifeCell(5);
+		cellMethod = setCellRules("drawCell");
 		PatternReader = new GameOfLifePatternReader();
 		gc = grid.getGraphicsContext2D();
 		colorPicker.setValue(Color.BLACK);
@@ -99,13 +138,13 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			try {
 			int x = (int)(e.getX()/cell.getCellSize());
 			int y = (int)(e.getY()/cell.getCellSize());
-			if(game.getSingleValue(x,y)==1){
-				game.changeSingleBoardValueToZero(x,y);
-				drawBox(x,y,Color.WHITE);
+			if(staticBoard.getSingleValue(x,y)==1){
+				staticBoard.changeSingleBoardValueToZero(x,y);
+				draw(gc);
 			}
 			else { 
-				game.changeSingleBoardValueToOne(x,y);
-				drawBox(x,y,colorPicker.getValue());
+				staticBoard.changeSingleBoardValueToOne(x,y);
+				draw(gc);
 			}
 			} catch(ArrayIndexOutOfBoundsException ex) {
 				System.err.println("Action could not be performed. Out of Bounds.");
@@ -117,8 +156,8 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			int x = (int)(e.getX()/cell.getCellSize());
 			int y = (int)(e.getY()/cell.getCellSize());
 			//Only brings cells to life.
-				game.changeSingleBoardValueToOne(x,y);
-				drawBox(x,y,colorPicker.getValue());
+				staticBoard.changeSingleBoardValueToOne(x,y);
+				draw(gc);
 		} catch(ArrayIndexOutOfBoundsException ex) {
 			System.err.println("Action could not be performed. Out of Bounds.");
 		}
@@ -131,6 +170,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		assert cleanButton != null : "fx:id=\"cleanButton\" No Clean Button Found.";
 		assert fileChooserButton != null : "fx:id=\"fileChooserButton\" No Pattern From Drive Button Found.";
 		assert fileByURLButton != null : "fx:id=\"fileByURLButton\" No Pattern By URL Button Found.";
+		assert cellButton != null : "fx:id=\"cellButton\" No Cell Button Found.";
 		assert colorPicker != null : "fx:id=\"colorPicker\" No Color Picker Found.";
 		assert speedSlider != null : "fx:id=\"speedSlider\" No Speed Slider Found.";
 		/*Button Logic*/
@@ -155,6 +195,18 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		fileByURLButton.setOnAction((event) -> {
 			fileByURLButton();
 		});
+		cellConway.setOnAction((event) -> {
+			cellConwayButton();
+		});
+		cellHistory.setOnAction((event) -> {
+			cellHistoryButton();
+		});
+		rulesConway.setOnAction((event) -> {
+			rulesConwayButton();
+		});
+		rulesNoDeaths.setOnAction((event) -> {
+			rulesNoDeathsButton();
+		});
 	}
 	/*Button Functions*/
 	public void playButton() {
@@ -170,12 +222,12 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void randomButton() {
-		game.setBoard(game.setRandomBoard(game.getBoardWidth(), game.getBoardHeight()));
+		staticBoard.setBoard(staticBoard.setRandomBoard(staticBoard.getBoardWidth(), staticBoard.getBoardHeight()));
 		draw(gc);
 	}
 	
 	public void cleanButton() {
-		game.setBoard(game.setCleanBoard(game.getBoardWidth(), game.getBoardHeight()));
+		staticBoard.setBoard(staticBoard.setCleanBoard(staticBoard.getBoardWidth(), staticBoard.getBoardHeight()));
 		draw(gc);
 	}
 	
@@ -190,7 +242,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				GameOfLifePattern tempObj = new GameOfLifePattern(PatternReader.tempName, PatternReader.tempOrigin, PatternReader.tempInformation, PatternReader.tempWIDTH, PatternReader.tempHEIGHT, PatternReader.tempLifeRules, PatternReader.charPlotPatternArray);
 				// Constructs a new board / array with information from the Pattern Object.
 				try {
-					game.setPatternBoard(tempObj.constructPatternFromRLE());
+					staticBoard.setPatternBoard(tempObj.constructPatternFromRLE());
 				} catch(PatternFormatException e) {
 					alertGameOfLifeController.setTitle("Error");
 					alertGameOfLifeController.setHeaderText("File could not be parsed.");
@@ -215,12 +267,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		defaultURLInput.setTitle("URL Input Dialog");
 		defaultURLInput.setHeaderText("Load your favorite GoL Pattern.");
 		defaultURLInput.setContentText("Enter URL:");
-		/*defaultURLInput.showAndWait();
-		.ifPresent(urlinput -> {
-			if (urlinput == ButtonType.OK) {
-			PatternReader.setPatternURL(urlinput);
-			}
-		});*/
 		final Button cancel = (Button) defaultURLInput.getDialogPane().lookupButton(ButtonType.CANCEL);
         cancel.addEventFilter(ActionEvent.ACTION, event ->
             System.out.println("Cancel was definitely pressed")
@@ -239,7 +285,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		            GameOfLifePattern tempObj = new GameOfLifePattern(PatternReader.tempName, PatternReader.tempOrigin, PatternReader.tempInformation, PatternReader.tempWIDTH, PatternReader.tempHEIGHT, PatternReader.tempLifeRules, PatternReader.charPlotPatternArray);
 		            // Constructs a new board / array with information from the Pattern Object.
 					try {
-						game.setPatternBoard(tempObj.constructPatternFromRLE());
+						staticBoard.setPatternBoard(tempObj.constructPatternFromRLE());
 					} catch(PatternFormatException e) {
 						alertGameOfLifeController.setTitle("Error");
 						alertGameOfLifeController.setHeaderText("File could not be parsed.");
@@ -265,6 +311,19 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			}
 			draw(gc);
 	}
+	
+	public void cellConwayButton() {
+		cellMethod = setCellRules("drawCell");
+	}
+	public void cellHistoryButton() {
+		cellMethod = setCellRules("drawCellHistory");
+	}
+	public void rulesConwayButton() {
+		ruleMethod = setRules("conwayLife");
+	}
+	public void rulesNoDeathsButton() {
+		ruleMethod = setRules("noDeathsLife");
+	}
 
 	public void timeLine() {
 		animation.setAutoReverse(false);
@@ -273,19 +332,24 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	public void run(){
 		cellHistory();
-		draw(gc);
 		timerlistener();
-		rules.conwayLife(game);
+		//Use reflection to call Rules,
+		//That way it's easy to change them at runtime.
+		try {
+			ruleMethod.invoke(rules, game, staticBoard);
+			} catch (IllegalArgumentException e) {}
+			  catch (IllegalAccessException e) {}
+			  catch (InvocationTargetException e) {}
+		draw(gc);
 	}
 	
 	public void cellHistory() {
-		for (int i = 0;i < game.getBoardWidth();i++) {
-			for (int j = 0;j < game.getBoardHeight();j++) {
-				game.getBoard()[i][j].savePreviousState();
+		for (int i = 0;i < staticBoard.getBoardWidth();i++) {
+			for (int j = 0;j < staticBoard.getBoardHeight();j++) {
+				staticBoard.getBoard()[i][j].savePreviousState();
 			}
 		}
 	}
-	
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -298,28 +362,23 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	@FXML private void draw(GraphicsContext gc) {
-		for (int i = 0; i < game.getBoardWidth(); i++) {
-			for (int j = 0; j < game.getBoardHeight(); j++) {
-				if(game.getBoard()[i][j].getPreviousState() == 0 && game.getBoard()[i][j].getCellState() == 1){
-					drawBox(i, j, colorPicker.getValue());
-				}
-				else if(game.getBoard()[i][j].getPreviousState() == 1 && game.getBoard()[i][j].getCellState() == 0){
-					drawBox(i, j, Color.RED);
-				}
-				else if(game.getBoard()[i][j].getCellState() == 1){
-					drawBox(i, j, Color.BLACK);
-				}
-				else  {
-					drawBox(i, j, Color.WHITE);
-				}
+		int currentSize = cell.getCellSize();
+		byte currentState = 0;
+		for (int i = 0; i < staticBoard.getBoardWidth(); i++) {
+			for (int j = 0; j < staticBoard.getBoardHeight(); j++) {
+				GameOfLifeCell currentCell = staticBoard.getBoard()[i][j];
+				//Return combination of previous and current cell states:
+				try {
+					currentState = (byte) cellMethod.invoke(currentCell, currentCell);
+					} catch (IllegalArgumentException e) {}
+					  catch (IllegalAccessException e) {}
+					  catch (InvocationTargetException e) {}
+				//currentState = currentCell.drawCell(currentCell);
+				//currentState = currentCell.drawCellHistory(currentCell);
+				currentCell.drawBox(gc, colorPicker.getValue(), i, j, currentSize, currentState);
 			}
 		}
     }
-	private void drawBox(int x, int y, Color c) {
-		gc.setFill(c);
-		gc.fillRect(x*cell.getCellSize(), y*cell.getCellSize(), cell.getCellSize()-cell.getCellSize()*0.2, cell.getCellSize()-cell.getCellSize()*0.2);
-		
-	}
 
 	public static void main(String[] args) {
 		
