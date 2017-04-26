@@ -3,6 +3,9 @@ package application;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import com.sun.javafx.tk.Toolkit;
+
 import java.lang.reflect.*;
 import java.lang.reflect.Method;
 
@@ -75,8 +78,8 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public GameOfLifeStatic staticBoard;
 	public GameOfLifeCell cell;
 	public GameOfLifeRules rules;
-	java.lang.reflect.Method ruleMethod = null;
-	java.lang.reflect.Method cellMethod = null;
+	Method ruleMethod = null;
+	Method cellMethod = null;
 	private GameOfLifePatternReader PatternReader;
 	final FileChooser fileChooser = new FileChooser();
 	FileChooser.ExtensionFilter extentionFilter = new FileChooser.ExtensionFilter("RLE files (*.rle)", "*.rle");
@@ -116,12 +119,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public void initialize(URL location, ResourceBundle resources) {
 		game = new GameOfLife();
 		staticBoard = new GameOfLifeStatic();
-		//Set all cells to be active
-		//game.initActivityMap();
-		//game.initActivityList();
 		rules = new GameOfLifeRules();
 		ruleMethod = setRules("conwayLife");
-		cell = new GameOfLifeCell(5);
+		cell = new GameOfLifeCell(3);
 		cellMethod = setCellRules("drawCell");
 		PatternReader = new GameOfLifePatternReader();
 		gc = grid.getGraphicsContext2D();
@@ -362,12 +362,15 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	@FXML private void draw(GraphicsContext gc) {
+		gc.clearRect(0, 0, grid.getWidth(), grid.getHeight());
 		int currentSize = cell.getCellSize();
 		byte currentState = 0;
 		for (int i = 0; i < staticBoard.getBoardWidth(); i++) {
 			for (int j = 0; j < staticBoard.getBoardHeight(); j++) {
 				GameOfLifeCell currentCell = staticBoard.getBoard()[i][j];
 				//Return combination of previous and current cell states:
+				//Use reflection to call cell presentation,
+				//different methods return different states
 				try {
 					currentState = (byte) cellMethod.invoke(currentCell, currentCell);
 					} catch (IllegalArgumentException e) {}

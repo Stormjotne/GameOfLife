@@ -28,26 +28,35 @@ public class GameOfLifeStatic extends GameOfLife {
 	public int countNeighbors(int x, int y){ 
 		neighbors = 0;
 		currentCell = getBoard()[x][y];
+		/*byte prevState = currentCell.getPreviousState();
+		int currNeighbors = currentCell.getCurrentNeighbors();
+		int prevNeighbors = currentCell.getPreviousNeigbors();*/
 		for (int i = -1; i <= 1; i++) {
 			  for (int j = -1; j <= 1; j++) {
 				// Sums the neighbors' states, which are 0 or 1.
 				// Executes a modulus operation to achieve wrap-around, 
 				// i.e. the cells on the top count as neighbors for the bottom cells, and the cells to the left are neighbors to the rightmost cells.
 			    neighbors += getBoard()[(x+i+k)%k][(y+j+m)%m].getPreviousState();
-			   }
+			    }
 			}
 		neighbors -= currentCell.getPreviousState(); //Trekker fra cellens egen verdi: 0, eller 1.
 		currentCell.currentNeighbors(neighbors);
 		/*if (neighbors == 0) {
-			//super.updateActivityMapZero(x,y);
-			//super.updateActivityListDelete(x,y);
+			currentCell.deActivate();
 		}
 		else if (currentCell.getCurrentNeighbors() == currentCell.getPreviousNeigbors()) {
-			//super.updateActivityMapZero(x,y);
-			//super.updateActivityListDelete(x,y);
-			}
-		currentCell.previousNeighbors(neighbors);*/
+			currentCell.deActivate();
+			}*/
+		currentCell.previousNeighbors(neighbors);
 		return neighbors;
+	}
+
+	public void activateNeighborCells(int x, int y) {
+		for (int c = -1; c <= 1; c++) {
+			  for (int d = -1; d <= 1; d++) {
+				  getBoard()[(x+c)][(y+d)].activate();
+			  }
+		}
 	}
 	
 	/** 

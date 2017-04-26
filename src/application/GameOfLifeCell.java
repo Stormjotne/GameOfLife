@@ -5,13 +5,14 @@ import java.util.Random;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class GameOfLifeCell extends GameOfLife {
+public class GameOfLifeCell {
 
 	private byte cellState;
 	private byte prevCellState;
 	private byte firstCellState;
 	public int currentNeighbors;
 	public int previousNeighbors;
+	public boolean isActive; 
 	int x, y;
 	int z;
 
@@ -33,6 +34,15 @@ public class GameOfLifeCell extends GameOfLife {
 		prevCellState = cellState;
 		firstCellState = cellState;
 		previousNeighbors = 0;
+		isActive = true;
+	}
+	
+	public void activate() {
+		this.isActive = true;
+	}
+	
+	public void deActivate() {
+		this.isActive = false;
 	}
 	
 	public void savePreviousState() {
@@ -53,6 +63,10 @@ public class GameOfLifeCell extends GameOfLife {
 	
 	public void previousNeighbors(int neighbors) {
 		this.previousNeighbors = neighbors;
+	}
+	
+	public boolean isActive() {
+		return isActive;
 	}
 	
 	public byte getCellState() {

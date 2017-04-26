@@ -7,15 +7,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameOfLifeController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameOfLifeController">
    <bottom>
-      <GridPane prefHeight="120.0" prefWidth="1030.0" BorderPane.alignment="CENTER">
+      <GridPane prefHeight="80.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
         <columnConstraints>
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="210.66668701171875" minWidth="0.0" prefWidth="81.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="432.0" minWidth="0.0" prefWidth="77.0" />
@@ -29,8 +30,8 @@
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="383.0" minWidth="10.0" prefWidth="185.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="60.0" minHeight="0.0" prefHeight="21.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="40.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Button fx:id="playButton" defaultButton="true" mnemonicParsing="false" prefHeight="40.0" prefWidth="70.0" text="Play">
@@ -79,7 +80,21 @@
       </GridPane>
    </bottom>
    <center>
-      <Canvas fx:id="grid" height="865.0" width="1261.0" BorderPane.alignment="CENTER" />
+      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1270.0" minWidth="10.0" prefWidth="1256.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="45.0" minWidth="10.0" prefWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="630.0" minHeight="10.0" prefHeight="630.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="10.0" minHeight="0.0" prefHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Canvas fx:id="grid" depthTest="ENABLE" height="598.0" width="1228.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <ScrollBar fx:id="horiScrollbar" prefHeight="10.0" prefWidth="1280.0" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            <ScrollBar fx:id="vertiScrollbar" orientation="VERTICAL" prefHeight="584.0" prefWidth="10.0" GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
    </center>
    
       </BorderPane>
