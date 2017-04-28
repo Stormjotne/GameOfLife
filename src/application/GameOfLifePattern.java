@@ -35,7 +35,7 @@ public class GameOfLifePattern {
 	public GameOfLifeCell[][] constructPatternFromRLE() throws PatternFormatException, ArrayIndexOutOfBoundsException {
 		  System.out.println("Pattern Width: " + this.WIDTH + " Pattern Height: " + this.HEIGHT);
 		patternBoard = new GameOfLifeCell[WIDTH+2][HEIGHT+2];
-		patternBoard = setCleanBoard(patternBoard.length, patternBoard[0].length);
+		setCleanBoard(patternBoard.length, patternBoard[0].length);
 		  System.out.println("Array Width: " + patternBoard.length + " Array Height: " + patternBoard[0].length);
 		int counter = 0;
 		//b = dead cell, o = alive cell, $ = end of line
@@ -135,19 +135,17 @@ public class GameOfLifePattern {
 				  }
 			  }
 		}
-		//setBoard is invoked from the reader instead.
-		/*game.setPatternBoard(patternBoard);*/
 		return patternBoard;
 	}
 	
-	public GameOfLifeCell[][] setCleanBoard(int x, int y){
+	public void setCleanBoard(int x, int y){
 		GameOfLifeCell[][] cleanBoard = new GameOfLifeCell[x][y];
 		for (int i = 0; i < x; i++) {
 			  for (int j = 0; j < y; j++) {
 				  cleanBoard[i][j] = new GameOfLifeCell(i, j, (byte) 0);
 			  }
 		}
-		return cleanBoard;
+		patternBoard = cleanBoard;
 	}
 	
 	public void printArray(GameOfLifeCell[][] x){

@@ -75,7 +75,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	private GraphicsContext gc;
 	public GameOfLife game;
-	public GameOfLifeStatic staticBoard;
 	public GameOfLifeCell cell;
 	public GameOfLifeRules rules;
 	Method ruleMethod = null;
@@ -97,7 +96,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
     }
 	public Method setRules(String ruletype) {
 		try {
-		ruleMethod = rules.getClass().getDeclaredMethod(ruletype, GameOfLife.class, GameOfLifeStatic.class);
+		ruleMethod = rules.getClass().getDeclaredMethod(ruletype, GameOfLife.class);
 		} catch (SecurityException e) 
 		{  }
 		  catch (NoSuchMethodException e)
@@ -117,8 +116,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		game = new GameOfLife();
-		staticBoard = new GameOfLifeStatic();
+		game = new GameOfLifeDynamic();
 		rules = new GameOfLifeRules();
 		ruleMethod = setRules("conwayLife");
 		cell = new GameOfLifeCell(3);
@@ -138,12 +136,12 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			try {
 			int x = (int)(e.getX()/cell.getCellSize());
 			int y = (int)(e.getY()/cell.getCellSize());
-			if(staticBoard.getSingleValue(x,y)==1){
-				staticBoard.changeSingleBoardValueToZero(x,y);
+			if(game.getSingleValue(x,y)==1){
+				game.changeSingleBoardValueToZero(x,y);
 				draw(gc);
 			}
 			else { 
-				staticBoard.changeSingleBoardValueToOne(x,y);
+				game.changeSingleBoardValueToOne(x,y);
 				draw(gc);
 			}
 			} catch(ArrayIndexOutOfBoundsException ex) {
@@ -156,7 +154,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			int x = (int)(e.getX()/cell.getCellSize());
 			int y = (int)(e.getY()/cell.getCellSize());
 			//Only brings cells to life.
-				staticBoard.changeSingleBoardValueToOne(x,y);
+				game.changeSingleBoardValueToOne(x,y);
 				draw(gc);
 		} catch(ArrayIndexOutOfBoundsException ex) {
 			System.err.println("Action could not be performed. Out of Bounds.");
@@ -222,12 +220,12 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void randomButton() {
-		staticBoard.setBoard(staticBoard.setRandomBoard(staticBoard.getBoardWidth(), staticBoard.getBoardHeight()));
+		game.setRandomBoard();
 		draw(gc);
 	}
 	
 	public void cleanButton() {
-		staticBoard.setBoard(staticBoard.setCleanBoard(staticBoard.getBoardWidth(), staticBoard.getBoardHeight()));
+		game.setCleanBoard();
 		draw(gc);
 	}
 	
@@ -242,7 +240,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				GameOfLifePattern tempObj = new GameOfLifePattern(PatternReader.tempName, PatternReader.tempOrigin, PatternReader.tempInformation, PatternReader.tempWIDTH, PatternReader.tempHEIGHT, PatternReader.tempLifeRules, PatternReader.charPlotPatternArray);
 				// Constructs a new board / array with information from the Pattern Object.
 				try {
-					staticBoard.setPatternBoard(tempObj.constructPatternFromRLE());
+					game.setPatternBoard(tempObj.constructPatternFromRLE());
 				} catch(PatternFormatException e) {
 					alertGameOfLifeController.setTitle("Error");
 					alertGameOfLifeController.setHeaderText("File could not be parsed.");
@@ -285,7 +283,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		            GameOfLifePattern tempObj = new GameOfLifePattern(PatternReader.tempName, PatternReader.tempOrigin, PatternReader.tempInformation, PatternReader.tempWIDTH, PatternReader.tempHEIGHT, PatternReader.tempLifeRules, PatternReader.charPlotPatternArray);
 		            // Constructs a new board / array with information from the Pattern Object.
 					try {
-						staticBoard.setPatternBoard(tempObj.constructPatternFromRLE());
+						game.setPatternBoard(tempObj.constructPatternFromRLE());
 					} catch(PatternFormatException e) {
 						alertGameOfLifeController.setTitle("Error");
 						alertGameOfLifeController.setHeaderText("File could not be parsed.");
@@ -336,7 +334,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		//Use reflection to call Rules,
 		//That way it's easy to change them at runtime.
 		try {
-			ruleMethod.invoke(rules, game, staticBoard);
+			ruleMethod.invoke(rules, game);
 			} catch (IllegalArgumentException e) {}
 			  catch (IllegalAccessException e) {}
 			  catch (InvocationTargetException e) {}
@@ -344,9 +342,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	
 	public void cellHistory() {
-		for (int i = 0;i < staticBoard.getBoardWidth();i++) {
-			for (int j = 0;j < staticBoard.getBoardHeight();j++) {
-				staticBoard.getBoard()[i][j].savePreviousState();
+		for (int i = 0;i < GameOfLife.k;i++) {
+			for (int j = 0;j < GameOfLife.m;j++) {
+				game.getCell(i,j).savePreviousState();
 			}
 		}
 	}
@@ -365,9 +363,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		gc.clearRect(0, 0, grid.getWidth(), grid.getHeight());
 		int currentSize = cell.getCellSize();
 		byte currentState = 0;
-		for (int i = 0; i < staticBoard.getBoardWidth(); i++) {
-			for (int j = 0; j < staticBoard.getBoardHeight(); j++) {
-				GameOfLifeCell currentCell = staticBoard.getBoard()[i][j];
+		for (int i = 0; i < GameOfLife.k; i++) {
+			for (int j = 0; j < GameOfLife.m; j++) {
+				GameOfLifeCell currentCell = game.getCell(i,j);
 				//Return combination of previous and current cell states:
 				//Use reflection to call cell presentation,
 				//different methods return different states
