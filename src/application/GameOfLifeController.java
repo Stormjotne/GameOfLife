@@ -58,7 +58,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Canvas grid;
 	@FXML private Button playButton;
 	@FXML private Button pauseButton;
-	@FXML private Button stopButton;
+	@FXML private Button resetButton;
 	@FXML private Button randomButton;
 	@FXML private Button cleanButton;
 	@FXML private Button fileChooserButton;
@@ -169,7 +169,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		/*Assertion of GUI control elements.*/
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
 		assert pauseButton != null : "fx:id=\"pauseButton\" No Pause Button Found.";
-		assert stopButton != null : "fx:id=\"stopButton\" No Stop Button Found.";
+		assert resetButton != null : "fx:id=\"stopButton\" No Stop Button Found.";
 		assert randomButton != null : "fx:id=\"randomButton\" No Random Button Found.";
 		assert cleanButton != null : "fx:id=\"cleanButton\" No Clean Button Found.";
 		assert fileChooserButton != null : "fx:id=\"fileChooserButton\" No Pattern From Drive Button Found.";
@@ -186,8 +186,8 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		pauseButton.setOnAction((event) -> {
 			pauseButton();
 		});
-		stopButton.setOnAction((event) -> {
-			stopButton();
+		resetButton.setOnAction((event) -> {
+			resetButton();
 		});
 		randomButton.setOnAction((event) -> {
 			randomButton();
@@ -223,14 +223,20 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	/*Button Functions*/
 	public void playButton() {
 		animation.play();
+		draw(gc);
 	}
 	
 	public void pauseButton() {
 		animation.pause();
+		draw(gc);
 	}
 	
-	public void stopButton() {
+	public void resetButton() {
 		animation.stop();
+		game.setWidth(100);
+		game.setHeight(100);
+		game.setCleanBoard();
+		draw(gc);
 	}
 	
 	public void randomButton() {
@@ -355,9 +361,15 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		//That way it's easy to change them at runtime.
 		try {
 			ruleMethod.invoke(rules, game);
-			} catch (IllegalArgumentException e) {}
-			  catch (IllegalAccessException e) {}
-			  catch (InvocationTargetException e) {}
+			} catch (IllegalArgumentException e) {
+				System.err.println("Either arguments of this method could be wrong.");
+			}
+			  catch (IllegalAccessException e) {
+				  System.err.println("Could not access this method.");
+			  }
+			  catch (InvocationTargetException e) {
+				  System.err.println("Method could not be invoked on object.");
+			  }
 		draw(gc);
 	}
 	
@@ -383,18 +395,26 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		gc.clearRect(0, 0, grid.getWidth(), grid.getHeight());
 		int currentSize = cell.getCellSize();
 		byte currentState = 0;
-		for (int i = 0; i < GameOfLife.k; i++) {
-			for (int j = 0; j < GameOfLife.m; j++) {
+		for (int i = 0; i < game.getWidth(); i++) {
+			for (int j = 0; j < game.getHeight(); j++) {
 				GameOfLifeCell currentCell = game.getCell(i,j);
 				//Return combination of previous and current cell states:
 				//Use reflection to call cell presentation,
 				//different methods return different states
 				try {
 					currentState = (byte) cellMethod.invoke(currentCell, currentCell);
-					} catch (IllegalArgumentException e) {}
-					  catch (IllegalAccessException e) {}
-					  catch (InvocationTargetException e) {}
-				//currentState = currentCell.drawCell(currentCell);
+				} catch (IllegalArgumentException e) {
+					System.err.println("Either arguments of this method could be wrong.");
+					currentState = currentCell.drawCell(currentCell);
+				}
+				  catch (IllegalAccessException e) {
+					  System.err.println("Could not access this method.");
+						currentState = currentCell.drawCell(currentCell);
+				  }
+				  catch (InvocationTargetException e) {
+					  System.err.println("Method could not be invoked on object.");
+						currentState = currentCell.drawCell(currentCell);
+				  }
 				//currentState = currentCell.drawCellHistory(currentCell);
 				currentCell.drawBox(gc, colorPicker.getValue(), i, j, currentSize, currentState);
 			}

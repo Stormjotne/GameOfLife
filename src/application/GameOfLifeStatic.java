@@ -36,7 +36,7 @@ public class GameOfLifeStatic extends GameOfLife {
 				// Sums the neighbors' states, which are 0 or 1.
 				// Executes a modulus operation to achieve wrap-around, 
 				// i.e. the cells on the top count as neighbors for the bottom cells, and the cells to the left are neighbors to the rightmost cells.
-			    neighbors += getCell(((x+i+k)%k),((y+j+m)%m)).getPreviousState();
+			    neighbors += getPreviousCellState((x+i+k)%k,(y+j+m)%m);
 			  }
 			}
 		neighbors -= currentCell.getPreviousState(); //Trekker fra cellens egen verdi: 0, eller 1.
@@ -51,6 +51,9 @@ public class GameOfLifeStatic extends GameOfLife {
 	 * returns GameOfLifeCell object from static board coordinates.
 	 */
 	public GameOfLifeCell getCell(int x, int y) {
+		if (x > getWidth() || y > getHeight()) {
+			throw new ArrayIndexOutOfBoundsException();
+		}
 		return board[x][y];
 	}
 	/**
@@ -72,7 +75,19 @@ public class GameOfLifeStatic extends GameOfLife {
 	 * @return
 	 */
 	public byte getCellState(int x, int y) {
+		if (x > getWidth() || y > getHeight()) {
+			throw new ArrayIndexOutOfBoundsException();
+		}
 		return board[x][y].getCellState();
+	}
+	/**
+	 * Returns byte 0 or 1 from cell at coordinates x, y.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public byte getPreviousCellState(int x, int y) {
+		return board[x][y].getPreviousState();
 	}
 	/**
 	 * Sets all neighbouring cells' active status to true (boolean).
@@ -115,6 +130,10 @@ public class GameOfLifeStatic extends GameOfLife {
 			}
 		}
 		board = randomBoard;
+	}
+	
+	public void setFirstBoard(){
+		board = first;
 	}
 
 	/**
