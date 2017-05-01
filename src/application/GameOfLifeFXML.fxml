@@ -16,15 +16,15 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameOfLifeController">
    <bottom>
-      <GridPane prefHeight="80.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+      <GridPane prefHeight="82.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
         <columnConstraints>
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="210.66668701171875" minWidth="0.0" prefWidth="81.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="432.0" minWidth="0.0" prefWidth="77.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="619.0" minWidth="10.0" prefWidth="80.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="619.0" minWidth="10.0" prefWidth="140.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="474.66668701171875" minWidth="10.0" prefWidth="107.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="474.66668701171875" minWidth="10.0" prefWidth="186.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="474.66668701171875" minWidth="10.0" prefWidth="236.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="474.66668701171875" minWidth="10.0" prefWidth="99.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="474.66668701171875" minWidth="10.0" prefWidth="323.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="818.0000305175781" minWidth="10.0" prefWidth="127.0" />
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="818.0000305175781" minWidth="10.0" prefWidth="57.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="383.0" minWidth="10.0" prefWidth="185.0" />
@@ -54,7 +54,7 @@
             <Button fx:id="fileChooserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" text="Pattern From Drive" GridPane.columnIndex="3" />
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="64.0" text="Cell Size:" textAlignment="CENTER" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <Button fx:id="fileByURLButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" text="Pattern From URL" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <ColorPicker fx:id="colorPicker" prefHeight="40.0" prefWidth="83.0" GridPane.columnIndex="5">
+            <ColorPicker fx:id="colorPicker" prefHeight="40.0" prefWidth="83.0" GridPane.columnIndex="6">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin>
@@ -76,18 +76,24 @@
                 <MenuItem fx:id="rulesNoDeaths" mnemonicParsing="false" text="No-Deaths" />
               </items>
             </MenuButton>
+            <MenuButton fx:id="boardButton" contentDisplay="RIGHT" layoutX="411.0" layoutY="10.0" mnemonicParsing="false" popupSide="RIGHT" prefHeight="40.0" prefWidth="70.0" text="Board" GridPane.columnIndex="5">
+               <items>
+                  <MenuItem fx:id="boardDynamic" mnemonicParsing="false" text="Dynamic" />
+                  <MenuItem fx:id="boardStatic" mnemonicParsing="false" text="Static" />
+               </items>
+            </MenuButton>
          </children>
       </GridPane>
    </bottom>
    <center>
-      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="521.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="1270.0" minWidth="10.0" prefWidth="1256.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="45.0" minWidth="10.0" prefWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints maxHeight="600.0" minHeight="10.0" prefHeight="600.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="10.0" minHeight="0.0" prefHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="610.0" minHeight="0.0" prefHeight="506.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="610.0" minHeight="0.0" prefHeight="15.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
             <Canvas fx:id="grid" depthTest="ENABLE" height="518.0" width="1212.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />

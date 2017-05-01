@@ -13,7 +13,7 @@ import com.sun.javafx.collections.MappingChange.Map;
  */
 public abstract class GameOfLife {
 
-	public static int k = 250, m = 250;
+	public static int k = 200, m = 100;
 	public GameOfLifeCell currentCell;
 	int neighbors;
 	
@@ -22,38 +22,50 @@ public abstract class GameOfLife {
 	}
 	
 	public abstract GameOfLifeCell getCell(int x, int y);
+	public abstract void setCellState(int x, int y, byte nstate);
+	public abstract byte getCellState(int x, int y);
 	public abstract int countNeighbors(int x, int y);
 	public abstract void setCleanBoard();
 	public abstract void setRandomBoard();
 	public abstract void setPatternBoard(GameOfLifeCell[][] boardArray);
 	public abstract void activateNeighborCells(int x, int y);
 	
-	public void changeSingleBoardValueToOne(int x, int y){
-		getCell(x, y).newCellState((byte) 1);
-	}
-	
-	public void changeSingleBoardValueToZero(int x, int y){
-		getCell(x, y).newCellState((byte) 0);
-	}
-	
-	public byte getSingleValue(int x, int y){
-		return getCell(x,y).getCellState();
-	}
-	
-	
-	public void setBoardWidth(int WIDTH){
+	public void setWidth(int WIDTH){
+		if (WIDTH < 0 || WIDTH > 500) {
+			throw new IllegalArgumentException();
+		}
+		else
 		k = WIDTH;
 	}
 	
-	public void setBoardheight(int HEIGHT){
+	public void setHeight(int HEIGHT){
+		if (HEIGHT < 0 || HEIGHT > 500) {
+			throw new IllegalArgumentException();
+		}
+		else
 		m = HEIGHT;
 	}
+	public void increaseWidth(){
+		if (k < 500) {
+			k++;
+		}
+		else
+		throw new IllegalArgumentException();
+	}
 	
-	public int getBoardWidth(){
+	public void increaseHeight(){
+		if (m < 500) {
+			m++;
+		}
+		else
+		throw new IllegalArgumentException();
+	}
+	
+	public int getWidth(){
 		return k;
 	}
 	
-	public int getBoardHeight(){
+	public int getHeight(){
 		return m;
 	}
 	

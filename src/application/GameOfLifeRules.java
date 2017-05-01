@@ -29,15 +29,15 @@ public class GameOfLifeRules {
 				  if (currentCell.isActive()) {
 				  	neighbors = game.countNeighbors(x,y);
 					if ((currentCell.getCellState() == (byte) 1)&&(neighbors < 2)){
-						currentCell.newCellState((byte)0);
+						game.setCellState(x, y, (byte)0);
 						//game.activateNeighborCells(x,y);
 					}
 					else if ((currentCell.getCellState() == (byte) 1)&&(neighbors > 3)){
-						currentCell.newCellState((byte)0);
+						game.setCellState(x, y, (byte)0);
 						//game.activateNeighborCells(x,y);
 					}
 					else if ((currentCell.getCellState() == (byte) 0)&&(neighbors == 3)){
-						currentCell.newCellState((byte)1);
+						game.setCellState(x, y, (byte)1);
 						//game.activateNeighborCells(x,y);
 					}
 				  }
@@ -54,7 +54,7 @@ public class GameOfLifeRules {
 				  	int neighbors = game.countNeighbors(x,y);
 					
 				  	if ((currentCell.getCellState() == (byte) 0)&&(neighbors == 3)){
-				  		currentCell.newCellState((byte)1);
+				  		game.setCellState(x, y, (byte)1);
 						//game.activateNeighborCells(x,y);
 					}
 			  }

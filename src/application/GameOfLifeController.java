@@ -55,7 +55,6 @@ import javafx.scene.layout.VBox;
  * */
 public class GameOfLifeController extends Application implements javafx.fxml.Initializable {
 	
-	private static final String MyVar = null;
 	@FXML private Canvas grid;
 	@FXML private Button playButton;
 	@FXML private Button pauseButton;
@@ -70,6 +69,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private MenuButton rulesButton;
 	@FXML private MenuItem rulesConway;
 	@FXML private MenuItem rulesNoDeaths;
+	@FXML private MenuButton boardButton;
+	@FXML private MenuItem boardDynamic;
+	@FXML private MenuItem boardStatic;
 	@FXML public ColorPicker colorPicker;
 	@FXML private Slider speedSlider;
 	
@@ -136,15 +138,17 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			try {
 			int x = (int)(e.getX()/cell.getCellSize());
 			int y = (int)(e.getY()/cell.getCellSize());
-			if(game.getSingleValue(x,y)==1){
-				game.changeSingleBoardValueToZero(x,y);
+			if(game.getCellState(x,y)==1){
+				game.setCellState(x,y,(byte)0);
 				draw(gc);
 			}
 			else { 
-				game.changeSingleBoardValueToOne(x,y);
+				game.setCellState(x,y,(byte)1);
 				draw(gc);
 			}
 			} catch(ArrayIndexOutOfBoundsException ex) {
+				System.err.println("Action could not be performed. Out of Bounds.");
+			} catch(IndexOutOfBoundsException ex) {
 				System.err.println("Action could not be performed. Out of Bounds.");
 			}
 		});
@@ -154,9 +158,11 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			int x = (int)(e.getX()/cell.getCellSize());
 			int y = (int)(e.getY()/cell.getCellSize());
 			//Only brings cells to life.
-				game.changeSingleBoardValueToOne(x,y);
+			game.setCellState(x,y,(byte)1);
 				draw(gc);
 		} catch(ArrayIndexOutOfBoundsException ex) {
+			System.err.println("Action could not be performed. Out of Bounds.");
+		} catch(IndexOutOfBoundsException ex) {
 			System.err.println("Action could not be performed. Out of Bounds.");
 		}
 		});
@@ -169,6 +175,8 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		assert fileChooserButton != null : "fx:id=\"fileChooserButton\" No Pattern From Drive Button Found.";
 		assert fileByURLButton != null : "fx:id=\"fileByURLButton\" No Pattern By URL Button Found.";
 		assert cellButton != null : "fx:id=\"cellButton\" No Cell Button Found.";
+		assert rulesButton != null : "fx:id=\"rulesButton\" No Rules Button Found.";
+		assert boardButton != null : "fx:id=\"boardButton\" No Board Button Found.";
 		assert colorPicker != null : "fx:id=\"colorPicker\" No Color Picker Found.";
 		assert speedSlider != null : "fx:id=\"speedSlider\" No Speed Slider Found.";
 		/*Button Logic*/
@@ -204,6 +212,12 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		});
 		rulesNoDeaths.setOnAction((event) -> {
 			rulesNoDeathsButton();
+		});
+		boardDynamic.setOnAction((event) -> {
+			boardDynamicButton();
+		});
+		boardStatic.setOnAction((event) -> {
+			boardStaticButton();
 		});
 	}
 	/*Button Functions*/
@@ -321,6 +335,12 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	}
 	public void rulesNoDeathsButton() {
 		ruleMethod = setRules("noDeathsLife");
+	}
+	public void boardDynamicButton() {
+		game = new GameOfLifeDynamic();
+	}
+	public void boardStaticButton() {
+		game = new GameOfLifeStatic();
 	}
 
 	public void timeLine() {

@@ -28,13 +28,18 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 */
 	public int countNeighbors(int x, int y) {
 		neighbors = 0;
+        if (x == 0 || y == 0 || x == getWidth()-1 || y == getHeight()-1) {
+            return neighbors;
+        }
+        else
 		currentCell = getCell(x,y);
 		for (int i = -1; i <= 1; i++) {
 			  for (int j = -1; j <= 1; j++) {
 				// Sums the neighbors' states, which are 0 or 1.
 				// Executes a modulus operation to achieve wrap-around, 
 				// i.e. the cells on the top count as neighbors for the bottom cells, and the cells to the left are neighbors to the rightmost cells.
-				  neighbors += getCell(((x+i+k)%k),((y+j+m)%m)).getPreviousState();
+				  neighbors += getPreviousCellState((x+i+k)%k,(y+j+m)%m);
+				//  neighbors += getPreviousCellState(x+i,y+j);
 			  }
 			}
 		neighbors -= currentCell.getPreviousState(); //Trekker fra cellens egen verdi: 0, eller 1.
@@ -49,7 +54,35 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 * returns GameOfLifeCell object from static board coordinates.
 	 */
 	public GameOfLifeCell getCell(int x, int y) {
+		
 		return board.get(x).get(y);
+	}
+	/**
+	 * Change state of the cell at coordinates x, y.
+	 * @param x
+	 * @param y
+	 * @param nstate
+	 */
+	public void setCellState(int x, int y, byte nstate) {
+	        board.get(x).get(y).newCellState(nstate);
+	}
+	/**
+	 * Returns byte 0 or 1 from cell at coordinates x, y.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public byte getCellState(int x, int y) {
+		return board.get(x).get(y).getCellState();
+	}
+	/**
+	 * Returns byte 0 or 1 from cell at coordinates x, y.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public byte getPreviousCellState(int x, int y) {
+		return board.get(x).get(y).getPreviousState();
 	}
 	/**
 	 * Sets all neighbouring cells' active status to true (boolean).
@@ -101,10 +134,8 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 */
 	public void setPatternBoard(GameOfLifeCell[][] boardArray) {
 		byte currentCellState;
-		int widthStart = (k/2);
-		int heightStart = (m/2);
-		int widthStop = widthStart + boardArray.length;
-		int heightStop = heightStart + boardArray[0].length;
+		int widthStart = Math.round(k/2)-boardArray.length;
+		int heightStart = Math.round(m/2)-boardArray[0].length;
 		List<List<GameOfLifeCell>> temporaryBoard = new ArrayList<List<GameOfLifeCell>>();
 		 for(int i = 0; i < GameOfLife.k; i++){
 	            List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
@@ -114,10 +145,10 @@ public class GameOfLifeDynamic extends GameOfLife {
 	            temporaryBoard.add(innerBoard);
 	        }
 		
-		for (int i = 0; i < boardArray.length; i++) {
-			  for (int j = 0; j < boardArray[0].length; j++) {
+		for (int i = 0, c = widthStart; i < boardArray.length; c++, i++) {
+			  for (int j = 0, d = heightStart; j < boardArray[0].length; d++, j++) {
 				 currentCellState = boardArray[i][j].getCellState();
-				 temporaryBoard.get(i).get(j).newCellState(currentCellState);
+				 temporaryBoard.get(c).get(d).newCellState(currentCellState);
 			  }
 		}
 		board = temporaryBoard;
@@ -125,40 +156,35 @@ public class GameOfLifeDynamic extends GameOfLife {
 	/**
 	 * Extends board horizontally from current max-width to the specified x value.
 	 * Extends board vertically from min-height to current max-height.
-	 * Passes along to (extendVertically) temp name.
+     * Extends board horizontally from min-width to the newly specified max-width (x value).
+     * Extends board vertically from current max-height to the the specified y value.
 	 * @param x
 	 * @param y
 	 */
 	public void extendBoard(int x, int y){
+        int width = getWidth();
+		int height = getHeight();
         List<List<GameOfLifeCell>> tempBoard = new ArrayList<List<GameOfLifeCell>>();
         tempBoard.addAll(board);
-        for(int i = k; i < x; i++){
+        for(int i = width; i <= x; i++){
             List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
-            for(int j = 0; j < m; j++){
+            for(int j = 0; j <= height; j++){
                 innerBoard.add(new GameOfLifeCell(i, j, (byte) 0));
             }
             tempBoard.add(innerBoard);
-            k++;
+            increaseWidth();
         }
-        extendVertical(tempBoard,x,y);
-    }
-    /**
-     * Extends board horizontally from min-width to the newly specified max-width (x value).
-     * Extends board vertically from current max-height to the the specified y value.
-     * @param tempBoard
-     * @param x
-     * @param y
-     */
-    public void extendVertical(List<List<GameOfLifeCell>> tempBoard, int x, int y){
-        int height = m;
-        for(int i = 0; i < x; i++){
-            for(int j = height; j < y; j++){
+        for(int i = 0; i <= x; i++){
+            for(int j = height; j <= y; j++){
                 tempBoard.get(i).add(new GameOfLifeCell(i, j, (byte) 0));
-                if(y>m){m++;}
-                else {};
+                if(y >= m) {
+                	increaseHeight();
+                }
+                else {
+                	
+                }
             }
         }
         board = tempBoard;
     }
-	
 }
