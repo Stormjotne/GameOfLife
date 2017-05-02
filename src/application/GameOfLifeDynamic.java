@@ -58,20 +58,16 @@ public class GameOfLifeDynamic extends GameOfLife {
 			extendBoard(x+3,y+3);
 		}
 		else if ((x == getWidth()-2) && board.get(x).get(y).getCellState() == 1) {
-			extendBoard(x+3,getHeight());
+			extendBoard(x+3,y);
 		}
 		else if ((y == getHeight()-2) && board.get(x).get(y).getCellState() == 1) {
-			extendBoard(getHeight(),y+3);
+			extendBoard(x,y+3);
 		}
-		else if ((x <= 1 && y <= 1)&& board.get(x).get(y).getCellState() == 1) {
+		else if ((x == 1 || y == 1)&& board.get(x).get(y).getCellState() == 1) {
 			extendBoard(x, y);
 		}
-		else if ((x <= 1) && board.get(x).get(y).getCellState() == 1) {
-			extendBoard(x,getHeight());
-		}
-		else if ((y <= 1) && board.get(x).get(y).getCellState() == 1) {
-			extendBoard(getHeight(),y);
-		}
+		
+		else {}
 		
 		return board.get(x).get(y);
 	}
@@ -187,9 +183,9 @@ public class GameOfLifeDynamic extends GameOfLife {
         int width = getWidth();
 		int height = getHeight();
         List<List<GameOfLifeCell>> tempBoard = new ArrayList<List<GameOfLifeCell>>();
-        tempBoard.addAll(board);
         // Should trigger at Bottom, Right corner.
         if (x > width && y > height) {
+            tempBoard.addAll(board);
         	for(int i = width; i <= x; i++){
         		List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
         		for(int j = 0; j < height; j++){
@@ -205,14 +201,13 @@ public class GameOfLifeDynamic extends GameOfLife {
                     if(y >= m) {
                     	increaseHeight();
                     }
-                    else {
-                    	
-                    }
                 }
             }
+            board = tempBoard;
         }
         // Should trigger at the Right side.
         else if (x > width) {
+            tempBoard.addAll(board);
         	for(int i = width; i <= x; i++){
         		List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
         		for(int j = 0; j < height; j++){
@@ -221,33 +216,58 @@ public class GameOfLifeDynamic extends GameOfLife {
         		tempBoard.add(innerBoard);
         		increaseWidth();
         	}
+            board = tempBoard;
         }
         // Should trigger at the Bottom.
         else if (y > height) {
+            tempBoard.addAll(board);
         	for(int i = 0; i < width; i++){
         		for(int j = height; j <= y; j++){
         			tempBoard.get(i).add(new GameOfLifeCell(i, j, (byte) 0));
-        			if(y >= m) {
+        			if(y >= getHeight()) {
         				increaseHeight();
-        			}
-        			else {
-                	
         			}
         		}
         	}
+            board = tempBoard;
         }
-        // Should trigger at Top, Left corner. 
-        else if (x <= 1 && y <= 1) {
-        	
+        // Should trigger at Bottom, Left corner. 
+        else if (x == 1 && y == height-2) {
+        	for(int i = width; i <= width+Math.abs(x); i++){
+        		List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
+        		for(int j = 0; j < height; j++){
+        			innerBoard.add(new GameOfLifeCell(i, j, (byte) 0));
+        		}
+        		tempBoard.add(innerBoard);
+        		increaseWidth();
+        	}
+        	width = getWidth();
+            for(int i = 0; i < width; i++){
+                for(int j = height; j <= y; j++){
+                    tempBoard.get(i).add(new GameOfLifeCell(i, j, (byte) 0));
+                    if(y >= m) {
+                    	increaseHeight();
+                    }
+                }
+            }
+            board = tempBoard;
         }
         // Should trigger at the Left side. 
-        else if (x <= 1) {
-        	
+        else if (x == 1) {
+        	for(int i = width; i <= width+Math.abs(x); i++){
+        		List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
+        		for(int j = 0; j < height; j++){
+        			innerBoard.add(new GameOfLifeCell(i, j, (byte) 0));
+        		}
+        		tempBoard.add(innerBoard);
+        		increaseWidth();
+        	}
+            tempBoard.addAll(board);
+            board = tempBoard;
         }
         // Should trigger at the Top. 
-        else if (y <= 1) {
-        	
+        else if (y == 1) {
+         	
         }
-        board = tempBoard;
     }
 }

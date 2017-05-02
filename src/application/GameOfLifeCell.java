@@ -197,7 +197,7 @@ public class GameOfLifeCell {
 	 * @param cellSize
 	 * @param currentState
 	 */
-	public void drawBox(GraphicsContext gc, Color c, int x, int y, int cellSize, byte currentState) {
+	public void drawBox(GraphicsContext gc, Color c, int x, int y, double vertiScroll, double horiScroll, int cellSize, byte currentState) {
 		if (currentState == 0) {
 			c = Color.WHITE;
 		}
@@ -223,7 +223,7 @@ public class GameOfLifeCell {
 			c = Color.ORANGE;
 		}
 		gc.setFill(c);
-		gc.fillRect(x*cellSize, y*cellSize, cellSize-cellSize*0.2, cellSize-cellSize*0.2);
+		gc.fillRect((x*cellSize)-horiScroll, (y*cellSize)-vertiScroll, cellSize-cellSize*0.2, cellSize-cellSize*0.2);
 	}
 	
 }

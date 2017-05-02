@@ -25,11 +25,13 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXML;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Alert;
@@ -56,6 +58,8 @@ import javafx.scene.layout.VBox;
 public class GameOfLifeController extends Application implements javafx.fxml.Initializable {
 	
 	@FXML private Canvas grid;
+	@FXML public ScrollBar horiScrollBar;
+	@FXML public ScrollBar vertiScrollBar;
 	@FXML private Button playButton;
 	@FXML private Button pauseButton;
 	@FXML private Button resetButton;
@@ -74,6 +78,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private MenuItem boardStatic;
 	@FXML public ColorPicker colorPicker;
 	@FXML private Slider speedSlider;
+	@FXML private Slider zoomSlider;
 	
 	private GraphicsContext gc;
 	public GameOfLife game;
@@ -87,16 +92,24 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	File defaultDirectory = new File("patterns/");
 	Alert alertGameOfLifeController = new Alert(AlertType.ERROR);
 	int timing = 10;
+	int cellSize = 5;
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
 	
 	    
-	public void timerlistener(){
+	public void timerListener(){
         speedSlider.valueProperty().addListener((ObservableValue<? extends Number> timerlistener, Number oldtime, Number newtime) -> {
             timing = newtime.intValue();
             animation.setRate(timing);
         });
     }
-	public Method setRules(String ruletype) {
+	
+	public void zoomListener() {
+		zoomSlider.valueProperty().addListener((ObservableValue<? extends Number> zoomlistener, Number oldsize, Number newsize) -> {
+		cellSize = newsize.intValue();
+		cell.setCellSize(cellSize); 
+		});
+	}
+		public Method setRules(String ruletype) {
 		try {
 		ruleMethod = rules.getClass().getDeclaredMethod(ruletype, GameOfLife.class);
 		} catch (SecurityException e) 
@@ -121,7 +134,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		game = new GameOfLifeDynamic();
 		rules = new GameOfLifeRules();
 		ruleMethod = setRules("conwayLife");
-		cell = new GameOfLifeCell(3);
+		cell = new GameOfLifeCell(cellSize);
 		cellMethod = setCellRules("drawCell");
 		PatternReader = new GameOfLifePatternReader();
 		gc = grid.getGraphicsContext2D();
@@ -166,7 +179,23 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			System.err.println("Action could not be performed. Out of Bounds.");
 		}
 		});
+		
+		horiScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
+		    public void changed(ObservableValue<? extends Number> ov,
+		            Number old_val, Number new_val) {
+		        }
+		    });
+		vertiScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
+		    public void changed(ObservableValue<? extends Number> ov,
+		            Number old_val, Number new_val) {
+		        }
+		    });
+
+
+		
 		/*Assertion of GUI control elements.*/
+		assert vertiScrollBar != null : "fx:id=\"vertiScrollBar\" No Vertical Scroll Bar Found.";
+		assert horiScrollBar != null : "fx:id=\"horiScrollBar\" No Horizontal Scroll Bar Found.";
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
 		assert pauseButton != null : "fx:id=\"pauseButton\" No Pause Button Found.";
 		assert resetButton != null : "fx:id=\"stopButton\" No Stop Button Found.";
@@ -234,7 +263,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public void resetButton() {
 		animation.stop();
 		game.setWidth(100);
-		game.setHeight(100);
+		game.setHeight(50);
 		game.setCleanBoard();
 		draw(gc);
 	}
@@ -356,7 +385,8 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	
 	public void run(){
 		cellHistory();
-		timerlistener();
+		timerListener();
+		zoomListener();
 		//Use reflection to call Rules,
 		//That way it's easy to change them at runtime.
 		try {
@@ -391,10 +421,16 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		primaryStage.show();
 	}
 	
+	private void drawScrollContext(Canvas grid, double scrollAmount) {
+		
+	}
+	
 	@FXML private void draw(GraphicsContext gc) {
 		gc.clearRect(0, 0, grid.getWidth(), grid.getHeight());
 		int currentSize = cell.getCellSize();
 		byte currentState = 0;
+		double verticalScroll = vertiScrollBar.getValue();
+		double horizontalScroll = horiScrollBar.getValue();
 		for (int i = 0; i < game.getWidth(); i++) {
 			for (int j = 0; j < game.getHeight(); j++) {
 				GameOfLifeCell currentCell = game.getCell(i,j);
@@ -415,8 +451,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 					  System.err.println("Method could not be invoked on object.");
 						currentState = currentCell.drawCell(currentCell);
 				  }
-				//currentState = currentCell.drawCellHistory(currentCell);
-				currentCell.drawBox(gc, colorPicker.getValue(), i, j, currentSize, currentState);
+				currentCell.drawBox(gc, colorPicker.getValue(), i, j, verticalScroll, horizontalScroll, currentSize, currentState);
 			}
 		}
     }

@@ -13,8 +13,8 @@ import com.sun.javafx.collections.MappingChange.Map;
  */
 public abstract class GameOfLife {
 
-	public static int k = 100, m = 100;
-	public static int maxk = 500, maxm = 500;
+	public static int k = 100, m = 50;
+	public static int maxk = 500, maxm = 250;
 	public GameOfLifeCell currentCell;
 	int neighbors;
 	
@@ -49,19 +49,15 @@ public abstract class GameOfLife {
 		GameOfLife.m = HEIGHT;
 	}
 	public void increaseWidth(){
-		if (k < 500) {
+		if (k < maxk) {
 			GameOfLife.k++;
 		}
-		else
-		throw new IllegalArgumentException();
 	}
 	
 	public void increaseHeight(){
-		if (m < 500) {
+		if (m < maxm) {
 			GameOfLife.m++;
 		}
-		else
-		throw new IllegalArgumentException();
 	}
 	
 	public int getWidth(){
