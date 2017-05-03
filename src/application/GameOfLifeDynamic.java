@@ -28,7 +28,7 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 */
 	public int countNeighbors(int x, int y) {
 		neighbors = 0;
-        if (x == 0 || y == 0 || x == getWidth()-1 || y == getHeight()-1) {
+        if ((getWidth() < maxk && getHeight() < GameOfLife.maxm) && (x == 0 || y == 0 || x == getWidth()-1 || y == getHeight()-1)) {
             return neighbors;
         }
         else
