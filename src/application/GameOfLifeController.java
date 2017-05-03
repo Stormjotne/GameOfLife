@@ -56,7 +56,7 @@ import javafx.scene.layout.VBox;
  * @author Ruby, Håkon & Julia
  * */
 public class GameOfLifeController extends Application implements javafx.fxml.Initializable {
-	
+	/* Inject GUI Elements via FXML*/
 	@FXML private Canvas grid;
 	@FXML public ScrollBar horiScrollBar;
 	@FXML public ScrollBar vertiScrollBar;
@@ -73,6 +73,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private MenuButton rulesButton;
 	@FXML private MenuItem rulesConway;
 	@FXML private MenuItem rulesNoDeaths;
+	@FXML private MenuItem rulesConwayPerformance;
 	@FXML private MenuButton boardButton;
 	@FXML private MenuItem boardDynamic;
 	@FXML private MenuItem boardStatic;
@@ -93,6 +94,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	Alert alertGameOfLifeController = new Alert(AlertType.ERROR);
 	int timing = 10;
 	int cellSize = 5;
+	
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
 	
 	    
@@ -106,7 +108,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public void zoomListener() {
 		zoomSlider.valueProperty().addListener((ObservableValue<? extends Number> zoomlistener, Number oldsize, Number newsize) -> {
 		cellSize = newsize.intValue();
-		cell.setCellSize(cellSize); 
+		cell.setCellSize(cellSize);
 		});
 	}
 		public Method setRules(String ruletype) {
@@ -140,6 +142,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		gc = grid.getGraphicsContext2D();
 		colorPicker.setValue(Color.BLACK);
 		draw(gc);
+		zoomListener();
 		timeLine();
 	    animation.setRate(timing);
 	    //removed rules from initialize
@@ -149,8 +152,8 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		 */
 		grid.addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e) ->{
 			try {
-			int x = (int)(e.getX()/cell.getCellSize());
-			int y = (int)(e.getY()/cell.getCellSize());
+			int x = (int)((e.getX()/cell.getCellSize()));
+			int y = (int)((e.getY()/cell.getCellSize()));
 			if(game.getCellState(x,y)==1){
 				game.setCellState(x,y,(byte)0);
 				draw(gc);
@@ -183,11 +186,13 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		horiScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
 		    public void changed(ObservableValue<? extends Number> ov,
 		            Number old_val, Number new_val) {
+		    	draw(gc);
 		        }
 		    });
 		vertiScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
 		    public void changed(ObservableValue<? extends Number> ov,
 		            Number old_val, Number new_val) {
+		    	draw(gc);
 		        }
 		    });
 
@@ -208,7 +213,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		assert boardButton != null : "fx:id=\"boardButton\" No Board Button Found.";
 		assert colorPicker != null : "fx:id=\"colorPicker\" No Color Picker Found.";
 		assert speedSlider != null : "fx:id=\"speedSlider\" No Speed Slider Found.";
-		/*Button Logic*/
+		/* Button Logic */
 		playButton.setOnAction((event) -> {
 			playButton();
 		});
@@ -241,6 +246,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		});
 		rulesNoDeaths.setOnAction((event) -> {
 			rulesNoDeathsButton();
+		});
+		rulesConwayPerformance.setOnAction((event) -> {
+			rulesConwayPerformanceButton();
 		});
 		boardDynamic.setOnAction((event) -> {
 			boardDynamicButton();
@@ -371,11 +379,16 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	public void rulesNoDeathsButton() {
 		ruleMethod = setRules("noDeathsLife");
 	}
+	public void rulesConwayPerformanceButton() {
+		ruleMethod = setRules("conwayLifePerformance");
+	}
 	public void boardDynamicButton() {
 		game = new GameOfLifeDynamic();
+		draw(gc);
 	}
 	public void boardStaticButton() {
 		game = new GameOfLifeStatic();
+		draw(gc);
 	}
 
 	public void timeLine() {
@@ -401,6 +414,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 				  System.err.println("Method could not be invoked on object.");
 			  }
 		draw(gc);
+		
 	}
 	
 	public void cellHistory() {
@@ -419,10 +433,6 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		primaryStage.setTitle("Game Of Life");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-	}
-	
-	private void drawScrollContext(Canvas grid, double scrollAmount) {
-		
 	}
 	
 	@FXML private void draw(GraphicsContext gc) {

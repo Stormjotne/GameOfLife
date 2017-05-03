@@ -3,8 +3,7 @@ package application;
 import java.util.Random;
 /**
  * 
- * This class contains data about the game board (arrays) and cells.
- * Class should be split into Board and Cell before we start working on extra assignments. 
+ * This class contains data about the static board.
  * @author Ruby, Håkon & Julia
  */
 public class GameOfLifeStatic extends GameOfLife {
@@ -41,7 +40,7 @@ public class GameOfLifeStatic extends GameOfLife {
 			}
 		neighbors -= currentCell.getPreviousState(); //Trekker fra cellens egen verdi: 0, eller 1.
 		currentCell.currentNeighbors(neighbors);
-		/*if (neighbors == 0 || currentCell.getCurrentNeighbors() == currentCell.getPreviousNeigbors()) {
+		/*if (neighbors <= 0 || currentCell.getCurrentNeighbors() == currentCell.getPreviousNeigbors()) {
 			currentCell.deActivate();
 		}*/
 		currentCell.previousNeighbors(neighbors);

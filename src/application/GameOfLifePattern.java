@@ -4,7 +4,7 @@ package application;
  * The PatternReader class invokes an object of Pattern which holds key values extracted from the file.
  * The pattern is represented by the board using the size and plot coordinates.
  * General information is displayed in a separate box.
- * @author Ruby & Håkon
+ * @author Ruby
  * */
 public class GameOfLifePattern {
 	private String patternName;
@@ -43,7 +43,6 @@ public class GameOfLifePattern {
 		//j in the outer for-loop to iterate horizontally
 		for (int j = 1; j < patternBoard[0].length; j++) {
 			  for (int i = 1; i < patternBoard.length; i++) {
-				  System.out.println("Current counter: " + counter);
 				  if(charPlotPatternArray[counter] == 'o'){
 					  patternBoard[i][j] = new GameOfLifeCell(i, j, (byte) 1);
 					  counter++;
@@ -65,7 +64,6 @@ public class GameOfLifePattern {
 					  if(Character.isDigit(charPlotPatternArray[counter])){
 						  int internalDoubleDigitCounter = (internalCounter * 10) + Character.getNumericValue(charPlotPatternArray[counter]);
 						  counter++;
-						  System.out.println("Current internal counter: " + internalDoubleDigitCounter);
 
 						  // Check if next char is 'o', add as many live cells as the internalCounter states.
 						  if(charPlotPatternArray[counter] == 'o'){
@@ -96,7 +94,6 @@ public class GameOfLifePattern {
 					  }
 					  // Check if next char is 'o', add as many live cells as the internalCounter states.
 					  else if(charPlotPatternArray[counter] == 'o'){
-						  System.out.println("Current internal counter: " + internalCounter);
 						  for (int k = 0; k < internalCounter; k++){
 							  patternBoard[i+k][j] = new GameOfLifeCell(i, j, (byte) 1);
 						  }
@@ -105,7 +102,6 @@ public class GameOfLifePattern {
 					  }
 					  // Check if next char is 'b', add as many dead cells as the internalCounter states.
 					  else if (charPlotPatternArray[counter] == 'b'){
-						  System.out.println("Current internal counter: " + internalCounter);
 						  for (int k = 0; k < internalCounter; k++){
 							  patternBoard[i+k][j] = new GameOfLifeCell(i, j, (byte) 0);
 						  }
@@ -124,7 +120,6 @@ public class GameOfLifePattern {
 				  }
 				  // Check if next char is '!', set the for-loop variables to conclude the loop.
 				  else if(charPlotPatternArray[counter] == '!'){
-					  System.out.println("Algorithm gets to the last line.");
 					  j = patternBoard[0].length;
 					  i = patternBoard.length;
 				  }

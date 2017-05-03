@@ -4,7 +4,11 @@ import java.util.Random;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
+/**
+ * 
+ * @author Ruby
+ *
+ */
 public class GameOfLifeCell {
 
 	private String cellName;

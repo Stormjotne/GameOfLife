@@ -61,7 +61,7 @@
             <Label prefHeight="40.0" prefWidth="40.0" text="FPS:" GridPane.columnIndex="8" />
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="64.0" text="Zoom:" textAlignment="CENTER" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <Slider fx:id="speedSlider" blockIncrement="0.0" majorTickUnit="10.0" max="60.0" min="5.0" minorTickCount="5" prefHeight="38.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="9" />
-            <Slider fx:id="zoomSlider" blockIncrement="0.0" layoutX="1001.0" layoutY="21.0" majorTickUnit="1.0" max="20.0" min="1.0" minorTickCount="0" prefHeight="38.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="4.0" GridPane.columnIndex="9" GridPane.rowIndex="1" />
+            <Slider fx:id="zoomSlider" blockIncrement="0.0" layoutX="1001.0" layoutY="21.0" majorTickUnit="1.0" max="20.0" min="1.0" minorTickCount="0" prefHeight="38.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="5.0" GridPane.columnIndex="9" GridPane.rowIndex="1" />
             <Slider fx:id="Slider2" blockIncrement="0.0" layoutX="1112.0" layoutY="21.0" majorTickUnit="4.0" max="40.0" min="4.0" minorTickCount="0" prefHeight="38.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="7" />
             <Slider fx:id="Slider3" blockIncrement="0.0" layoutX="1112.0" layoutY="21.0" majorTickUnit="4.0" max="40.0" min="4.0" minorTickCount="0" prefHeight="38.0" prefWidth="289.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
             <MenuButton fx:id="cellButton" contentDisplay="RIGHT" mnemonicParsing="false" popupSide="RIGHT" prefHeight="40.0" prefWidth="70.0" text="Cell" GridPane.columnIndex="4">
@@ -74,6 +74,7 @@
               <items>
                 <MenuItem fx:id="rulesConway" mnemonicParsing="false" text="Conway" />
                 <MenuItem fx:id="rulesNoDeaths" mnemonicParsing="false" text="No-Deaths" />
+                  <MenuItem fx:id="rulesConwayPerformance" mnemonicParsing="false" text="ConwayPerformance" />
               </items>
             </MenuButton>
             <MenuButton fx:id="boardButton" contentDisplay="RIGHT" layoutX="411.0" layoutY="10.0" mnemonicParsing="false" popupSide="RIGHT" prefHeight="40.0" prefWidth="70.0" text="Board" GridPane.columnIndex="5">

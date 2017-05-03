@@ -3,7 +3,11 @@ package application;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
+/**
+ * This class contains data about the dynamic board.
+ * @author Håkon & Ruby
+ *
+ */
 public class GameOfLifeDynamic extends GameOfLife {
 
 	private List<List<GameOfLifeCell>> board;
@@ -55,13 +59,13 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 */
 	public GameOfLifeCell getCell(int x, int y) {
 		if ((x == getWidth()-2 && y == getHeight()-2) && board.get(x).get(y).getCellState() == 1) {
-			extendBoard(x+3,y+3);
+			extendBoard(x+4,y+4);
 		}
 		else if ((x == getWidth()-2) && board.get(x).get(y).getCellState() == 1) {
-			extendBoard(x+3,y);
+			extendBoard(x+4,y);
 		}
 		else if ((y == getHeight()-2) && board.get(x).get(y).getCellState() == 1) {
-			extendBoard(x,y+3);
+			extendBoard(x,y+4);
 		}
 		else if ((x == 1 || y == 1)&& board.get(x).get(y).getCellState() == 1) {
 			extendBoard(x, y);
@@ -232,8 +236,8 @@ public class GameOfLifeDynamic extends GameOfLife {
             board = tempBoard;
         }
         // Should trigger at Bottom, Left corner. 
-        else if (x == 1 && y == height-2) {
-        	for(int i = width; i <= width+Math.abs(x); i++){
+        else if (x <= 1 && y == height-2) {
+        	for(int i = width; i <= width+Math.abs(x)+1; i++){
         		List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
         		for(int j = 0; j < height; j++){
         			innerBoard.add(new GameOfLifeCell(i, j, (byte) 0));
@@ -253,8 +257,8 @@ public class GameOfLifeDynamic extends GameOfLife {
             board = tempBoard;
         }
         // Should trigger at the Left side. 
-        else if (x == 1) {
-        	for(int i = width; i <= width+Math.abs(x); i++){
+        else if (x <= 1) {
+        	for(int i = width; i <= width+Math.abs(x)+1; i++){
         		List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
         		for(int j = 0; j < height; j++){
         			innerBoard.add(new GameOfLifeCell(i, j, (byte) 0));
@@ -266,7 +270,7 @@ public class GameOfLifeDynamic extends GameOfLife {
             board = tempBoard;
         }
         // Should trigger at the Top. 
-        else if (y == 1) {
+        else if (y <= 1) {
          	
         }
     }

@@ -10,7 +10,11 @@ import java.net.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * 
+ * @author Ruby
+ *
+ */
 public class GameOfLifePatternReader {
 	
 	public String userPatternURL;

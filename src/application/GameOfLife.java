@@ -14,7 +14,7 @@ import com.sun.javafx.collections.MappingChange.Map;
 public abstract class GameOfLife {
 
 	public static int k = 100, m = 50;
-	public static int maxk = 200, maxm = 100;
+	public static int maxk = 500, maxm = 250;
 	public GameOfLifeCell currentCell;
 	int neighbors;
 	
