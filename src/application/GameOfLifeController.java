@@ -63,6 +63,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private Button playButton;
 	@FXML private Button pauseButton;
 	@FXML private Button resetButton;
+	@FXML private Button GIFButton;
 	@FXML private Button randomButton;
 	@FXML private Button cleanButton;
 	@FXML private Button fileChooserButton;
@@ -204,6 +205,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
 		assert pauseButton != null : "fx:id=\"pauseButton\" No Pause Button Found.";
 		assert resetButton != null : "fx:id=\"stopButton\" No Stop Button Found.";
+		assert GIFButton != null : "fx:id=\"GIFButton\" No GIF Button Found.";
 		assert randomButton != null : "fx:id=\"randomButton\" No Random Button Found.";
 		assert cleanButton != null : "fx:id=\"cleanButton\" No Clean Button Found.";
 		assert fileChooserButton != null : "fx:id=\"fileChooserButton\" No Pattern From Drive Button Found.";
@@ -222,6 +224,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		});
 		resetButton.setOnAction((event) -> {
 			resetButton();
+		});
+		GIFButton.setOnAction((event) -> {
+			GIFButton();
 		});
 		randomButton.setOnAction((event) -> {
 			randomButton();
@@ -274,6 +279,48 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		game.setHeight(50);
 		game.setCleanBoard();
 		draw(gc);
+	}
+	
+	public void GIFButton() {
+		int frameCount;
+		String GIFSavePath;
+		TextInputDialog GIFFrames = new TextInputDialog("10");
+		GIFFrames.setTitle("GIF Creator");
+		GIFFrames.setHeaderText("Export a GIF of your favorite life-cycle!");
+		GIFFrames.setContentText("Frame count:");
+		final Button cancel = (Button) GIFFrames.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancel.addEventFilter(ActionEvent.ACTION, event ->
+            System.out.println("Cancel was definitely pressed")
+        );
+        Optional<String> result = GIFFrames.showAndWait();
+    		//Get url from user input
+			if (result.isPresent() && result.get().matches("[0-9]+")) {
+	            System.out.println("Result present => OK was pressed");
+	            System.out.println("Result: " + result.get());
+	            frameCount = Integer.parseInt(result.get());
+	            
+	            TextInputDialog GIFPath = new TextInputDialog("GIF01");
+	    		GIFPath.setTitle("GIF Creator");
+	    		GIFPath.setHeaderText("Export a GIF of your favorite life-cycle!");
+	    		GIFPath.setContentText("File Name:");
+	    		final Button cancel2 = (Button) GIFPath.getDialogPane().lookupButton(ButtonType.CANCEL);
+	            cancel2.addEventFilter(ActionEvent.ACTION, event ->
+	                System.out.println("Cancel was definitely pressed")
+	            );
+	            Optional<String> result2 = GIFPath.showAndWait();
+	        		//Get url from user input
+	    			if (result2.isPresent()) {
+	    	            System.out.println("Result present => OK was pressed");
+	    	            System.out.println("Result: " + result2.get());
+	    	            GIFSavePath = result2.get();
+	    			 } else {
+	    				 System.out.println("Result was invalid. ");
+	    			 }
+			 } else {
+				System.out.println("Result was invalid. ");
+			 }
+		//Input code for GIF-generator here.
+		//Use variables frameCOunt and GIFSavePath.
 	}
 	
 	public void randomButton() {

@@ -83,6 +83,11 @@
                   <MenuItem fx:id="boardStatic" mnemonicParsing="false" text="Static" />
                </items>
             </MenuButton>
+            <Button fx:id="GIFButton" layoutX="96.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="70.0" text="GIF" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <padding>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+               </padding>
+            </Button>
          </children>
       </GridPane>
    </bottom>
