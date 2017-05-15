@@ -24,17 +24,28 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 * Subtracts state of given object.
 	 * Uses modulus to get cells from opposite "side" of the board, in case given cell's coordinates are at either extreme.
 	 * If 250 is the width of the board, such extreme coordinates might be:
-	 * (0,1) , (250, 100) , (45, 0) , (0, 250)
+	 * (0,1) , (249, 100) , (45, 0) , (0, 249)
 	 * Cell objects keep track of previous and current number of neighbours. Those variables are updated in this loop.
 	 * If a cell has 0 neighbours, or if previous and current number of neighbours is the same, the cell will be deactivated.
 	 * @param x
 	 * @param y
 	 */
-	public int countNeighbors(int x, int y) {
-		neighbors = 0;
-        if ((getWidth() < maxk && getHeight() < GameOfLife.maxm) && (x == 0 || y == 0 || x == getWidth()-1 || y == getHeight()-1)) {
+	int countNeighbors(int x, int y) {
+		int neighbors = 0;
+		// Not fully expanded in either direction. Cells at Left and Top edges die.
+        if ((getWidth() < maxk && getHeight() < maxm) && (x == 0 || y == 0 || x == getWidth()-1 || y == getHeight()-1)) {
             return neighbors;
         }
+        // Fully expanded at width, while not expanded at height. Cells at Top die.
+        else if ((getWidth() == maxk && getHeight() < maxm) && (y == 0 || y == getWidth()-1)) {
+        	return neighbors;
+        }
+        // Fully expanded at height, while not expanded at width. Cells at Left die.
+        else if ((getWidth() < maxk && getHeight() == maxm) && (x == 0 || x == getHeight()-1)) {
+        	return neighbors;
+        }
+        // When board is fully expanded, cells at the edges wrap around.
+        // Cells not on the edges always go to the following else.
         else
 		currentCell = getCell(x,y);
 		for (int i = -1; i <= 1; i++) {
@@ -48,32 +59,26 @@ public class GameOfLifeDynamic extends GameOfLife {
 			}
 		neighbors -= currentCell.getPreviousState();
 		currentCell.currentNeighbors(neighbors);
-		/*if (neighbors == 0 || currentCell.getCurrentNeighbors() == currentCell.getPreviousNeigbors()) {
+		//	Unsuccessful implementation of tracking active cells.
+		/*if (neighbors == 0) {
 			currentCell.deActivate();
 		}*/
-		currentCell.previousNeighbors(neighbors);
 		return neighbors;
 	}
 	/**
 	 * returns GameOfLifeCell object from static board coordinates.
 	 */
-	public GameOfLifeCell getCell(int x, int y) {
-		if ((x == getWidth()-2 && y == getHeight()-2) && board.get(x).get(y).getCellState() == 1) {
-			extendBoard(x+4,y+4);
+	GameOfLifeCell getCell(int x, int y) {
+		// Only attempts to extend when board isn't fully expanded.
+		if (getWidth() < maxk || getHeight() < maxm) {
+			if ((x == getWidth()-2 || y == getHeight()-2) && board.get(x).get(y).getCellState() == 1) {
+				extendBoard(getWidth()+16, getHeight()+8);
+			}
+			else if ((x == 1 || y == 1) && board.get(x).get(y).getCellState() == 1) {
+				extendBoard(0-16, 0-8);
+			}
 		}
-		else if ((x == getWidth()-2) && board.get(x).get(y).getCellState() == 1) {
-			extendBoard(x+4,y);
-		}
-		else if ((y == getHeight()-2) && board.get(x).get(y).getCellState() == 1) {
-			extendBoard(x,y+4);
-		}
-		else if ((x == 1 || y == 1)&& board.get(x).get(y).getCellState() == 1) {
-			extendBoard(x, y);
-		}
-		
-		else {}
-		
-		return board.get(x).get(y);
+			return board.get(x).get(y);
 	}
 	/**
 	 * Change state of the cell at coordinates x, y.
@@ -81,7 +86,10 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 * @param y
 	 * @param nstate
 	 */
-	public void setCellState(int x, int y, byte nstate) {
+	void setCellState(int x, int y, byte nstate) {
+		if (x > getWidth() || y > getHeight()) {
+			extendBoard(x, y);
+		}
 		board.get(x).get(y).newCellState(nstate);
 	}
 	/**
@@ -90,7 +98,7 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 * @param y
 	 * @return
 	 */
-	public byte getCellState(int x, int y) {
+	byte getCellState(int x, int y) {
 		return board.get(x).get(y).getCellState();
 	}
 	/**
@@ -99,23 +107,23 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 * @param y
 	 * @return
 	 */
-	public byte getPreviousCellState(int x, int y) {
+	byte getPreviousCellState(int x, int y) {
 		return board.get(x).get(y).getPreviousState();
 	}
 	/**
 	 * Sets all neighbouring cells' active status to true (boolean).
 	 */
 	public void activateNeighborCells(int x, int y) {
-		for (int c = -1; c <= 1; c++) {
-			for (int d = -1; d <= 1; d++) {
-				board.get((x+c+k)%k).get((y+d+m)%m).activate();
+		for (int i = -1; i <= 1; i++) {
+			  for (int j = -1; j <= 1; j++) {
+				board.get((x+i+getWidth())%getWidth()).get((y+j+getHeight())%getHeight()).activate();
 			}
 		}
 	}
 	/**
 	 * Initializes an empty array to be represented by the game board.
 	 * */
-	public void setCleanBoard() {
+	void setCleanBoard() {
 		 List<List<GameOfLifeCell>> cleanBoard = new ArrayList<List<GameOfLifeCell>>();
 	        for(int i = 0; i < GameOfLife.k; i++){
 	            List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
@@ -130,7 +138,7 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 * Initializes a random array to be represented by the game board.
 	 * */	
 	
-	public void setRandomBoard(){
+	void setRandomBoard(){
 		List<List<GameOfLifeCell>> randomBoard = new ArrayList<List<GameOfLifeCell>>();
 		Random ranNum = new Random();
 		for(int i = 0; i < GameOfLife.k; i++){
@@ -144,7 +152,7 @@ public class GameOfLifeDynamic extends GameOfLife {
 		board = randomBoard;
 	}
 	
-	public void setFirstBoard(){
+	void setFirstBoard(){
 		board = first;
 	}
 	/**
@@ -154,10 +162,15 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 * @param boardArray : any two-dimensional array lesser than the current board's width and height.
 	 * Pattern.constructPatternFromRLE() returns such an array from RLE files.
 	 */
-	public void setPatternBoard(GameOfLifeCell[][] boardArray) {
+	void setPatternBoard(GameOfLifeCell[][] boardArray) {
+		int importedboardwidth = boardArray.length;
+		int importedboardheight = boardArray[0].length;
+		if (k < importedboardwidth || m < importedboardheight) {
+		extendBoard(importedboardwidth, importedboardheight);
+		}
 		byte currentCellState;
-		int widthStart = Math.round(k/2)-boardArray.length;
-		int heightStart = Math.round(m/2)-boardArray[0].length;
+		int widthStart = Math.round((k/2)-(importedboardwidth/2));
+		int heightStart = Math.round((m/2)-(importedboardheight/2));
 		List<List<GameOfLifeCell>> temporaryBoard = new ArrayList<List<GameOfLifeCell>>();
 		 for(int i = 0; i < GameOfLife.k; i++){
 	            List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
@@ -183,14 +196,14 @@ public class GameOfLifeDynamic extends GameOfLife {
 	 * @param x
 	 * @param y
 	 */
-	public void extendBoard(int x, int y){
+	private void extendBoard(int x, int y){
         int width = getWidth();
 		int height = getHeight();
         List<List<GameOfLifeCell>> tempBoard = new ArrayList<List<GameOfLifeCell>>();
-        // Should trigger at Bottom, Right corner.
-        if (x > width && y > height) {
+        // Should trigger at Bottom or Right side.
+        if (x > width-2 || y > height-2) {
             tempBoard.addAll(board);
-        	for(int i = width; i <= x; i++){
+        	for(int i = width; i <= (x); i++){
         		List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
         		for(int j = 0; j < height; j++){
         			innerBoard.add(new GameOfLifeCell(i, j, (byte) 0));
@@ -200,7 +213,7 @@ public class GameOfLifeDynamic extends GameOfLife {
         	}
         	width = getWidth();
             for(int i = 0; i < width; i++){
-                for(int j = height; j <= y; j++){
+                for(int j = height; j <= (y); j++){
                     tempBoard.get(i).add(new GameOfLifeCell(i, j, (byte) 0));
                     if(y >= m) {
                     	increaseHeight();
@@ -209,35 +222,11 @@ public class GameOfLifeDynamic extends GameOfLife {
             }
             board = tempBoard;
         }
-        // Should trigger at the Right side.
-        else if (x > width) {
-            tempBoard.addAll(board);
-        	for(int i = width; i <= x; i++){
-        		List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
-        		for(int j = 0; j < height; j++){
-        			innerBoard.add(new GameOfLifeCell(i, j, (byte) 0));
-        		}
-        		tempBoard.add(innerBoard);
-        		increaseWidth();
-        	}
-            board = tempBoard;
-        }
-        // Should trigger at the Bottom.
-        else if (y > height) {
-            tempBoard.addAll(board);
-        	for(int i = 0; i < width; i++){
-        		for(int j = height; j <= y; j++){
-        			tempBoard.get(i).add(new GameOfLifeCell(i, j, (byte) 0));
-        			if(y >= getHeight()) {
-        				increaseHeight();
-        			}
-        		}
-        	}
-            board = tempBoard;
-        }
-        // Should trigger at Bottom, Left corner. 
-        else if (x <= 1 && y == height-2) {
-        	for(int i = width; i <= width+Math.abs(x)+1; i++){
+        // Unsuccessful implementation of leftward and upward expansion.
+        // Should trigger at Top or Left side. 
+        /*else if (x < 1 || y < 1) {
+        	tempBoard.addAll(board);
+        	for(int i = width; i <= width+Math.abs(x); i++){
         		List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
         		for(int j = 0; j < height; j++){
         			innerBoard.add(new GameOfLifeCell(i, j, (byte) 0));
@@ -247,31 +236,15 @@ public class GameOfLifeDynamic extends GameOfLife {
         	}
         	width = getWidth();
             for(int i = 0; i < width; i++){
-                for(int j = height; j <= y; j++){
+                for(int j = height; j <= height+Math.abs(y); j++){
                     tempBoard.get(i).add(new GameOfLifeCell(i, j, (byte) 0));
-                    if(y >= m) {
+                    if(height+Math.abs(y) >= m) {
                     	increaseHeight();
                     }
                 }
             }
-            board = tempBoard;
-        }
-        // Should trigger at the Left side. 
-        else if (x <= 1) {
-        	for(int i = width; i <= width+Math.abs(x)+1; i++){
-        		List<GameOfLifeCell> innerBoard = new ArrayList<GameOfLifeCell>();
-        		for(int j = 0; j < height; j++){
-        			innerBoard.add(new GameOfLifeCell(i, j, (byte) 0));
-        		}
-        		tempBoard.add(innerBoard);
-        		increaseWidth();
-        	}
             tempBoard.addAll(board);
             board = tempBoard;
-        }
-        // Should trigger at the Top. 
-        else if (y <= 1) {
-         	
-        }
+        }*/
     }
 }

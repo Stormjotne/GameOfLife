@@ -2,14 +2,10 @@ package application;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import java.nio.*;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.List;
 /**
  * 
  * @author Ruby
@@ -17,9 +13,9 @@ import java.util.List;
  */
 public class GameOfLifePatternReader {
 	
-	public String userPatternURL;
-	public String userPatternDirectory;
-	public String userPatternName;
+	String userPatternURL;
+	String userPatternDirectory;
+	String userPatternName;
 
 	String tempName;
 	String tempOrigin;
@@ -31,17 +27,17 @@ public class GameOfLifePatternReader {
 	char[] charPlotPatternArray;
 	Alert alertGameOfLifePatternReader = new Alert(AlertType.ERROR);
 
-	public void GameOfLifePatternReader() {
+	public GameOfLifePatternReader() {
 		
 	}
 	
 	/**
 	 * Reads a single RLE file and parses its contents into useful information about a Game of Life pattern.
 	 * The goal is for this method to be called by both remote and local file functions and successfully parse contents into Pattern objects.
-	 * Takes an instance of the Model class and a user-selected file as its arguments.
+	 * Takes a user-selected file as its arguments.
 	 * @author Ruby
 	 * */
-	public void parseFileToPatternObject(File rle) throws IOException {
+	void parseFileToPatternObject(File rle) throws IOException {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(rle.getAbsolutePath()));
 			String fileRead = br.readLine();
@@ -89,8 +85,6 @@ public class GameOfLifePatternReader {
 			//The StringBuffer is converted to a String and then to an array of Characters
 			//The last Character should always be '!'
 			charPlotPatternArray = tempPlotPattern.toString().toCharArray();
-			System.out.println(charPlotPatternArray);
-			
             br.close();
 			//Reset StringBuffer for the coordinate plot.
 			tempPlotPattern.setLength(0);
@@ -110,11 +104,11 @@ public class GameOfLifePatternReader {
         }
 	}
 	/**
-	 * Reads a rle-file from user-specified URL and parses its contents into useful information about a Game of Life pattern.
+	 * Reads a RLE-file from user-specified URL and parses its contents into useful information about a Game of Life pattern.
 	 * The goal is for this method to be called by both remote and local file functions and successfully parse contents into Pattern objects.
-	 * Takes an instance of the Model class as its argument.
+	 * Takes no argument.
 	 * */
-	public void parseURLToPatternObject() throws IOException {
+	void parseURLToPatternObject() throws IOException {
 		try {
 			URL patternURL = new URL(userPatternURL);
 			BufferedReader RLEReader = new BufferedReader(
@@ -181,7 +175,7 @@ public class GameOfLifePatternReader {
 	/**
 	 * Downloads a single rle-file from user-specified URL and saves it to the specified directory.
 	 * */
-	public void downloadPattern() throws IOException {
+	void downloadPattern() throws IOException {
 		URL patternURL = new URL(userPatternURL);
 		ReadableByteChannel rbc = Channels.newChannel(patternURL.openStream());
 		File directory = new File(String.valueOf(userPatternDirectory));
@@ -197,14 +191,14 @@ public class GameOfLifePatternReader {
 	 *  Sets the online location of the pattern. 
 	 *  Takes user input.
 	 * */
-	public void setPatternURL(String patternURL) {
+	void setPatternURL(String patternURL) {
 		userPatternURL = patternURL;
 	}
 	/** 
 	 * Gets the online location of the pattern.
 	 * Given by the user.
 	 * */
-	public String getPatternURL() {
+	String getPatternURL() {
 		String currentPatternURL = userPatternURL;
 		return currentPatternURL;
 	}
@@ -212,14 +206,14 @@ public class GameOfLifePatternReader {
 	 *  Sets the local location of the pattern directory. 
 	 *  Takes user input.
 	 * */
-	public void setPatternDirectory(String patternDirectory) {
+	void setPatternDirectory(String patternDirectory) {
 		userPatternDirectory = patternDirectory;
 	}
 	/** 
 	 * Gets the local location of the pattern directory.
 	 * Given by the user.
 	 * */
-	public String getPatternDirectory() {
+	String getPatternDirectory() {
 		String currentPatternDirectory = userPatternDirectory;
 		return currentPatternDirectory;
 	}
@@ -227,14 +221,14 @@ public class GameOfLifePatternReader {
 	 *  Sets the name of the pattern chosen by the user.
 	 *  Takes user input.
 	 * */
-	public void setPatternName(String patternName) {
+	void setPatternName(String patternName) {
 		userPatternName = patternName;
 	}
 	/** 
 	 * Gets the name of the user-defined pattern.
 	 * Given by the user.
 	 * */
-	public String getPatternName() {
+	String getPatternName() {
 		String currentpatternName = userPatternName;
 		return currentpatternName;
 	}

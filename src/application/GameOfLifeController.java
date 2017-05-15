@@ -1,10 +1,11 @@
 package application;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import com.sun.javafx.tk.Toolkit;
 
 import java.lang.reflect.*;
 import java.lang.reflect.Method;
@@ -18,26 +19,19 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXML;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Slider;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
@@ -45,10 +39,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 
 /**
@@ -58,8 +48,6 @@ import javafx.scene.layout.VBox;
 public class GameOfLifeController extends Application implements javafx.fxml.Initializable {
 	/* Inject GUI Elements via FXML*/
 	@FXML private Canvas grid;
-	@FXML public ScrollBar horiScrollBar;
-	@FXML public ScrollBar vertiScrollBar;
 	@FXML private Button playButton;
 	@FXML private Button pauseButton;
 	@FXML private Button resetButton;
@@ -74,45 +62,53 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	@FXML private MenuButton rulesButton;
 	@FXML private MenuItem rulesConway;
 	@FXML private MenuItem rulesNoDeaths;
+	@FXML private MenuItem rulesHighLife;
 	@FXML private MenuItem rulesConwayPerformance;
 	@FXML private MenuButton boardButton;
 	@FXML private MenuItem boardDynamic;
 	@FXML private MenuItem boardStatic;
-	@FXML public ColorPicker colorPicker;
+	@FXML private ColorPicker colorPicker;
 	@FXML private Slider speedSlider;
-	@FXML private Slider zoomSlider;
 	
 	private GraphicsContext gc;
-	public GameOfLife game;
-	public GameOfLifeCell cell;
-	public GameOfLifeRules rules;
-	Method ruleMethod = null;
-	Method cellMethod = null;
+	private GameOfLife game;
+	private GameOfLifeCell cell;
+	private GameOfLifeRules rules;
+	private GameOfLifeGIF gif = null;
+	private Method ruleMethod = null;
+	private Method cellMethod = null;
+	static List<Thread> workers = new ArrayList<Thread>();
 	private GameOfLifePatternReader PatternReader;
-	final FileChooser fileChooser = new FileChooser();
-	FileChooser.ExtensionFilter extentionFilter = new FileChooser.ExtensionFilter("RLE files (*.rle)", "*.rle");
-	File defaultDirectory = new File("patterns/");
-	Alert alertGameOfLifeController = new Alert(AlertType.ERROR);
-	int timing = 10;
-	int cellSize = 5;
+	private final FileChooser fileChooser = new FileChooser();
+	File defaultDirectory;
+	File defaultGIFDirectory;
+	private FileChooser.ExtensionFilter extentionFilter = new FileChooser.ExtensionFilter("RLE files (*.rle)", "*.rle");
+	private Alert alertGameOfLifeController = new Alert(AlertType.ERROR);
+	private int timing = 10;
+	private int cellSize = 5;
 	
 	Timeline animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> run()));
 	
+    
+    void defaultDirectory() {
+    	defaultDirectory = new File(System.getProperty("user.dir") + "/patterns/");
+    	if (! defaultDirectory.exists()){
+    		defaultDirectory.mkdir();
+    	}
+    	defaultGIFDirectory = new File(System.getProperty("user.dir") + "/gifs/");
+    	if (! defaultGIFDirectory.exists()){
+    		defaultGIFDirectory.mkdir();
+    	}
+    }
+
 	    
-	public void timerListener(){
+	private void timerListener(){
         speedSlider.valueProperty().addListener((ObservableValue<? extends Number> timerlistener, Number oldtime, Number newtime) -> {
             timing = newtime.intValue();
             animation.setRate(timing);
         });
     }
-	
-	public void zoomListener() {
-		zoomSlider.valueProperty().addListener((ObservableValue<? extends Number> zoomlistener, Number oldsize, Number newsize) -> {
-		cellSize = newsize.intValue();
-		cell.setCellSize(cellSize);
-		});
-	}
-		public Method setRules(String ruletype) {
+	private Method setRules(String ruletype) {
 		try {
 		ruleMethod = rules.getClass().getDeclaredMethod(ruletype, GameOfLife.class);
 		} catch (SecurityException e) 
@@ -122,7 +118,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		return ruleMethod;
 	}
 	
-	public Method setCellRules(String ruletype) {
+	private Method setCellRules(String ruletype) {
 		try {
 		cellMethod = cell.getClass().getDeclaredMethod(ruletype, GameOfLifeCell.class);
 		} catch (SecurityException e) 
@@ -140,10 +136,10 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		cell = new GameOfLifeCell(cellSize);
 		cellMethod = setCellRules("drawCell");
 		PatternReader = new GameOfLifePatternReader();
+		defaultDirectory();
 		gc = grid.getGraphicsContext2D();
 		colorPicker.setValue(Color.BLACK);
 		draw(gc);
-		zoomListener();
 		timeLine();
 	    animation.setRate(timing);
 	    //removed rules from initialize
@@ -152,9 +148,11 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		  Changes the location in the array on mouseclick and draws a new box
 		 */
 		grid.addEventHandler(MouseEvent.MOUSE_PRESSED,(MouseEvent e) ->{
+			double currentWidthRatio = grid.getWidth()/(cellSize*game.getWidth());
+			double currentHeightRatio = grid.getHeight()/(cellSize*game.getHeight());
 			try {
-			int x = (int)((e.getX()/cell.getCellSize()));
-			int y = (int)((e.getY()/cell.getCellSize()));
+				int x = (int)((e.getX()/cell.getCellSize())/currentWidthRatio);
+				int y = (int)((e.getY()/cell.getCellSize())/currentHeightRatio);
 			if(game.getCellState(x,y)==1){
 				game.setCellState(x,y,(byte)0);
 				draw(gc);
@@ -171,9 +169,11 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		});
 		
 		grid.addEventHandler(MouseEvent.MOUSE_DRAGGED,(MouseEvent e) ->{
+			double currentWidthRatio = grid.getWidth()/(cellSize*game.getWidth());
+			double currentHeightRatio = grid.getHeight()/(cellSize*game.getHeight());
 			try {
-			int x = (int)(e.getX()/cell.getCellSize());
-			int y = (int)(e.getY()/cell.getCellSize());
+				int x = (int)((e.getX()/cell.getCellSize())/currentWidthRatio);
+				int y = (int)((e.getY()/cell.getCellSize())/currentHeightRatio);
 			//Only brings cells to life.
 			game.setCellState(x,y,(byte)1);
 				draw(gc);
@@ -183,25 +183,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			System.err.println("Action could not be performed. Out of Bounds.");
 		}
 		});
-		
-		horiScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
-		    public void changed(ObservableValue<? extends Number> ov,
-		            Number old_val, Number new_val) {
-		    	draw(gc);
-		        }
-		    });
-		vertiScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
-		    public void changed(ObservableValue<? extends Number> ov,
-		            Number old_val, Number new_val) {
-		    	draw(gc);
-		        }
-		    });
-
-
-		
 		/*Assertion of GUI control elements.*/
-		assert vertiScrollBar != null : "fx:id=\"vertiScrollBar\" No Vertical Scroll Bar Found.";
-		assert horiScrollBar != null : "fx:id=\"horiScrollBar\" No Horizontal Scroll Bar Found.";
 		assert playButton != null : "fx:id=\"playButton\" No Play Button Found.";
 		assert pauseButton != null : "fx:id=\"pauseButton\" No Pause Button Found.";
 		assert resetButton != null : "fx:id=\"stopButton\" No Stop Button Found.";
@@ -226,7 +208,12 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			resetButton();
 		});
 		GIFButton.setOnAction((event) -> {
+			try {
 			GIFButton();
+			}
+			catch (Exception e) {
+				System.err.println("Something terrible has happened to you. I think it was:" + e);
+			}
 		});
 		randomButton.setOnAction((event) -> {
 			randomButton();
@@ -252,6 +239,9 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		rulesNoDeaths.setOnAction((event) -> {
 			rulesNoDeathsButton();
 		});
+		rulesHighLife.setOnAction((event) -> {
+			rulesHighLifeButton();
+		});
 		rulesConwayPerformance.setOnAction((event) -> {
 			rulesConwayPerformanceButton();
 		});
@@ -263,27 +253,27 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		});
 	}
 	/*Button Functions*/
-	public void playButton() {
+	private void playButton() {
 		animation.play();
 		draw(gc);
 	}
 	
-	public void pauseButton() {
+	private void pauseButton() {
 		animation.pause();
 		draw(gc);
 	}
 	
-	public void resetButton() {
+	private void resetButton() {
 		animation.stop();
-		game.setWidth(100);
-		game.setHeight(50);
+		game.setWidth(240);
+		game.setHeight(120);
 		game.setCleanBoard();
 		draw(gc);
 	}
 	
-	public void GIFButton() {
-		int frameCount;
-		String GIFSavePath;
+	private void GIFButton() throws Exception {
+		int frameCount = 0;
+		String GIFSavePath = null;
 		TextInputDialog GIFFrames = new TextInputDialog("10");
 		GIFFrames.setTitle("GIF Creator");
 		GIFFrames.setHeaderText("Export a GIF of your favorite life-cycle!");
@@ -299,7 +289,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 	            System.out.println("Result: " + result.get());
 	            frameCount = Integer.parseInt(result.get());
 	            
-	            TextInputDialog GIFPath = new TextInputDialog("GIF01");
+	            TextInputDialog GIFPath = new TextInputDialog("GIF01.gif");
 	    		GIFPath.setTitle("GIF Creator");
 	    		GIFPath.setHeaderText("Export a GIF of your favorite life-cycle!");
 	    		GIFPath.setContentText("File Name:");
@@ -319,21 +309,25 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			 } else {
 				System.out.println("Result was invalid. ");
 			 }
-		//Input code for GIF-generator here.
-		//Use variables frameCOunt and GIFSavePath.
+			//Input code for GIF-generator here.
+            // makes a GameOfLifeGIF object and pass it the necessary parameters.
+            gif = new GameOfLifeGIF(frameCount, (defaultGIFDirectory + "/" + GIFSavePath), game, rules);
+            // starts the process of making the gif.
+            gif.makeGIF();
+        //Use variables frameCount and GIFSavePath.
 	}
 	
-	public void randomButton() {
+	private void randomButton() {
 		game.setRandomBoard();
 		draw(gc);
 	}
 	
-	public void cleanButton() {
+	private void cleanButton() {
 		game.setCleanBoard();
 		draw(gc);
 	}
 	
-	public void fileChooserButton()  {
+	private void fileChooserButton()  {
 		try {
 			fileChooser.setInitialDirectory(defaultDirectory);
 			File file = fileChooser.showOpenDialog(null);
@@ -364,7 +358,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		draw(gc);
 	}
 	
-	public void fileByURLButton() {
+	private void fileByURLButton() {
 		TextInputDialog defaultURLInput = new TextInputDialog("http://www.conwaylife.com/patterns/glider.rle");
 		defaultURLInput.setTitle("URL Input Dialog");
 		defaultURLInput.setHeaderText("Load your favorite GoL Pattern.");
@@ -377,7 +371,7 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
         Optional<String> result = defaultURLInput.showAndWait();
         	try {
         		//Get url from user input
-				if (result.isPresent() /*&& result.get().endsWith(".rle)")*/) {
+				if (result.isPresent()) {
 		            System.out.println("Result present => OK was pressed");
 		            System.out.println("Result: " + result.get());
 		            PatternReader.setPatternURL(result.get());
@@ -414,41 +408,43 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			draw(gc);
 	}
 	
-	public void cellConwayButton() {
+	private void cellConwayButton() {
 		cellMethod = setCellRules("drawCell");
 	}
-	public void cellHistoryButton() {
+	private void cellHistoryButton() {
 		cellMethod = setCellRules("drawCellHistory");
 	}
-	public void rulesConwayButton() {
+	private void rulesConwayButton() {
 		ruleMethod = setRules("conwayLife");
 	}
-	public void rulesNoDeathsButton() {
+	private void rulesNoDeathsButton() {
 		ruleMethod = setRules("noDeathsLife");
 	}
-	public void rulesConwayPerformanceButton() {
+	private void rulesHighLifeButton() {
+		ruleMethod = setRules("highLife");
+	}
+	private void rulesConwayPerformanceButton() {
 		ruleMethod = setRules("conwayLifePerformance");
 	}
-	public void boardDynamicButton() {
+	private void boardDynamicButton() {
 		game = new GameOfLifeDynamic();
 		draw(gc);
 	}
-	public void boardStaticButton() {
+	private void boardStaticButton() {
 		game = new GameOfLifeStatic();
 		draw(gc);
 	}
 
-	public void timeLine() {
+	private void timeLine() {
 		animation.setAutoReverse(false);
         animation.setCycleCount(Timeline.INDEFINITE);
 	}
 	
-	public void run(){
-		cellHistory();
+	private void run(){
 		timerListener();
-		zoomListener();
-		//Use reflection to call Rules,
-		//That way it's easy to change them at runtime.
+		cellHistory();
+		//Use reflection to call Rules.
+		//Ruleset can be changed by the press of a button.
 		try {
 			ruleMethod.invoke(rules, game);
 			} catch (IllegalArgumentException e) {
@@ -460,14 +456,25 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 			  catch (InvocationTargetException e) {
 				  System.err.println("Method could not be invoked on object.");
 			  }
+		// Comment out above, and uncomment below to use threads.
+		/*try {
+            createWorkers();
+            runWorkers();
+            workers.clear();
+        } catch (InterruptedException e1) {
+            //e1.printStackTrace();
+        }*/
 		draw(gc);
 		
 	}
 	
-	public void cellHistory() {
+	private void cellHistory() {
 		for (int i = 0;i < GameOfLife.k;i++) {
 			for (int j = 0;j < GameOfLife.m;j++) {
-				game.getCell(i,j).savePreviousState();
+				GameOfLifeCell currentCell = game.getCell(i,j);
+				currentCell.savePreviousState();
+				currentCell.saveActivity();
+				currentCell.savePreviousNeighbors();
 			}
 		}
 	}
@@ -486,8 +493,8 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 		gc.clearRect(0, 0, grid.getWidth(), grid.getHeight());
 		int currentSize = cell.getCellSize();
 		byte currentState = 0;
-		double verticalScroll = vertiScrollBar.getValue();
-		double horizontalScroll = horiScrollBar.getValue();
+		double currentWidthRatio = grid.getWidth()/(cellSize*game.getWidth());
+		double currentHeightRatio = grid.getHeight()/(cellSize*game.getHeight());
 		for (int i = 0; i < game.getWidth(); i++) {
 			for (int j = 0; j < game.getHeight(); j++) {
 				GameOfLifeCell currentCell = game.getCell(i,j);
@@ -508,11 +515,37 @@ public class GameOfLifeController extends Application implements javafx.fxml.Ini
 					  System.err.println("Method could not be invoked on object.");
 						currentState = currentCell.drawCell(currentCell);
 				  }
-				currentCell.drawBox(gc, colorPicker.getValue(), i, j, verticalScroll, horizontalScroll, currentSize, currentState);
+				currentCell.drawBox(gc, colorPicker.getValue(), i, j, currentSize, currentState, currentWidthRatio, currentHeightRatio);
 			}
 		}
+    } 
+	/**
+     * Makes threads by the number of processors Threads implement conwayLifeConcurrent.
+     * @throws InterruptedException 
+     */
+    public void createWorkers() throws InterruptedException{
+        int numWorkers = Runtime.getRuntime().availableProcessors();
+        int increment = GameOfLife.k/numWorkers;
+        rules.resetIndex(increment);
+        for(int i = 0; i < numWorkers; i++){
+            workers.add(new Thread(() -> {
+                rules.conwayLifeConcurrent(game, increment);
+                }));
+        }
     }
-
+    
+    /**
+     * Runs the threads and then calls updateNeighbors() after all the threads have finished running.
+     * @throws InterruptedException
+     */
+    public void runWorkers() throws InterruptedException {
+        for(Thread t : workers) {
+            t.start();
+        }
+        for(Thread t : workers) {
+            t.join();
+        }
+    }
 	public static void main(String[] args) {
 		
 		launch(args);

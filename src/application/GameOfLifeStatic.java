@@ -4,6 +4,7 @@ import java.util.Random;
 /**
  * 
  * This class contains data about the static board.
+ * Inherits from GameOfLife.
  * @author Ruby, Håkon & Julia
  */
 public class GameOfLifeStatic extends GameOfLife {
@@ -27,8 +28,8 @@ public class GameOfLifeStatic extends GameOfLife {
 	 * @param x
 	 * @param y
 	 */
-	public int countNeighbors(int x, int y){ 
-		neighbors = 0;
+	int countNeighbors(int x, int y){ 
+		int neighbors = 0;
 		currentCell = getCell(x,y);
 		for (int i = -1; i <= 1; i++) {
 			  for (int j = -1; j <= 1; j++) {
@@ -40,16 +41,16 @@ public class GameOfLifeStatic extends GameOfLife {
 			}
 		neighbors -= currentCell.getPreviousState(); //Trekker fra cellens egen verdi: 0, eller 1.
 		currentCell.currentNeighbors(neighbors);
+		//	Unsuccessful implementation of tracking active cells.
 		/*if (neighbors <= 0 || currentCell.getCurrentNeighbors() == currentCell.getPreviousNeigbors()) {
 			currentCell.deActivate();
 		}*/
-		currentCell.previousNeighbors(neighbors);
 		return neighbors;
 	}
 	/**
 	 * returns GameOfLifeCell object from static board coordinates.
 	 */
-	public GameOfLifeCell getCell(int x, int y) {
+	GameOfLifeCell getCell(int x, int y) {
 		if (x > getWidth() || y > getHeight()) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
@@ -61,7 +62,7 @@ public class GameOfLifeStatic extends GameOfLife {
 	 * @param y
 	 * @param nstate
 	 */
-	public void setCellState(int x, int y, byte nstate) {
+	void setCellState(int x, int y, byte nstate) {
 		if (x > getWidth() || y > getHeight()) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
@@ -73,7 +74,7 @@ public class GameOfLifeStatic extends GameOfLife {
 	 * @param y
 	 * @return
 	 */
-	public byte getCellState(int x, int y) {
+	byte getCellState(int x, int y) {
 		if (x > getWidth() || y > getHeight()) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
@@ -85,13 +86,13 @@ public class GameOfLifeStatic extends GameOfLife {
 	 * @param y
 	 * @return
 	 */
-	public byte getPreviousCellState(int x, int y) {
+	byte getPreviousCellState(int x, int y) {
 		return board[x][y].getPreviousState();
 	}
 	/**
 	 * Sets all neighbouring cells' active status to true (boolean).
 	 */
-	public void activateNeighborCells(int x, int y) {
+	void activateNeighborCells(int x, int y) {
 		for (int c = -1; c <= 1; c++) {
 			for (int d = -1; d <= 1; d++) {
 				board[(x+c+k)%k][(y+d+m)%m].activate();
@@ -101,13 +102,13 @@ public class GameOfLifeStatic extends GameOfLife {
 	/** 
 	 * Resets the game board.
 	 * */
-	public void firstGeneration(){
+	void firstGeneration(){
 		board = first;
 	}
 	/**
 	 * Initializes an empty array to be represented by the game board.
 	 * */
-	public void setCleanBoard(){
+	void setCleanBoard(){
 		GameOfLifeCell[][] cleanBoard = new GameOfLifeCell[k][m];
 		for (int i = 0; i < k; i++) {
 			  for (int j = 0; j < m; j++) {
@@ -119,7 +120,7 @@ public class GameOfLifeStatic extends GameOfLife {
 	/**
 	 * Initializes a random array to be represented by the game board.
 	 * */	
-	public void setRandomBoard(){
+	void setRandomBoard(){
 		GameOfLifeCell[][] randomBoard = new GameOfLifeCell[k][m];
 		Random ranNum = new Random();
 		for (int i = 0; i < GameOfLife.k; i++) {
@@ -142,17 +143,19 @@ public class GameOfLifeStatic extends GameOfLife {
 	 * @param boardArray : any two-dimensional array lesser than the current board's width and height.
 	 * Pattern.constructPatternFromRLE() returns such an array from RLE files.
 	 */
-	public void setPatternBoard(GameOfLifeCell[][] boardArray) {
-		int widthStart = Math.round(k/2)-boardArray.length;
-		int heightStart = Math.round(m/2)-boardArray[0].length;
+	void setPatternBoard(GameOfLifeCell[][] boardArray) {
+		int importedboardwidth = boardArray.length;
+		int importedboardheight = boardArray[0].length;
+		int widthStart = Math.round(k/2)-(importedboardwidth/2);
+		int heightStart = Math.round(m/2)-(importedboardheight/2);
 		GameOfLifeCell[][] temporaryBoard = new GameOfLifeCell[k][m];
 		for (int i = 0; i < k; i++) {
 			  for (int j = 0; j < m; j++) {
 				  temporaryBoard[i][j] = new GameOfLifeCell(i, j, (byte) 0);
 			  }
 		}
-		for (int i = 0, c = widthStart; i < boardArray.length; c++, i++) {
-			  for (int j = 0, d = heightStart; j < boardArray[0].length; d++, j++) {
+		for (int i = 0, c = widthStart; i < importedboardwidth; c++, i++) {
+			  for (int j = 0, d = heightStart; j < importedboardheight; d++, j++) {
 				  temporaryBoard[c][d] = boardArray[i][j];
 			  }
 		}
@@ -162,7 +165,7 @@ public class GameOfLifeStatic extends GameOfLife {
 	 * Sets the static board to be in part equal to the input array.
 	 * @param boardArray
 	 */
-	public void setBoard(GameOfLifeCell[][] boardArray) {
+	void setBoard(GameOfLifeCell[][] boardArray) {
 		GameOfLifeCell[][] temporaryBoard = new GameOfLifeCell[k][m];
 		for (int i = 0; i < GameOfLife.k; i++) {
 			  for (int j = 0; j < GameOfLife.m; j++) {

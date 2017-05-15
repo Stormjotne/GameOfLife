@@ -32,7 +32,7 @@ public class GameOfLifePattern {
 		this.charPlotPatternArray = charPlotPatternArray;
 	}
 	
-	public GameOfLifeCell[][] constructPatternFromRLE() throws PatternFormatException, ArrayIndexOutOfBoundsException {
+	GameOfLifeCell[][] constructPatternFromRLE() throws PatternFormatException, ArrayIndexOutOfBoundsException {
 		  System.out.println("Pattern Width: " + this.WIDTH + " Pattern Height: " + this.HEIGHT);
 		patternBoard = new GameOfLifeCell[WIDTH+2][HEIGHT+2];
 		setCleanBoard(patternBoard.length, patternBoard[0].length);
@@ -64,6 +64,37 @@ public class GameOfLifePattern {
 					  if(Character.isDigit(charPlotPatternArray[counter])){
 						  int internalDoubleDigitCounter = (internalCounter * 10) + Character.getNumericValue(charPlotPatternArray[counter]);
 						  counter++;
+						// Check if next char is also a digit.
+						  // If it is, concatenate it to the first two with general desimal arithmetic.
+						  if(Character.isDigit(charPlotPatternArray[counter])){
+							  int internalTripleDigitCounter = (internalDoubleDigitCounter * 100) + (internalCounter * 10) + Character.getNumericValue(charPlotPatternArray[counter]);
+							  counter++;
+
+							  // Check if next char is 'o', add as many live cells as the internalCounter states.
+							  if(charPlotPatternArray[counter] == 'o'){
+								  for (int k = 0; k < internalTripleDigitCounter; k++){
+									  patternBoard[i+k][j] = new GameOfLifeCell(i, j, (byte) 1);
+								  }
+								  i+=internalTripleDigitCounter-2;
+							  }
+							  // Check if next char is 'b', add as many dead cells as the internalCounter states.
+							  else if(charPlotPatternArray[counter] == 'b') {
+								  for (int k = 0; k < internalTripleDigitCounter; k++){
+									  patternBoard[i+k][j] = new GameOfLifeCell(i, j, (byte) 0);
+								  }
+								  i+=internalTripleDigitCounter-2;
+							  }
+							  // Check if next char is '$', skip as many lines as the internalCounter states.
+							  else if(charPlotPatternArray[counter] == '$'){
+								  j+=internalTripleDigitCounter-2;
+								  i = patternBoard.length;
+							  }
+
+							  else {
+								  counter++;
+								  throw new PatternFormatException();
+							  }
+						  }
 
 						  // Check if next char is 'o', add as many live cells as the internalCounter states.
 						  if(charPlotPatternArray[counter] == 'o'){
@@ -132,8 +163,7 @@ public class GameOfLifePattern {
 		}
 		return patternBoard;
 	}
-	
-	public void setCleanBoard(int x, int y){
+	private void setCleanBoard(int x, int y){
 		GameOfLifeCell[][] cleanBoard = new GameOfLifeCell[x][y];
 		for (int i = 0; i < x; i++) {
 			  for (int j = 0; j < y; j++) {
@@ -143,7 +173,7 @@ public class GameOfLifePattern {
 		patternBoard = cleanBoard;
 	}
 	
-	public void printArray(GameOfLifeCell[][] x){
+	private void printArray(GameOfLifeCell[][] x){
 		for (int i = 0; i < (x.length); i++) {
 			  for (int j = 0; j < (x[0].length); j++) {
 				  System.out.print(x[i][j]);
